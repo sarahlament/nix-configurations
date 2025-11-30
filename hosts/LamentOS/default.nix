@@ -12,10 +12,10 @@
     ./boot.nix
     ./disko.nix
     ./fastfetch.nix
-    ./gitlab-runner.nix
     ./packages.nix
     ./stylix.nix
   ];
+  sops.age.keyFile = "/persist/key.age";
 
   atelier.system.core.hostName = "LamentOS";
   atelier.hardware.graphics.vendor = "nvidia";
@@ -34,6 +34,9 @@
   atelier.user.lament.extraGroups = [
     "video"
   ];
+
+  services.fwupd.enable = true;
+  security.rtkit.enable = true;
 
   services.udev.extraRules = ''
     KERNEL=="card*", SUBSYSTEM=="drm", GROUP="video", MODE="0660"

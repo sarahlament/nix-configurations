@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  inherit (lib) mkIf mkEnableOption mkOption types;
+  inherit (lib) mkIf mkEnableOption mkDefault mkOption types;
   cfg = config.atelier.kits.desktop;
 in {
   options.atelier.kits.desktop = {
@@ -19,6 +19,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+    networking.networkmanager.enable = mkDefault true;
+    fonts = {
+      enableDefaultPackages = true;
+      enableGhostscriptFonts = true;
+    };
     services = {
       displayManager.autoLogin = mkIf (cfg.autoLogin.user != null) {
         enable = true;

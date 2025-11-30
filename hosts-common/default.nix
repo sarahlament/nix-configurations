@@ -15,9 +15,4 @@
   atelier.system.core.enable = true;
   atelier.system.core.timeZone = "America/Chicago";
   atelier.shell.modernTools.useRustSudo = true;
-
-  services.fwupd.enable = true;
-  security.rtkit.enable = true;
-
-  networking.networkmanager.wifi.powersave = false;
 }

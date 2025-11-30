@@ -5,6 +5,7 @@
   ...
 }: {
   stylix = {
+    enableReleaseChecks = false;
     image = ./wallpaper.png;
     colorGeneration = {
       polarity = "dark";

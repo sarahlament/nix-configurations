@@ -53,6 +53,5 @@ in {
 
     i18n.defaultLocale = cfg.locale;
     time.timeZone = cfg.timeZone;
-    networking.networkmanager.enable = mkDefault true;
   };
 }

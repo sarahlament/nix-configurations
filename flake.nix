@@ -2,7 +2,7 @@
   description = "LamentOS";
   inputs = {
     ###################
-    ## SHARED INPUTS ##
+    ## COMMON INPUTS ##
     ###################
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -12,11 +12,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # stylix provides system-level theming
-    stylix = {
-      # I'm going to test matugen theming once again
-      #url = "github:nix-community/stylix/";
-      url = "github:make-42/stylix/matugen";
+    ###################
+    ## SERVER INPUTS ##
+    ###################
+    # simple, declarative mailserver for NixOS
+    nixos-mailserver = {
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -26,6 +27,14 @@
     # disko let's me declaratively define how my disks are formatted and such
     disko = {
       url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # stylix provides system-level theming
+    stylix = {
+      # I'm going to test matugen theming once again
+      #url = "github:nix-community/stylix/";
+      url = "github:make-42/stylix/matugen";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -78,6 +87,16 @@
         self.nixosModules.atelier
         ./hosts-common
         ./hosts/LamentOS
+        ./users/lament
+      ];
+    };
+
+    nixosConfigurations.athena = nixpkgs.lib.nixosSystem {
+      specialArgs = {inherit inputs;};
+      modules = [
+        self.nixosModules.atelier
+        ./hosts-common
+        ./hosts/athena
         ./users/lament
       ];
     };

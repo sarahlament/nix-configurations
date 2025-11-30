@@ -37,7 +37,7 @@
           "nix.serverSettings" = {
             "nixd" = {
               "formatting" = {
-                "command" = ["${pkgs.alejandra}/bin/alejandra"];
+                "command" = ["alejandra"];
               };
             };
           };

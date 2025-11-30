@@ -4,13 +4,6 @@
   lib,
   ...
 }: {
-  stylix = lib.mkIf osConfig.atelier.kits.desktop.enable {
-    targets.nixvim.transparentBackground = {
-      main = true;
-      numberLine = true;
-      signColumn = true;
-    };
-  };
   programs.nixvim = {
     enable = true;
     defaultEditor = true;
