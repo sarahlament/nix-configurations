@@ -32,7 +32,6 @@ in {
       [
         inputs.nixvim.homeModules.nixvim
 
-        ./env.nix
         ./git.nix
         ./hyfetch.nix
         ./kitty.nix
