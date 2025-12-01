@@ -12,6 +12,7 @@
     ./headscale.nix
     ./mailserver.nix
     ./monitoring.nix
+    ./nextcloud.nix
     ./openssh.nix
     ./vaultwarden.nix
   ];
