@@ -13,7 +13,13 @@
 
   security.acme = {
     acceptTerms = true;
-    defaults.email = "sarah@lament.gay";
+    defaults.email = "sarah1@lament.gay";
+
+    certs."mail.lament.gay" = {
+      webroot = "/var/lib/acme/acme-challenge";
+      group = "dovecot2";
+      postRun = "systemctl reload postfix dovecot2";
+    };
   };
 
   mailserver = {

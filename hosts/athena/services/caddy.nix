@@ -18,9 +18,13 @@
       '';
     };
 
-    virtualHosts."mail.lament.gay" = {
-      # empty for now, we just need it to handle the certificate
-    };
+    # HTTP-only server for ACME challenges
+    extraConfig = ''
+      http://mail.lament.gay {
+        root * /var/lib/acme/acme-challenge
+        file_server
+      }
+    '';
   };
 
   systemd.tmpfiles.rules = [
