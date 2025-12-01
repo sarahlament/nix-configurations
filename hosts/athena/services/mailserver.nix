@@ -13,7 +13,7 @@
 
   security.acme = {
     acceptTerms = true;
-    defaults.email = "lament@lament.gay";
+    defaults.email = "sarah@lament.gay";
   };
 
   mailserver = {
@@ -23,7 +23,7 @@
     domains = ["lament.gay"];
 
     loginAccounts = {
-      "lament@lament.gay" = {
+      "sarah@lament.gay" = {
         hashedPasswordFile = config.sops.secrets.lamentPassHash.path;
         aliases = [
           "postmaster@lament.gay"
