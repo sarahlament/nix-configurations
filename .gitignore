@@ -1,0 +1,25 @@
+# Nix build outputs
+result
+result-*
+
+# direnv
+.direnv/
+
+# Claude Code local settings
+.claude/
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.qcow2

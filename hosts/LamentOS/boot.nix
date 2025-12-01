@@ -1,0 +1,53 @@
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
+  boot = {
+    # as lanzaboote uses its own thing, force systemd-boot to false
+    loader = {
+      systemd-boot.enable = lib.mkForce false;
+      efi.canTouchEfiVariables = true;
+      efi.efiSysMountPoint = "/efi";
+    };
+
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/persist/pki";
+      configurationLimit = 5;
+      settings = {
+        console-mode = "max";
+        timeout = 2;
+      };
+    };
+    initrd = {
+      systemd.enable = true;
+      availableKernelModules = [
+        "btrfs"
+        "lz4"
+        "lz4_compress"
+        "nvme"
+        "xhci_pci"
+        "ahci"
+        "usb_storage"
+        "usbhid"
+        "sd_mod"
+        "sr_mod"
+      ];
+    };
+
+    kernelPackages = pkgs.linuxPackages_zen;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "nowatchdog"
+      "zswap.enabled=1"
+      "zswap.compressor=lz4"
+      "zswap.max_pool_percent=20"
+      "zswap.shrinker_enabled=1"
+    ];
+
+    plymouth.enable = true;
+  };
+}
