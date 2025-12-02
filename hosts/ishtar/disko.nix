@@ -26,7 +26,7 @@
               size = "100%";
               content = {
                 type = "lvm_pv";
-                vg = "lamentos";
+                vg = "ishtar";
               };
             };
           };
@@ -34,7 +34,7 @@
       };
     };
     lvm_vg = {
-      lamentos = {
+      ishtar = {
         type = "lvm_vg";
         lvs = {
           swap = {

@@ -9,11 +9,13 @@
     inputs.sops-nix.nixosModules.sops
 
     ./boot.nix # Shared boot options
+    ./network.nix # basic network configuration
     ./nixconf.nix # 'nix' configuration
     ./packages.nix # shared packages
     ./sops.nix # sops-nix information
     ./shellTools.nix # tools for all hosts
-    ./tailscale.nix # tailscale client for all my things
+
+    ../users/lament # I'm obviously going to be on all of my systems
   ];
   system.stateVersion = "26.05";
   nixpkgs.hostPlatform = "x86_64-linux";

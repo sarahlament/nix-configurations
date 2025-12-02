@@ -12,5 +12,7 @@
     xdg-utils # XDG desktop integration
     unrar # RAR archive extraction
     gdu # Disk usage analyzer
+    wl-clipboard # Wayland clipboard utilities
+    wl-clip-persist # Persistent clipboard for Wayland
   ];
 }

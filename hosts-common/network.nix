@@ -4,6 +4,7 @@
   pkgs,
   ...
 }: {
+  networking.networkmanager.enable = lib.mkDefault true;
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "client";

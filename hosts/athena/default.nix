@@ -13,7 +13,7 @@
     ./boot.nix
     ./disko.nix
     ./fastfetch.nix
-    ./networking.nix
+    ./network.nix
     ./packages.nix
 
     ./services

@@ -22,17 +22,14 @@
       };
     };
     initrd = {
-      systemd.enable = true;
       availableKernelModules = [
         "btrfs"
         "lz4"
         "lz4_compress"
         "nvme"
         "xhci_pci"
-        "ahci"
         "usb_storage"
         "usbhid"
-        "sd_mod"
         "sr_mod"
       ];
     };

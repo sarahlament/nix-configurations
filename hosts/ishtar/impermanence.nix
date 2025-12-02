@@ -8,8 +8,8 @@
   boot.initrd.systemd.services.rollback = {
     description = "Rollback btrfs root and home subvols to a blank state";
     wantedBy = ["initrd.target"];
-    after = ["dev-lamentos-system.device"];
-    requires = ["dev-lamentos-system.device"];
+    after = ["dev-ishtar-system.device"];
+    requires = ["dev-ishtar-system.device"];
     before = ["sysroot.mount"];
     unitConfig.DefaultDependencies = "no";
     serviceConfig.Type = "oneshot";

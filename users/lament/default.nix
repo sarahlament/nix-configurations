@@ -6,7 +6,6 @@
   ...
 }: let
   inherit (lib) optionals;
-  kits = config.atelier.kits;
 in {
   sops.secrets.lamentPassHash.neededForUsers = true;
   users.users.lament = {
@@ -14,15 +13,10 @@ in {
     hashedPasswordFile = config.sops.secrets.lamentPassHash.path;
     isNormalUser = true;
 
-    extraGroups =
-      [
-        "wheel"
-        "systemd-journal"
-      ]
-      ++ optionals (kits.desktop.enable) ["networkmanager" "plugdev" "video"]
-      ++ optionals (kits.development.enable) ["docker"]
-      ++ optionals (kits.virtualisation.enable) ["libvirtd"]
-      ++ optionals (kits.gaming.enable) ["gamemode"];
+    extraGroups = [
+      "wheel"
+      "systemd-journal"
+    ];
   };
 
   users.users.lament.openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWSe/rbjk1/7meA90ZAg1hR3TcbKUgjB4GEl18SF1bZ"]; # lament@LamentOS
@@ -39,7 +33,7 @@ in {
         ./shell.nix
         ./system.nix
       ]
-      ++ optionals kits.desktop.enable [
+      ++ optionals (config.networking.hostName == "ishtar") [
         ./stylix.nix
         ./vscode.nix
         ./obsidian.nix

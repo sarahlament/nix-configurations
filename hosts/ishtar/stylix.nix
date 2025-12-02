@@ -4,6 +4,11 @@
   pkgs,
   ...
 }: {
+  fonts = {
+    enableDefaultPackages = true;
+    enableGhostscriptFonts = true;
+  };
+
   stylix = {
     enable = true;
     enableReleaseChecks = false;

@@ -4,9 +4,18 @@
   pkgs,
   ...
 }: {
-  boot.blacklistedKernelModules = [
-    "pcspkr" # annoying TTY beeps
-  ];
+  boot = {
+    initrd = {
+      systemd.enable = true;
+      availableKernelModules = [
+        "ahci"
+        "sd_mod"
+      ];
+    };
+    blacklistedKernelModules = [
+      "pcspkr" # annoying TTY beeps
+    ];
+  };
 
   environment.systemPackages = with pkgs; [
     efibootmgr # Helper for EFI things

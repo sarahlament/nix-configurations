@@ -72,35 +72,21 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = inputs @ {
-    nixpkgs,
-    self,
-    ...
-  }: {
-    # here we 'expose' our modules, so they can be used without my personal system configs
-    nixosModules = {
-      default = self.nixosModules.atelier;
-      atelier = import ./modules/kits inputs;
-    };
-
+  outputs = inputs @ {nixpkgs, ...}: {
     # this is my personal system config
-    nixosConfigurations.LamentOS = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.ishtar = nixpkgs.lib.nixosSystem {
       specialArgs = {inherit inputs;};
       modules = [
-        self.nixosModules.atelier
         ./hosts-common
-        ./hosts/LamentOS
-        ./users/lament
+        ./hosts/ishtar
       ];
     };
 
     nixosConfigurations.athena = nixpkgs.lib.nixosSystem {
       specialArgs = {inherit inputs;};
       modules = [
-        self.nixosModules.atelier
         ./hosts-common
         ./hosts/athena
-        ./users/lament
       ];
     };
 

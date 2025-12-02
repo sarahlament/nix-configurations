@@ -11,6 +11,11 @@
     r2modman # Mod manager for various games
     #ryubing-canary # Switch emulator
     prismlauncher
-    visualvm
+    visualvm # java vm visualizer
+    discord # Voice and text chat
   ];
+
+  programs = {
+    firefox.enable = true;
+  };
 }

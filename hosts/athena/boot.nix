@@ -7,10 +7,6 @@
   zramSwap.enable = true;
   boot = {
     kernelPackages = pkgs.linuxPackages;
-    initrd.availableKernelModules = [
-      "ahci"
-      "sd_mod"
-    ];
     kernelModules = [
       "virtio_net"
     ];
