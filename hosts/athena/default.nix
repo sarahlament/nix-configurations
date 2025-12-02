@@ -14,18 +14,10 @@
     ./disko.nix
     ./fastfetch.nix
     ./networking.nix
+    ./packages.nix
 
     ./services
   ];
   sops.age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
-
   networking.hostName = "athena";
-
-  environment.systemPackages = with pkgs; [
-    traceroute
-    mtr
-    sysstat
-    htop
-    screen
-  ];
 }
