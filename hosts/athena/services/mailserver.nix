@@ -4,6 +4,7 @@
   pkgs,
   ...
 }: {
+  sops.secrets.adminPassHash = {};
   users.users.root.extraGroups = ["acme"];
   networking.firewall.allowedTCPPorts = [
     25 # SMTP
@@ -31,6 +32,13 @@
     loginAccounts = {
       "sarah@lament.gay" = {
         hashedPasswordFile = config.sops.secrets.lamentPassHash.path;
+        aliases = [
+          "lament@lament.gay"
+          "sarahlament@lament.gay"
+        ];
+      };
+      "admin@lament.gay" = {
+        hashedPasswordFile = config.sops.secrets.adminPassHash.path;
         aliases = [
           "postmaster@lament.gay"
           "admin@lament.gay"
