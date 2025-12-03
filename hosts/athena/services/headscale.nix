@@ -30,6 +30,8 @@
     settings = {
       server_url = "https://headscale.lament.gay";
 
+      noise.private_key_path = "/var/lib/headscale/noise_private.key";
+
       database = {
         type = "sqlite3";
         sqlite.path = "/var/lib/headscale/db.sqlite";
