@@ -30,7 +30,12 @@
     # nixvim is neovim and plugins done the nix way
     nixvim = {
       url = "github:nix-community/nixvim/main";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        systems.follows = "systems";
+        nuschtosSearch.inputs.flake-utils.follows = "flake-utils";
+      };
     };
 
     ###################
@@ -39,7 +44,11 @@
     # simple, declarative mailserver for NixOS
     nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-compat.follows = "flake-compat";
+        git-hooks.inputs.gitignore.follows = "gitignore";
+      };
     };
 
     #####################
@@ -50,25 +59,65 @@
       # I'm going to test matugen theming once again
       #url = "github:nix-community/stylix/";
       url = "github:make-42/stylix/matugen";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        systems.follows = "systems";
+      };
     };
 
     # lanzaboote is a secure boot implementation, requiring your own keys
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.3";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-compat.follows = "flake-compat";
+        flake-parts.follows = "flake-parts";
+        pre-commit-hooks-nix.inputs.gitignore.follows = "gitignore";
+        rust-overlay.follows = "rust-overlay";
+      };
     };
 
     # anime games launcher
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-compat.follows = "flake-compat";
+        rust-overlay.follows = "rust-overlay";
+      };
     };
 
     # this allows us to have up-to-date claude-code instead of the late updates provided by nixpkgs
     # note: this is an overlay, not a module
     claude-code = {
       url = "github:sadjow/claude-code-nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
+
+    ###################
+    ## DEDUPLICATION ##
+    ###################
+    # these are declared to deduplicate sources within my flake.lock
+    systems.url = "github:nix-systems/default";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.systems.follows = "systems";
+    };
+    gitignore = {
+      url = "github:hercules-ci/gitignore.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
