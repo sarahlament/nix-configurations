@@ -51,9 +51,9 @@
       };
     };
 
-    #####################
-    ## LAMENTOS INPUTS ##
-    #####################
+    ###################
+    ## ISHTAR INPUTS ##
+    ###################
     # stylix provides system-level theming
     stylix = {
       # I'm going to test matugen theming once again
