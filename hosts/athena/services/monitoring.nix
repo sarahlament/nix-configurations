@@ -77,6 +77,6 @@
   # Make Grafana wait for Tailscale interface to be up
   systemd.services.grafana = {
     after = ["tailscaled.service" "network-online.service"];
-    wants = ["tailscaled.service" "network-online.target"];
+    wants = ["tailscaled.service" "network-online.service"];
   };
 }
