@@ -58,7 +58,7 @@
     stylix = {
       # I'm going to test matugen theming once again
       #url = "github:nix-community/stylix/";
-      url = "github:make-42/stylix/matugen";
+      url = "github:nix-community/stylix/?ref=pull/892/head";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
