@@ -13,6 +13,7 @@
     prismlauncher
     visualvm # java vm visualizer
     discord # Voice and text chat
+    thunderbird # email client
   ];
 
   programs = {
