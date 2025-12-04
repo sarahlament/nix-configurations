@@ -7,7 +7,6 @@
 }: {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
-    inputs.disko.nixosModules.disko
     inputs.nixos-mailserver.nixosModules.mailserver
 
     ./boot.nix

@@ -35,8 +35,8 @@ in {
       ]
       ++ optionals (config.networking.hostName == "ishtar") [
         ./stylix.nix
-        ./vscode.nix
         ./obsidian.nix
+        ./vscode.nix
       ];
     home = {
       stateVersion = config.system.stateVersion;

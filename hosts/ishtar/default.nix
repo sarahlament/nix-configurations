@@ -4,10 +4,9 @@
   ...
 }: {
   imports = [
-    inputs.disko.nixosModules.disko
     inputs.lanzaboote.nixosModules.lanzaboote
-    inputs.stylix.nixosModules.stylix
     inputs.aagl.nixosModules.default
+    inputs.stylix.nixosModules.stylix
 
     ./aagl.nix
     ./boot.nix

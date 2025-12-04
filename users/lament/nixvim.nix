@@ -6,6 +6,7 @@
 }: {
   programs.nixvim = {
     enable = true;
+    version.enableNixpkgsReleaseCheck = false;
     defaultEditor = true;
     vimAlias = true;
 

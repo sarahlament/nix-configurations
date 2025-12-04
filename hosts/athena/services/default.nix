@@ -6,8 +6,6 @@
   ...
 }: {
   imports = [
-    inputs.stylix.nixosModules.stylix
-
     ./caddy.nix
     ./headscale.nix
     ./mailserver.nix
