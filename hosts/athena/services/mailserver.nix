@@ -41,7 +41,6 @@
         hashedPasswordFile = config.sops.secrets.adminPassHash.path;
         aliases = [
           "postmaster@lament.gay"
-          "admin@lament.gay"
           "abuse@lament.gay"
         ];
       };
