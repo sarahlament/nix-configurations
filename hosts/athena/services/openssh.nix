@@ -5,7 +5,7 @@
   ...
 }: {
   networking.firewall.allowedTCPPorts = [
-    22
+    22 # SSH
   ];
 
   services.openssh = {
