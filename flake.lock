@@ -110,29 +110,6 @@
         "type": "gitlab"
       }
     },
-    "claude-code": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1764795702,
-        "narHash": "sha256-7xWvM0arsDEvn5EPjSXnfZVnZPe7f4roXtO0F7MSNSg=",
-        "owner": "sadjow",
-        "repo": "claude-code-nix",
-        "rev": "87772710b01b40402a17831fe2a643254a2bba72",
-        "type": "github"
-      },
-      "original": {
-        "owner": "sadjow",
-        "repo": "claude-code-nix",
-        "type": "github"
-      }
-    },
     "crane": {
       "locked": {
         "lastModified": 1754269165,
@@ -567,7 +544,6 @@
     "root": {
       "inputs": {
         "aagl": "aagl",
-        "claude-code": "claude-code",
         "disko": "disko",
         "flake-compat": "flake-compat",
         "flake-parts": "flake-parts",

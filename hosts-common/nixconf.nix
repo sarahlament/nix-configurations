@@ -28,21 +28,12 @@
   };
 
   nixpkgs.overlays = [
-    inputs.claude-code.overlays.default
     (import ../packages)
     (final: prev:
       lib.recursiveUpdate prev {
         vscode-extensions.anthropic.claude-code = prev.vscode-extensions.anthropic.claude-code.overrideAttrs (old: {
           src = old.src.overrideAttrs (oldSrc: {
             outputHash = "sha256-j5yeFtbaW0UVrchKOcqBO60ay9PuPDS4jQzz+GN+56U=";
-          });
-        });
-      })
-    (final: prev:
-      lib.recursiveUpdate prev {
-        vimplugins.lualine-nvim = prev.vimplugins.lualine-nvim.overrideAttrs (old: {
-          src = old.src.overrideAttrs (oldSrc: {
-            outputHash = "sha256-+ru34zasfJCJOS0z38RnqE2wMGeLfw2GIB/guy1RmAU=";
           });
         });
       })

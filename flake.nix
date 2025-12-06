@@ -88,16 +88,6 @@
       };
     };
 
-    # this allows us to have up-to-date claude-code instead of the late updates provided by nixpkgs
-    # note: this is an overlay, not a module
-    claude-code = {
-      url = "github:sadjow/claude-code-nix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
-    };
-
     ###################
     ## DEDUPLICATION ##
     ###################
