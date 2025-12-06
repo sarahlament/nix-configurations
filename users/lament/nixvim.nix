@@ -123,6 +123,9 @@
           bashls.enable = true;
           yamlls.enable = true;
           marksman.enable = true;
+
+          # Workaround for broken tclsp package reference in nixvim
+          tclsp.package = null;
         };
       };
 

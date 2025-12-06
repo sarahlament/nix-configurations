@@ -27,16 +27,7 @@
     #########################
     ## HOME MANAGER INPUTS ##
     #########################
-    # nixvim is neovim and plugins done the nix way
-    nixvim = {
-      url = "github:nix-community/nixvim/main";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-parts.follows = "flake-parts";
-        systems.follows = "systems";
-        nuschtosSearch.inputs.flake-utils.follows = "flake-utils";
-      };
-    };
+    # nixvim is being replaced by NVF {soon:tm:}
 
     ###################
     ## ATHENA INPUTS ##
@@ -97,10 +88,6 @@
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
-    };
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      inputs.systems.follows = "systems";
     };
     gitignore = {
       url = "github:hercules-ci/gitignore.nix";
