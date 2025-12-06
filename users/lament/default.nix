@@ -24,8 +24,7 @@ in {
   home-manager.users.lament = {
     imports =
       [
-        inputs.nixvim.homeModules.nixvim
-
+    inputs.nixvim.homeModules.nixvim
         ./git.nix
         ./hyfetch.nix
         ./kitty.nix
@@ -35,8 +34,13 @@ in {
       ]
       ++ optionals (config.networking.hostName == "ishtar") [
         ./stylix.nix
-        ./obsidian.nix
         ./vscode.nix
+        {
+          programs = {
+            obsidian.enable = true;
+            firefox.enable = true;
+          };
+        }
       ];
     home = {
       stateVersion = config.system.stateVersion;

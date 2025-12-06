@@ -15,8 +15,4 @@
     discord # Voice and text chat
     thunderbird # email client
   ];
-
-  programs = {
-    firefox.enable = true;
-  };
 }

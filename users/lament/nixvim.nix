@@ -1,9 +1,11 @@
 {
-  osConfig,
+  config,
   pkgs,
   lib,
   ...
 }: {
+  imports = [
+  ];
   programs.nixvim = {
     enable = true;
     version.enableNixpkgsReleaseCheck = false;
