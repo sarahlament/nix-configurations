@@ -29,16 +29,18 @@
           chunk_retain_period = "30s";
         };
 
-        schema_config.configs = [{
-          from = "2024-01-01";
-          store = "tsdb";
-          object_store = "filesystem";
-          schema = "v13";
-          index = {
-            prefix = "index_";
-            period = "24h";
-          };
-        }];
+        schema_config.configs = [
+          {
+            from = "2024-01-01";
+            store = "tsdb";
+            object_store = "filesystem";
+            schema = "v13";
+            index = {
+              prefix = "index_";
+              period = "24h";
+            };
+          }
+        ];
 
         storage_config = {
           filesystem.directory = "/var/lib/loki/chunks";

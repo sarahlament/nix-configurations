@@ -15,6 +15,7 @@
     ./fastfetch.nix
     ./gaming.nix
     ./kde.nix
+    ./nixconf.nix
     ./nvidia.nix
     ./packages.nix
     ./posh.nix

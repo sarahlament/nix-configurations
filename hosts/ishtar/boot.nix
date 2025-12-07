@@ -17,7 +17,7 @@
       pkiBundle = "/persist/pki";
       configurationLimit = 5;
       settings = {
-        console-mode = "max";
+        console-mode = 0;
         timeout = 2;
       };
     };
