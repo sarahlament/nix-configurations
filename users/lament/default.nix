@@ -32,12 +32,15 @@ in {
       ]
       ++ optionals (config.networking.hostName == "ishtar") [
         ./stylix.nix
-        ./vscode.nix
+        #./vscode.nix I'm making my config non-declarative for now while I start to actually play around with settings. I'll set this back up later :P
         {
           programs = {
             obsidian.enable = true;
             firefox.enable = true;
+            vscode.enable = true;
+            vscode.package = pkgs.vscodium;
           };
+          stylix.targets.vscode.enable = false;
         }
       ];
     home = {
