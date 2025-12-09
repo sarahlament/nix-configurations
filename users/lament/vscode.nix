@@ -39,6 +39,14 @@
               "formatting" = {
                 "command" = ["${pkgs.alejandra}/bin/alejandra"];
               };
+              "options" = {
+                "nixpkgs" = {
+                  "expr" = "(builtins.getFlake \"/home/lament/.nix-conf\").nixosConfigurations.ishtar.pkgs";
+                };
+                "nixos" = {
+                  "expr" = "(builtins.getFlake \"/home/lament/.nix-conf\").nixosConfigurations.ishtar.options";
+                };
+              };
             };
           };
 
@@ -56,10 +64,28 @@
           "explorer.confirmDragAndDrop" = false;
           "explorer.confirmDelete" = false;
 
-          "gitlens.currentLine.enabled" = false;
-          "gitlens.hovers.currentLine.over" = "line";
-          "gitlens.ai.model" = "gitkraken";
           "claudeCode.preferredLocation" = "panel";
+          "claudeCode.disableLoginPrompt" = true;
+
+          "editor.aiStats.enabled" = true;
+          "editor.autoIndentOnPaste" = true;
+          "editor.codeActions.triggerOnFocusChange" = true;
+          "editor.scrollbar.horizontal" = "hidden";
+          "editor.unfoldOnClickAfterEndOfLine" = true;
+          "editor.formatOnPaste" = true;
+          "editor.defaultFormatter" = "jnoortheen.nix-ide";
+
+          "diffEditor.codeLens" = true;
+          "diffEditor.experimental.showMoves" = true;
+          "diffEditor.experimental.useTrueInlineView" = true;
+
+          "workbench.iconTheme" = "charmed-icons";
+          "workbench.panel.defaultLocation" = "right";
+
+          "terminal.external.linuxExec" = "kitty";
+          "terminal.integrated.defaultProfile.linux" = "zsh";
+
+          "catppuccin-noctis-icons.hidesExplorerArrows" = false;
         };
       };
     };

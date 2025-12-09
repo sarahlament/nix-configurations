@@ -5,6 +5,7 @@
   inputs,
   ...
 }: {
+  programs.nix-ld.enable = true;
   nix = {
     settings = {
       experimental-features = [
@@ -33,8 +34,6 @@
       dates = "weekly";
       options = "--delete-older-than 7d";
     };
-
-    nixPath = ["nixpkgs=${inputs.nixpkgs}"];
   };
 
   nixpkgs.overlays = [

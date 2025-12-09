@@ -13,10 +13,7 @@
   in "38;2;${toString (toDecimal r)};${toString (toDecimal g)};${toString (toDecimal b)}";
 
   colors = config.lib.stylix.colors;
-  systemColor = hexToRgb colors.base0D; # blue - system information
-  desktopColor = hexToRgb colors.base09; # orange - desktop/UI context
-  hardwareColor = hexToRgb colors.base0B; # green - hardware/resources
-  infoColor = hexToRgb colors.base0E; # magenta/purple - user info
+  treeColor = hexToRgb colors.base0D; # blue - tree characters and keys
 in {
   home-manager.sharedModules = [
     {
@@ -31,147 +28,9 @@ in {
             separator = "  ";
           };
           modules = [
-            "break"
-            {
-              type = "custom";
-              format = "╭─ System ─────────────────────────────────────────────────────╮";
-              outputColor = systemColor;
-            }
-            {
-              type = "os";
-              key = "│ OS";
-              keyColor = systemColor;
-            }
-            {
-              type = "host";
-              key = "│ Host";
-              keyColor = systemColor;
-            }
-            {
-              type = "kernel";
-              key = "│ Kernel";
-              keyColor = systemColor;
-            }
-            {
-              type = "uptime";
-              key = "│ Uptime";
-              keyColor = systemColor;
-            }
-            {
-              type = "packages";
-              key = "│ Packages";
-              keyColor = systemColor;
-            }
-            {
-              type = "shell";
-              key = "│ Shell";
-              keyColor = systemColor;
-            }
-            {
-              type = "terminal";
-              key = "│ Terminal";
-              keyColor = systemColor;
-            }
-            {
-              type = "custom";
-              format = "╰──────────────────────────────────────────────────────────────╯";
-              outputColor = systemColor;
-            }
-            {
-              type = "custom";
-              format = "╭─ Desktop ────────────────────────────────────────────────────╮";
-              outputColor = desktopColor;
-            }
-            {
-              type = "wm";
-              key = "│ WM";
-              keyColor = desktopColor;
-            }
-            {
-              type = "wmtheme";
-              key = "│ WM Theme";
-              keyColor = desktopColor;
-            }
-            {
-              type = "theme";
-              key = "│ Theme";
-              keyColor = desktopColor;
-            }
-            {
-              type = "cursor";
-              key = "│ Cursor";
-              keyColor = desktopColor;
-            }
-            {
-              type = "icons";
-              key = "│ Icons";
-              keyColor = desktopColor;
-            }
-            {
-              type = "font";
-              key = "│ Font";
-              keyColor = desktopColor;
-            }
-            {
-              type = "terminalfont";
-              key = "│ Term Font";
-              keyColor = desktopColor;
-            }
-            {
-              type = "custom";
-              format = "╰──────────────────────────────────────────────────────────────╯";
-              outputColor = desktopColor;
-            }
-            {
-              type = "custom";
-              format = "╭─ Hardware ───────────────────────────────────────────────────╮";
-              outputColor = hardwareColor;
-            }
-            {
-              type = "cpu";
-              key = "│ CPU";
-              keyColor = hardwareColor;
-            }
-            {
-              type = "gpu";
-              key = "│ GPU";
-              keyColor = hardwareColor;
-            }
-            {
-              type = "sound";
-              key = "│ Sound";
-              keyColor = hardwareColor;
-            }
-            {
-              type = "memory";
-              key = "│ Memory";
-              keyColor = hardwareColor;
-            }
-            {
-              type = "swap";
-              key = "│ Swap";
-              keyColor = hardwareColor;
-            }
-            {
-              type = "disk";
-              key = "│ Disk";
-              keyColor = hardwareColor;
-            }
-            {
-              type = "custom";
-              format = "╰──────────────────────────────────────────────────────────────╯";
-              outputColor = hardwareColor;
-            }
-            {
-              type = "custom";
-              format = "╭─ Info ───────────────────────────────────────────────────────╮";
-              outputColor = infoColor;
-            }
             {
               type = "title";
               fqdn = true;
-              key = "│ User";
-              keyColor = infoColor;
               color = {
                 user = "bright_white";
                 at = "bright_white";
@@ -179,41 +38,60 @@ in {
               };
             }
             {
+              type = "os";
+              key = "├─ OS";
+              keyColor = treeColor;
+            }
+            {
+              type = "kernel";
+              key = "├─ Kernel";
+              keyColor = treeColor;
+            }
+            {
+              type = "uptime";
+              key = "├─ Uptime";
+              keyColor = treeColor;
+            }
+            {
               type = "localip";
-              key = "│ Local IP";
-              keyColor = infoColor;
+              key = "├─ Local IP";
+              keyColor = treeColor;
             }
             {
-              type = "publicip";
-              key = "│ Public IP";
-              keyColor = infoColor;
-              format = "{ip}";
-              timeout = 3000;
+              type = "cpu";
+              key = "├─ CPU";
+              keyColor = treeColor;
             }
             {
-              type = "command";
-              key = "│ Public IPv6";
-              keyColor = infoColor;
-              text = "curl -s --max-time 3 https://ipv6.icanhazip.com 2>/dev/null || echo 'N/A'";
+              type = "cpuusage";
+              key = "│  └─ Usage";
+              keyColor = treeColor;
             }
             {
-              type = "locale";
-              key = "│ Locale";
-              keyColor = infoColor;
+              type = "memory";
+              key = "├─ Memory";
+              keyColor = treeColor;
             }
             {
-              type = "weather";
-              key = "│ Weather";
-              keyColor = infoColor;
-              location = "Fort Worth, Texas";
-              timeout = 3000;
+              type = "swap";
+              key = "│  ├─ Swap";
+              keyColor = treeColor;
             }
             {
-              type = "custom";
-              format = "╰──────────────────────────────────────────────────────────────╯";
-              outputColor = infoColor;
+              type = "loadavg";
+              key = "│  └─ Load Avg";
+              keyColor = treeColor;
             }
-            "break"
+            {
+              type = "disk";
+              key = "├─ Disk";
+              keyColor = treeColor;
+            }
+            {
+              type = "packages";
+              key = "└─ Packages";
+              keyColor = treeColor;
+            }
             {
               type = "colors";
               symbol = "circle";
