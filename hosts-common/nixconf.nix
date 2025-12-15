@@ -38,13 +38,5 @@
 
   nixpkgs.overlays = [
     (import ../packages)
-    (final: prev:
-      lib.recursiveUpdate prev {
-        vscode-extensions.anthropic.claude-code = prev.vscode-extensions.anthropic.claude-code.overrideAttrs (old: {
-          src = old.src.overrideAttrs (oldSrc: {
-            outputHash = "sha256-j5yeFtbaW0UVrchKOcqBO60ay9PuPDS4jQzz+GN+56U=";
-          });
-        });
-      })
   ];
 }
