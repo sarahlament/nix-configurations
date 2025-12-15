@@ -4,7 +4,8 @@
   pkgs,
   ...
 }: {
-  config = {
+  options.gaming.enable = lib.mkEnableOption "Gaming module";
+  config = lib.mkIf config.gaming.enable {
     services.ratbagd.enable = true;
 
     programs = {

@@ -13,8 +13,6 @@
     ./develop.nix
     ./disko.nix
     ./fastfetch.nix
-    ./gaming.nix
-    ./kde.nix
     ./nixconf.nix
     ./nvidia.nix
     ./packages.nix
@@ -22,6 +20,9 @@
     ./services.nix
     ./stylix.nix
   ];
+  kde.enable = true;
+  gaming.enable = true;
+
   sops.age.keyFile = "/persist/key.age";
   hardware.bluetooth.enable = true;
 

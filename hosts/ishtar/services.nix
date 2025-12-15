@@ -6,6 +6,7 @@
 }: {
   services = {
     flatpak.enable = true;
+    fwupd.enable = true;
     tuned = {
       enable = true;
       ppdSettings.main = {
@@ -17,7 +18,5 @@
       enable = true;
       user = "lament";
     };
-
-    fwupd.enable = true;
   };
 }

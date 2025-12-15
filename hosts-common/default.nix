@@ -16,6 +16,8 @@
     ./sops.nix # sops-nix information
     ./shellTools.nix # tools for all hosts
 
+    ./modules # reusable modules in case I need them
+
     ../users/lament # I'm obviously going to be on all of my systems
   ];
   system.stateVersion = "26.05";
