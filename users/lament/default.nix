@@ -37,6 +37,7 @@ in {
           programs = {
             obsidian.enable = true;
             firefox.enable = true;
+            zed-editor.enable = true;
           };
         }
       ];
