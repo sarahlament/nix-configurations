@@ -16,4 +16,9 @@
     thunderbird # email client
     jetbrains.idea-community-bin # IntelliJ IDEA
   ];
+
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
 }

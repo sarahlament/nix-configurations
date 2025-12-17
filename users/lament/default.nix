@@ -6,11 +6,12 @@
   ...
 }: let
   inherit (lib) optionals;
+  passFile = config.sops.secrets.lamentPassHash.path;
 in {
   sops.secrets.lamentPassHash.neededForUsers = true;
   users.users.lament = {
     description = "Sarah Lament";
-    hashedPasswordFile = config.sops.secrets.lamentPassHash.path;
+    hashedPasswordFile = passFile;
     isNormalUser = true;
 
     extraGroups = [
@@ -19,7 +20,7 @@ in {
     ];
   };
 
-  users.users.lament.openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWSe/rbjk1/7meA90ZAg1hR3TcbKUgjB4GEl18SF1bZ"]; # lament@LamentOS
+  users.users.lament.openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWSe/rbjk1/7meA90ZAg1hR3TcbKUgjB4GEl18SF1bZ"]; # personal key
 
   home-manager.users.lament = {
     imports =
