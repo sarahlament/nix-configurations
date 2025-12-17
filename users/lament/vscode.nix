@@ -13,7 +13,6 @@
         extensions = with pkgs.vscode-extensions; [
           jnoortheen.nix-ide
           eamodio.gitlens
-          anthropic.claude-code
         ];
 
         userSettings = {
