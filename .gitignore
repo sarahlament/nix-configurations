@@ -6,7 +6,7 @@ result-*
 .direnv/
 
 # Claude Code local settings
-.claude/
+**/.claude/
 
 # Editor/IDE
 .vscode/
