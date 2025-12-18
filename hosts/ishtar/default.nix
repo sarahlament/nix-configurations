@@ -27,7 +27,6 @@
   hardware.bluetooth.enable = true;
 
   networking.hostName = "ishtar";
-  security.sudo-rs.wheelNeedsPassword = false;
 
   security.rtkit.enable = true;
 

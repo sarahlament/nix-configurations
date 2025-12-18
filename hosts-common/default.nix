@@ -25,6 +25,7 @@
   nixpkgs.config = {
     allowUnfree = true;
   };
+  security.sudo-rs.wheelNeedsPassword = false;
   hardware.enableRedistributableFirmware = true;
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "America/Chicago";
