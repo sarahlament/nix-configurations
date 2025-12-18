@@ -5,6 +5,7 @@
   ...
 }: {
   imports = [
+    ./attic.nix
     ./caddy.nix
     ./headscale.nix
     ./mailserver.nix
