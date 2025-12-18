@@ -31,7 +31,7 @@
 
     settings = {
       # Listen on localhost, Caddy will handle the reverse proxy
-      listen = "127.0.0.1:8080";
+      listen = "127.0.0.1:8085";
 
       # API endpoint (publicly accessible URL)
       api-endpoint = "https://attic.lament.gay/";
@@ -50,6 +50,14 @@
         type = "zstd";
       };
 
+      # Chunking settings
+      chunking = {
+        nar-size-threshold = 64 * 1024; # 64 KiB
+        min-size = 16 * 1024; # 16 KiB
+        avg-size = 64 * 1024; # 64 KiB
+        max-size = 256 * 1024; # 256 KiB
+      };
+
       # Garbage collection
       garbage-collection = {
         interval = "12 hours";
@@ -59,10 +67,7 @@
   };
 
   # SOPS secret for Attic credentials
-  sops.secrets.attic-credentials = {
-    owner = "atticd";
-    group = "atticd";
-  };
+  sops.secrets.attic-credentials = {};
 
   # Ensure storage directory exists with correct permissions
   systemd.tmpfiles.rules = [
