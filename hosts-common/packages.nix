@@ -1,11 +1,12 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
 }: {
   environment.systemPackages = with pkgs; [
-    # Core System Utilities
+    attic-client # cachix alternative
     curl # HTTP client
     glib # Low-level system library
     jq # JSON processor

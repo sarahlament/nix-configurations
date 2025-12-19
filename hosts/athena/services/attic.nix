@@ -5,10 +5,13 @@
   inputs,
   ...
 }: {
-  # Import the attic server module
-  imports = [
-    inputs.atticserver.nixosModules.atticd
-  ];
+  # Caddy reverse proxy configuration
+  services.caddy.virtualHosts."attic.lament.gay" = {
+    extraConfig = ''
+      encode zstd gzip
+      reverse_proxy localhost:8085
+    '';
+  };
 
   # Enable PostgreSQL for Attic's database
   services.postgresql = {

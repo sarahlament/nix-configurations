@@ -49,16 +49,6 @@
       };
     };
 
-    # attic is a self-hostable Nix binary cache server
-    atticserver = {
-      url = "github:zhaofengli/attic";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-compat.follows = "flake-compat";
-        flake-parts.follows = "flake-parts";
-      };
-    };
-
     ###################
     ## ISHTAR INPUTS ##
     ###################

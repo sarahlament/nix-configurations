@@ -12,6 +12,14 @@
     993 # IMAP
   ];
 
+  # HTTP-only server for ACME challenges
+  services.caddy.extraConfig = ''
+    http://mail.lament.gay {
+      root * /var/lib/acme/acme-challenge
+      file_server
+    }
+  '';
+
   security.acme = {
     acceptTerms = true;
     defaults.email = "sarah1@lament.gay";
@@ -45,10 +53,10 @@
         ];
       };
     };
-
-    certificateScheme = "manual";
-    certificateFile = "/var/lib/acme/mail.lament.gay/fullchain.pem";
-    keyFile = "/var/lib/acme/mail.lament.gay/key.pem";
+    x509 = {
+      certificateFile = "/var/lib/acme/mail.lament.gay/fullchain.pem";
+      privateKeyFile = "/var/lib/acme/mail.lament.gay/key.pem";
+    };
 
     enableImap = true;
     enableImapSsl = true;
