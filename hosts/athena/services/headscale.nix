@@ -38,7 +38,7 @@
       };
 
       dns = {
-        base_domain = "ts.lament.gay";
+        base_domain = "ts";
         magic_dns = true;
         nameservers.global = ["1.1.1.1" "9.9.9.9"];
       };
