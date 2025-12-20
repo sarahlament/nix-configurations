@@ -13,7 +13,7 @@
     ./develop.nix
     ./disko.nix
     ./fastfetch.nix
-    ./nixconf.nix
+    #./nixconf.nix
     ./nvidia.nix
     ./packages.nix
     ./posh.nix

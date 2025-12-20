@@ -26,7 +26,7 @@
 
     # renix is my own host manager for NixOS
     renix = {
-      url = "path:/home/lament/renix";
+      url = "git+file:/home/lament/renix";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.inputs.systems.follows = "systems";
     };

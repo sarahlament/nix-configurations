@@ -14,7 +14,7 @@
     visualvm # java vm visualizer
     discord # Voice and text chat
     thunderbird # email client
-    jetbrains.idea-community-bin # IntelliJ IDEA
+    jetbrains.idea-oss # IntelliJ IDEA
   ];
 
   programs.direnv = {
