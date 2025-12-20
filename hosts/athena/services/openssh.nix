@@ -22,9 +22,12 @@
     };
   };
 
-  # Make SSHD wait for Tailscale interface to be up
   systemd.services.sshd = {
-    after = ["tailscaled.service" "network-online.target"];
-    wants = ["tailscaled.service" "network-online.target"];
+    after = ["tailnet-online.target"];
+    requires = ["tailnet-online.target"];
+    serviceConfig = {
+      RestartSec = "10s";
+      StartLimitBurst = 10;
+    };
   };
 }

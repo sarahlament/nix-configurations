@@ -174,9 +174,8 @@
     };
   };
 
-  # Make Grafana wait for Tailscale interface to be up
   systemd.services.grafana = {
-    after = ["tailscaled.service" "network-online.target"];
-    wants = ["tailscaled.service" "network-online.target"];
+    after = ["tailnet-online.target"];
+    requires = ["tailnet-online.target"];
   };
 }
