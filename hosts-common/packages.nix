@@ -15,5 +15,7 @@
     gdu # Disk usage analyzer
     wl-clipboard # Wayland clipboard utilities
     wl-clip-persist # Persistent clipboard for Wayland
+
+    google-antigravity
   ];
 }

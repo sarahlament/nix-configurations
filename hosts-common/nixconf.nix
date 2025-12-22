@@ -38,5 +38,6 @@
 
   nixpkgs.overlays = [
     (import ../packages)
+    inputs.antigrav.overlays.default
   ];
 }

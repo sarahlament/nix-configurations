@@ -27,8 +27,13 @@
     # renix is my own host manager for NixOS
     renix = {
       url = "git+file:/home/lament/renix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.inputs.systems.follows = "systems";
+      inputs = {
+        crane.follows = "crane";
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+        pre-commit-hooks.inputs.flake-compat.follows = "flake-compat";
+        pre-commit-hooks.inputs.gitignore.follows = "gitignore";
+      };
     };
 
     #########################
@@ -43,9 +48,9 @@
     nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
         flake-compat.follows = "flake-compat";
         git-hooks.inputs.gitignore.follows = "gitignore";
+        nixpkgs.follows = "nixpkgs";
       };
     };
 
@@ -58,8 +63,8 @@
       #url = "github:nix-community/stylix/";
       url = "github:nix-community/stylix/?ref=pull/892/head";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
       };
     };
@@ -68,9 +73,10 @@
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.3";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
+        crane.follows = "crane";
         flake-compat.follows = "flake-compat";
         flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
         pre-commit-hooks-nix.inputs.gitignore.follows = "gitignore";
         rust-overlay.follows = "rust-overlay";
       };
@@ -80,21 +86,34 @@
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
         flake-compat.follows = "flake-compat";
+        nixpkgs.follows = "nixpkgs";
         rust-overlay.follows = "rust-overlay";
       };
+    };
+
+    # let's give antigravity a try
+    antigrav = {
+      url = "github:jacopone/antigravity-nix";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     ###################
     ## DEDUPLICATION ##
     ###################
     # these are declared to deduplicate sources within my flake.lock
-    systems.url = "github:nix-systems/default";
-    flake-parts.url = "github:hercules-ci/flake-parts";
+    crane = {
+      url = "github:ipetkov/crane";
+    };
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
+    };
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.systems.follows = "systems";
     };
     gitignore = {
       url = "github:hercules-ci/gitignore.nix";
@@ -104,6 +123,7 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    systems.url = "github:nix-systems/default";
   };
   outputs = inputs @ {nixpkgs, ...}: {
     # this is my personal system config
