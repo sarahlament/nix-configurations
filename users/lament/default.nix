@@ -32,6 +32,8 @@ in {
         ./system.nix
       ]
       ++ optionals (config.networking.hostName == "ishtar") [
+        inputs.sops-nix.homeManagerModules.sops
+        ./sops.nix
         ./stylix.nix
         ./vscode.nix
         {
