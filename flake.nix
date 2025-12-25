@@ -26,7 +26,7 @@
 
     # renix is my own host manager for NixOS
     renix = {
-      url = "git+file:/home/lament/renix";
+      url = "github:sarahlament/renix";
       inputs = {
         crane.follows = "crane";
         flake-utils.follows = "flake-utils";
