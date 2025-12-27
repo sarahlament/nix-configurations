@@ -9,7 +9,6 @@
   ];
 
   services.openssh = {
-    enable = true;
     listenAddresses = [
       # we only want to listen on the tailnet
       {addr = "100.64.0.1";}

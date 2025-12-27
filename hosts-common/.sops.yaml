@@ -1,9 +1,11 @@
 keys:
   - &lament age15k8clh8j26kxmnrfaa4a83s7mm7d5xl7vueh04kkrtpc2shhcuzqewurla
+  - &ishtar age1ndkugrut458fm5whwmymgnr6372ljsdemn59str6z6nt96s8ea5q78clsd
   - &athena age1xu88tgtlfss26pyu95h5ltz0z479tmp04jv520xs4yq78n9wlqhsn0sdll
 creation_rules:
   - path_regex: secrets.yaml$
     key_groups:
     - age:
       - *lament
+      - *ishtar
       - *athena

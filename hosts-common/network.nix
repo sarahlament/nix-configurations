@@ -12,4 +12,6 @@
       "--login-server https://headscale.lament.gay"
     ];
   };
+
+  services.openssh.enable = true;
 }
