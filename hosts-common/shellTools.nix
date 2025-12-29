@@ -23,7 +23,6 @@
           colors = "auto";
           icons = "auto";
           extraOptions = [
-            "--grid"
             "--group-directories-first"
             "--follow-symlinks"
             "--no-filesize"

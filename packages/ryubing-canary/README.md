@@ -1,1 +1,0 @@
-## Ported from [NixOS/nixpkgs](https://github.com/nixos/nixpkgs) and adapted for use for the canary releases

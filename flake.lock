@@ -376,6 +376,26 @@
         "type": "github"
       }
     },
+    "my-overlays": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1767042586,
+        "narHash": "sha256-cTeXxVHjSsq9MmziZoPVN2p7LOCAUeoTsgXfViUtWBM=",
+        "ref": "refs/heads/main",
+        "rev": "2e01b1d65bc1b6345238308c9c0030a803a0c8b0",
+        "revCount": 1,
+        "type": "git",
+        "url": "file:///home/lament/nix-overlays"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:///home/lament/nix-overlays"
+      }
+    },
     "nixos-mailserver": {
       "inputs": {
         "blobs": "blobs",
@@ -551,6 +571,7 @@
         "gitignore": "gitignore",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
+        "my-overlays": "my-overlays",
         "nixos-mailserver": "nixos-mailserver",
         "nixpkgs": "nixpkgs",
         "renix": "renix",

@@ -36,6 +36,11 @@
       };
     };
 
+    my-overlays = {
+      url = "git+file:///home/lament/nix-overlays";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     #########################
     ## HOME MANAGER INPUTS ##
     #########################
