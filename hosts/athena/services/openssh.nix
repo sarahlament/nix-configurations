@@ -25,8 +25,8 @@
     after = ["tailnet-online.target"];
     requires = ["tailnet-online.target"];
     serviceConfig = {
+      Restart = "always";
       RestartSec = "10s";
-      StartLimitBurst = 10;
     };
   };
 }

@@ -14,6 +14,8 @@
     discord # Voice and text chat
     thunderbird # email client
     jetbrains.idea-oss # IntelliJ IDEA
+    waydroid # android emulator
+    waydroid-helper
   ];
 
   programs.direnv = {

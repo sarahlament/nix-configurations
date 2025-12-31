@@ -15,6 +15,8 @@
     wl-clipboard # Wayland clipboard utilities
     wl-clip-persist # Persistent clipboard for Wayland
 
-    google-antigravity
+    nom
+    nvd
+    nvdtools
   ];
 }
