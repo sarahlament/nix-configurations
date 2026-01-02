@@ -13,7 +13,7 @@
 
     kernelParams = ["console=ttyS0,19200n8"];
     loader = {
-      timeout = 1;
+      timeout = 0;
       grub = {
         enable = true;
         forceInstall = true;

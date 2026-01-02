@@ -22,17 +22,15 @@
       ];
       trusted-users = ["lament"];
     };
+  };
 
-    optimise = {
-      automatic = true;
-      persistent = true;
+  programs.nh = {
+    enable = true;
+    flake = "/home/lament/nix-configurations";
+    clean = {
+      enable = true;
+      extraArgs = "--keep 3 --optimise";
       dates = "weekly";
-    };
-    gc = {
-      automatic = true;
-      persistent = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
     };
   };
 

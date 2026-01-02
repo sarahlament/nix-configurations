@@ -15,7 +15,7 @@
     lanzaboote = {
       enable = true;
       pkiBundle = "/persist/pki";
-      configurationLimit = 5;
+      configurationLimit = 3;
       settings = {
         console-mode = 0;
         timeout = 2;
