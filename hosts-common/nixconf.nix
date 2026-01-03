@@ -35,7 +35,6 @@
   };
 
   nixpkgs.overlays = [
-    inputs.antigrav.overlays.default
     inputs.my-overlays.overlays.default
 
     (final: prev: {

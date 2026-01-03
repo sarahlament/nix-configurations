@@ -22,8 +22,6 @@
   ];
   kde.enable = true;
   gaming.enable = true;
-  services.openssh.enable = true;
-  services.openssh.settings.PermitRootLogin = "prohibit-password";
 
   sops.age.keyFile = "/persist/key.age";
   hardware.bluetooth.enable = true;

@@ -97,13 +97,6 @@
       };
     };
 
-    # let's give antigravity a try
-    antigrav = {
-      url = "github:jacopone/antigravity-nix";
-      inputs.flake-utils.follows = "flake-utils";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     ###################
     ## DEDUPLICATION ##
     ###################

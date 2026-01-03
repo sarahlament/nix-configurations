@@ -17,6 +17,5 @@
 
     nom
     nvd
-    nvdtools
   ];
 }
