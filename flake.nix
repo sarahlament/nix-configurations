@@ -128,7 +128,7 @@
       nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs;};
         modules = [
-          ./hosts-common
+          ./hosts/common
           ./hosts/${hostName}
         ];
       };
