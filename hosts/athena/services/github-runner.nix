@@ -11,7 +11,7 @@
       group = "github-runner-renix";
       url = "https://github.com/sarahlament/renix";
       name = "renix-runner";
-      tokenFile = config.sops.secrets.github-runner-token.path;
+      tokenFile = config.sops.secrets.githubRunnerToken.path;
       replace = true;
       extraLabels = [
         "nixos"
@@ -45,7 +45,7 @@
     createHome = true;
   };
   users.groups.github-runner-renix = {};
-  sops.secrets.github-runner-token = {
+  sops.secrets.githubRunnerToken = {
     owner = "github-runner-renix";
     group = "github-runner-renix";
   };

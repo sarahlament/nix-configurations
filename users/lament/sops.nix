@@ -8,6 +8,9 @@
   sops.defaultSopsFile = ../../hosts/common/secrets.yaml;
   sops.defaultSopsFormat = "yaml";
 
-  sops.secrets.context7-api-key = {};
-  programs.zsh.envExtra = "export CONTEXT7_API_KEY=$(cat ${config.sops.secrets.context7-api-key.path})";
+  sops.secrets.context7ApiKey = {};
+  sops.templates.context7Env.content = ''
+    CONTEXT7_API_KEY=${config.sops.placeholder.context7ApiKey}
+  '';
+  programs.zsh.envExtra = "source ${config.sops.templates.context7Env.path}";
 }

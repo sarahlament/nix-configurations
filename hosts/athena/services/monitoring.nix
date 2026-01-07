@@ -4,11 +4,6 @@
   pkgs,
   ...
 }: {
-  sops.secrets.grafana-github-pat = {
-    owner = "grafana";
-    group = "grafana";
-  };
-
   services = {
     caddy.virtualHosts."http://grafana.athena.ts" = {
       listenAddresses = ["100.64.0.1"];
@@ -142,7 +137,7 @@
         news.mews_feed_enabled = false;
 
         server = {
-          root_url = "https://grafana.athena.ts";
+          root_url = "http://grafana.athena.ts";
           domain = "grafana.athena.ts";
           http_addr = "100.64.0.1";
           http_port = 3000;
@@ -158,16 +153,6 @@
             access = "proxy";
             url = "http://127.0.0.1:${toString config.services.prometheus.port}";
             isDefault = true;
-          }
-          {
-            name = "GitHub";
-            type = "grafana-github-datasource";
-            jsonData = {
-              selectedAuthType = "personal-access-token";
-            };
-            secureJsonData = {
-              accessToken = "$__file{${config.sops.secrets.grafana-github-pat.path}}";
-            };
           }
           {
             name = "Loki";

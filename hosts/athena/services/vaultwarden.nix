@@ -29,8 +29,13 @@
       ROCKET_LOG = "critical";
     };
 
-    environmentFile = config.sops.secrets.vaultwarden-env.path;
+    environmentFile = config.sops.templates.vaultwardenEnv.path;
   };
 
-  sops.secrets.vaultwarden-env = {};
+  sops.secrets.vaultwardenToken = {};
+  sops.templates.vaultwardenEnv = {
+    content = ''
+      AUTH_TOKEN=${config.sops.placeholder.vaultwardenToken}
+    '';
+  };
 }

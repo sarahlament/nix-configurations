@@ -4,7 +4,8 @@
   pkgs,
   ...
 }: {
-  sops.secrets.adminPassHash = {};
+  sops.secrets.adminMailPass = {};
+  sops.secrets.lamentMailPass = {};
   users.users.root.extraGroups = ["acme"];
   networking.firewall.allowedTCPPorts = [
     25 # SMTP
@@ -37,19 +38,27 @@
     fqdn = "mail.lament.gay";
     domains = ["lament.gay"];
 
-    loginAccounts = {
+    loginAccounts = let
+      passwords = config.sops.secrets;
+    in {
       "sarah@lament.gay" = {
-        hashedPasswordFile = config.sops.secrets.lamentPassHash.path;
+        hashedPasswordFile = passwords.lamentMailPass.path;
         aliases = [
           "lament@lament.gay"
           "sarahlament@lament.gay"
         ];
       };
       "admin@lament.gay" = {
-        hashedPasswordFile = config.sops.secrets.adminPassHash.path;
+        hashedPasswordFile = passwords.adminMailPass.path;
         aliases = [
           "postmaster@lament.gay"
           "abuse@lament.gay"
+        ];
+      };
+      "git@lament.gay" = {
+        hashedPasswordFile = passwords.forgejoMailPass.path;
+        aliases = [
+          "forgejo@lament.gay"
         ];
       };
     };

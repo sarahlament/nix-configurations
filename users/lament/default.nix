@@ -6,12 +6,11 @@
   ...
 }: let
   inherit (lib) optionals;
-  passFile = config.sops.secrets.lamentPassHash.path;
 in {
-  sops.secrets.lamentPassHash.neededForUsers = true;
+  sops.secrets.lamentUserPass.neededForUsers = true;
   users.users.lament = {
     description = "Sarah Lament";
-    hashedPasswordFile = passFile;
+    hashedPasswordFile = config.sops.secrets.lamentUserPass.path;
     isNormalUser = true;
 
     extraGroups = [

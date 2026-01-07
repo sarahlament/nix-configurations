@@ -30,7 +30,7 @@
     enable = true;
 
     # Credentials and secrets
-    environmentFile = config.sops.secrets.attic-credentials.path;
+    environmentFile = config.sops.templates.atticEnv.path;
 
     settings = {
       # Listen on localhost, Caddy will handle the reverse proxy
@@ -70,7 +70,10 @@
   };
 
   # SOPS secret for Attic credentials
-  sops.secrets.attic-credentials = {};
+  sops.secrets.atticCredentials = {};
+  sops.templates.atticEnv.content = ''
+    ATTIC_SERVER_TOKEN_HS256_SECRET_BASE64=${config.sops.placeholder.atticCredentials}
+  '';
 
   # Ensure storage directory exists with correct permissions
   systemd.tmpfiles.rules = [
