@@ -41,6 +41,10 @@
         base_domain = "ts";
         magic_dns = true;
         nameservers.global = ["1.1.1.1" "9.9.9.9"];
+        extra_records = [
+          { name = "git.athena.ts"; type = "A"; value = "100.64.0.1";}
+          { name = "grafana.athena.ts"; type = "A"; value = "100.64.0.1";}
+        ];
       };
 
       prefixes = {

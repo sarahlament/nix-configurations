@@ -10,6 +10,12 @@
   };
 
   services = {
+    caddy.virtualHosts."http://grafana.athena.ts" = {
+      listenAddresses = ["100.64.0.1"];
+      extraConfig = ''
+        reverse_proxy http://100.64.0.1:3000
+      '';
+    };
     loki = {
       enable = true;
       configuration = {
@@ -136,8 +142,8 @@
         news.mews_feed_enabled = false;
 
         server = {
-          root_url = "https://athena.ts.lament.gay:3000";
-          domain = "athena.ts.lament.gay";
+          root_url = "https://grafana.athena.ts";
+          domain = "grafana.athena.ts";
           http_addr = "100.64.0.1";
           http_port = 3000;
         };
