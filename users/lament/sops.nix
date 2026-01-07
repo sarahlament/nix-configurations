@@ -5,7 +5,7 @@
   ...
 }: {
   sops.age.keyFile = "/home/lament/.config/sops/age/keys.txt";
-  sops.defaultSopsFile = ../../hosts-common/secrets.yaml;
+  sops.defaultSopsFile = ../../hosts/common/secrets.yaml;
   sops.defaultSopsFormat = "yaml";
 
   sops.secrets.context7-api-key = {};
