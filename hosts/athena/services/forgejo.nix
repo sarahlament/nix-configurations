@@ -3,7 +3,7 @@
   lib,
   pkgs,
   ...
-}: { 
+}: {
   users.users.gitea-runner = {
     isSystemUser = true;
     group = "gitea-runner";
@@ -12,7 +12,7 @@
   };
   users.groups.gitea-runner = {};
 
-  sops.secrets.forgejoRunnerToken  = {
+  sops.secrets.forgejoRunnerToken = {
     owner = "gitea-runner";
     group = "gitea-runner";
   };
@@ -76,7 +76,7 @@
       enable = true;
       name = "athena";
       url = "http://100.64.0.1:3030";
-      tokenFile = config.sops.templates.runnerEnv.path; 
+      tokenFile = config.sops.templates.runnerEnv.path;
       labels = [
         "native:host"
       ];

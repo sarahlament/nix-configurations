@@ -9,6 +9,7 @@
     inputs.stylix.nixosModules.stylix
 
     ./aagl.nix
+    ./audio.nix
     ./boot.nix
     ./develop.nix
     ./disko.nix
@@ -27,8 +28,6 @@
   hardware.bluetooth.enable = true;
 
   networking.hostName = "ishtar";
-
-  security.rtkit.enable = true;
 
   users.users.lament.extraGroups = [
     "networkmanager"

@@ -14,6 +14,11 @@
     spiceUSBRedirection.enable = true;
   };
 
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   home-manager.sharedModules = [
     {
       dconf.settings = {
