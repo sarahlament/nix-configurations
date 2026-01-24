@@ -16,5 +16,8 @@
     jetbrains.idea-oss # IntelliJ IDEA
     waydroid # android emulator
     waydroid-helper
+
+    wineWowPackages.stagingFull
+    winetricks
   ];
 }
