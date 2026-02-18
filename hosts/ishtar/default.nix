@@ -14,6 +14,7 @@
     ./develop.nix
     ./disko.nix
     ./fastfetch.nix
+    ./gaming.nix
     ./network.nix
     ./nixconf.nix
     ./nvidia.nix
