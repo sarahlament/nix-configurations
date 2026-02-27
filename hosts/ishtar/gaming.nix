@@ -3,7 +3,7 @@
   lib,
   pkgs,
   ...
-} : {
+}: {
   programs = {
     gamescope = {
       args = [
