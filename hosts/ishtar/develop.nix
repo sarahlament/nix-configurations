@@ -37,5 +37,6 @@
     uv # Python package manager
     python3 # Python interpreter
     rustup # Rust toolchain installer
+    libreoffice-fresh
   ];
 }
