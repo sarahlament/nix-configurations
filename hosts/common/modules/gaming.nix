@@ -10,8 +10,14 @@
 
     programs = {
       steam.enable = true;
+      steam.protontricks.enable = true;
       gamescope = {
         enable = true;
+        args = [
+          "--rt"
+          "--fullscreen"
+          "--hdr-enabled"
+        ];
       };
       gamemode = {
         enable = true;
