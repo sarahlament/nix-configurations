@@ -38,7 +38,7 @@
 
   services = {
     caddy.virtualHosts."http://git.athena.ts" = {
-      listenAddresses = ["100.64.0.1"];
+      #listenAddresses = ["100.64.0.1"];
       extraConfig = ''
         reverse_proxy http://100.64.0.1:3030
       '';

@@ -4,6 +4,13 @@
   pkgs,
   ...
 }: {
+  sops.secrets.grafanaSecretKey = { };
+  sops.templates.grafanaSecret = {
+    content = ''
+      $__file=${config.sops.placeholder.grafanaSecretKey}
+    '';
+  };
+
   services = {
     caddy.virtualHosts."http://grafana.athena.ts" = {
       listenAddresses = ["100.64.0.1"];
@@ -136,6 +143,8 @@
         analytics.reporting_enabled = false;
         news.mews_feed_enabled = false;
 
+        security.secret_key = config.sops.templates.grafanaSecret;
+
         server = {
           root_url = "http://grafana.athena.ts";
           domain = "grafana.athena.ts";
@@ -158,7 +167,7 @@
             name = "Loki";
             type = "loki";
             access = "proxy";
-            url = "http://127.0.0.1:3100";
+            url = "http://127.0.0.1:${toString config.services.loki.server.http_listen_port}";
           }
         ];
       };

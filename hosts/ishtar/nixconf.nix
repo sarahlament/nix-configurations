@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
@@ -12,4 +13,7 @@
       "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
     ];
   };
+  nixpkgs.overlays = [
+    inputs.my-overlays.overlays.default
+  ];
 }

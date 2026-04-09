@@ -37,7 +37,7 @@
     };
 
     my-overlays = {
-      url = "git+file:///home/lament/nix-overlays";
+      url = "github:sarahlament/nix-overlays";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

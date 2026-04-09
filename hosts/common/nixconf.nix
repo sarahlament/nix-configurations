@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }: {
   programs.nix-ld.enable = true;
@@ -35,8 +34,6 @@
   };
 
   nixpkgs.overlays = [
-    inputs.my-overlays.overlays.default
-
     (final: prev: {
       luajitPackages = prev.luajitPackages.overrideScope (lfinal: lprev: {
         luaossl = lprev.luaossl.overrideAttrs (old: {

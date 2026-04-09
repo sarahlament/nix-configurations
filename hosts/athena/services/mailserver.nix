@@ -38,7 +38,7 @@
     fqdn = "mail.lament.gay";
     domains = ["lament.gay"];
 
-    loginAccounts = let
+    accounts = let
       passwords = config.sops.secrets;
     in {
       "sarah@lament.gay" = {
@@ -74,10 +74,10 @@
     enableSubmission = true;
     enableSubmissionSsl = true;
 
-    dkimSigning = true;
-    dkimSelector = "mail";
+    dkim.enable = true;
+    dkim.defaults.selector = "mail";
 
-    mailDirectory = "/var/vmail";
+    storage.path = "/var/vmail";
 
     fullTextSearch = {
       enable = false;

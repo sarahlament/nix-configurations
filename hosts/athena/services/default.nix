@@ -11,7 +11,6 @@
     ./github-runner.nix
     ./headscale.nix
     ./mailserver.nix
-    ./monitoring.nix
     ./openssh.nix
     ./vaultwarden.nix
   ];
