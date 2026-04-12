@@ -14,7 +14,6 @@
 
     hardware.graphics.enable = true;
     services = {
-      dbus.enable = true;
       xserver.enable = true;
       displayManager = {
         sddm = {

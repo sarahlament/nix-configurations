@@ -24,9 +24,11 @@ in {
   home-manager.users.lament = {
     imports =
       [
+        inputs.nixvim.homeModules.nixvim
         ./git.nix
         ./hyfetch.nix
         ./kitty.nix
+        ./nixvim.nix
         ./shell.nix
         ./system.nix
       ]

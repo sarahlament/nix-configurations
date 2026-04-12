@@ -464,6 +464,32 @@
         "type": "github"
       }
     },
+    "nixvim": {
+      "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "systems": [
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775837497,
+        "narHash": "sha256-L17VI03w/wVXvc1SK7EI1muLqHxD3+esYPPzgQvvdOE=",
+        "owner": "nix-community",
+        "repo": "nixvim",
+        "rev": "a587a96a48c705609bfd2ad23f9ae5961eb0d373",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixvim",
+        "type": "github"
+      }
+    },
     "nur": {
       "inputs": {
         "flake-parts": [
@@ -585,6 +611,7 @@
         "my-overlays": "my-overlays",
         "nixos-mailserver": "nixos-mailserver",
         "nixpkgs": "nixpkgs",
+        "nixvim": "nixvim",
         "renix": "renix",
         "rust-overlay": "rust-overlay",
         "sops-nix": "sops-nix",

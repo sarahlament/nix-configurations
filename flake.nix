@@ -44,7 +44,12 @@
     #########################
     ## HOME MANAGER INPUTS ##
     #########################
-    # nixvim is being replaced by NVF {soon:tm:}
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems";
+      inputs.flake-parts.follows = "flake-parts";
+    };
 
     ###################
     ## ATHENA INPUTS ##

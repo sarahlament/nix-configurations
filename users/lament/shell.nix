@@ -15,7 +15,7 @@
       reboot = "systemctl reboot";
 
       sys-rebuild = "nixos-rebuild --flake ${config.home.homeDirectory}/nix-configurations/# --sudo";
-      athena-rebuild = "nixos-rebuild --flake ${config.home.homeDirectory}/nix-configurations/# --ask-sudo-password --target athena.ts.lament.gay";
+      athena-rebuild = "nixos-rebuild --flake ${config.home.homeDirectory}/nix-configurations/# --ask-sudo-password --target athena.ts";
       sys-clean-gens = "nix-collect-garbage -d; sys-rebuild switch";
     };
   };

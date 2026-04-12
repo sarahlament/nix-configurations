@@ -7,8 +7,6 @@
   programs = {
     gamescope = {
       args = [
-        "--rt"
-        "--fullscreen"
         "--hdr-enabled"
         "--hdr-debug-force-output"
         "--hdr-itm-enable"
@@ -22,6 +20,11 @@
         gpu_device = 0;
       };
     };
+  };
+
+  fileSystems."/persist/gamedir" = {
+    device = "/dev/disk/by-label/GAMEDIR";
+    fsType = "ext4";
   };
 
   environment.systemPackages = with pkgs; [

@@ -16,17 +16,11 @@
         args = [
           "--rt"
           "--fullscreen"
-          "--hdr-enabled"
         ];
       };
       gamemode = {
         enable = true;
       };
-    };
-
-    fileSystems."/persist/gamedir" = {
-      device = "/dev/disk/by-label/GAMEDIR";
-      fsType = "ext4";
     };
 
     environment.systemPackages = with pkgs; [

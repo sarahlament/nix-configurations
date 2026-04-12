@@ -32,19 +32,4 @@
       dates = "weekly";
     };
   };
-
-  nixpkgs.overlays = [
-    (final: prev: {
-      luajitPackages = prev.luajitPackages.overrideScope (lfinal: lprev: {
-        luaossl = lprev.luaossl.overrideAttrs (old: {
-          # GCC 14 makes this an error; downgrade it to a warning so it builds.
-          env =
-            (old.env or {})
-            // {
-              NIX_CFLAGS_COMPILE = (old.env.NIX_CFLAGS_COMPILE or "") + " -Wno-error=incompatible-pointer-types";
-            };
-        });
-      });
-    })
-  ];
 }

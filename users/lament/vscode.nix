@@ -40,10 +40,10 @@
               };
               "options" = {
                 "nixpkgs" = {
-                  "expr" = "(builtins.getFlake \"/home/lament/.nix-conf\").nixosConfigurations.ishtar.pkgs";
+                  "expr" = "(builtins.getFlake \"/home/lament/nix-configurations\").nixosConfigurations.ishtar.pkgs";
                 };
                 "nixos" = {
-                  "expr" = "(builtins.getFlake \"/home/lament/.nix-conf\").nixosConfigurations.ishtar.options";
+                  "expr" = "(builtins.getFlake \"/home/lament/nix-configurations\").nixosConfigurations.ishtar.options";
                 };
               };
             };
