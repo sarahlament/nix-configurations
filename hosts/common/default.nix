@@ -33,7 +33,6 @@
 
   users.defaultUserShell = pkgs.zsh;
   programs.zsh.enable = true;
-  programs.renix.enable = true;
 
   home-manager = {
     useGlobalPkgs = true;
