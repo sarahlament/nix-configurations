@@ -5,6 +5,7 @@
     ## SHARED INPUTS ##
     ###################
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-small.url = "github:nixos/nixpkgs/nixos-unstable-small";
 
     # home manager manages user-level configuration (dotfiles, packages, services)
     home-manager = {
@@ -129,8 +130,8 @@
     systems.url = "github:nix-systems/default";
   };
   outputs = inputs @ {nixpkgs, ...}: let
-    mkSystem = hostName:
-      nixpkgs.lib.nixosSystem {
+    mkSystem = {hostName, pkgs ? nixpkgs}:
+      pkgs.lib.nixosSystem {
         specialArgs = {inherit inputs;};
         modules = [
           ./hosts/common
@@ -139,8 +140,8 @@
       };
   in {
     # this is my personal system config
-    nixosConfigurations.ishtar = mkSystem "ishtar";
-    nixosConfigurations.athena = mkSystem "athena";
+    nixosConfigurations.ishtar = mkSystem { hostName = "ishtar"; };
+    nixosConfigurations.athena = mkSystem { hostName = "athena"; pkgs = inputs.nixpkgs-small; };
 
     # I prefer how alejandra looks opposed to nixfmt
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
