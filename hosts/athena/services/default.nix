@@ -5,7 +5,6 @@
   ...
 }: {
   imports = [
-    ./attic.nix
     ./caddy.nix
     ./forgejo.nix
     ./headscale.nix

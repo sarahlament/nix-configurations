@@ -55,12 +55,6 @@
           "abuse@lament.gay"
         ];
       };
-      "git@lament.gay" = {
-        hashedPasswordFile = passwords.forgejoMailPass.path;
-        aliases = [
-          "forgejo@lament.gay"
-        ];
-      };
     };
     x509 = {
       certificateFile = "/var/lib/acme/mail.lament.gay/fullchain.pem";

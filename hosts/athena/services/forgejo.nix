@@ -4,6 +4,18 @@
   pkgs,
   ...
 }: {
+  sops.secrets.forgejoMailPass = {};
+  mailserver.accounts = let
+    passwords = config.sops.secrets;
+  in {
+    "git@lament.gay" = {
+      hashedPasswordFile = passwords.forgejoMailPass.path;
+      aliases = [
+        "forgejo@lament.gay"
+      ];
+    };
+  };
+
   users.users.gitea-runner = {
     isSystemUser = true;
     group = "gitea-runner";
@@ -23,7 +35,6 @@
     owner = "gitea-runner";
   };
 
-  sops.secrets.forgejoMailPass = {};
   sops.templates.forgejoServiceEnv = {
     content = ''
       FORGEJO__mailer__PASSWD=${config.sops.placeholder.forgejoMailPass}
