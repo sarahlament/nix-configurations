@@ -61,7 +61,7 @@
       inputs = {
         flake-compat.follows = "flake-compat";
         git-hooks.inputs.gitignore.follows = "gitignore";
-        nixpkgs.follows = "nixpkgs";
+        nixpkgs.follows = "nixpkgs-small";
       };
     };
 
