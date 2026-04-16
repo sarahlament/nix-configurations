@@ -5,11 +5,33 @@
   ...
 }: {
   sops.secrets.grafanaSecretKey = { };
-  sops.templates.grafanaSecret = {
-    content = ''
-      $__file=${config.sops.placeholder.grafanaSecretKey}
-    '';
-  };
+
+  # alloy config (promtail replacement)
+  environment.etc."alloy/config.alloy".text = ''
+    loki.source.journal "journal" {
+      forward_to = [loki.relabel.journal.receiver]
+      max_age    = "12h"
+      labels     = {
+        job  = "systemd-journal",
+        host = "athena",
+      }
+    }
+
+    loki.relabel "journal" {
+      forward_to = [loki.write.local.receiver]
+
+      rule {
+        source_labels = ["__journal__systemd_unit"]
+        target_label  = "unit"
+      }
+    }
+
+    loki.write "local" {
+      endpoint {
+        url = "http://127.0.0.1:3100/loki/api/v1/push"
+      }
+    }
+  '';
 
   services = {
     caddy.virtualHosts."http://grafana.athena.ts" = {
@@ -76,37 +98,9 @@
       };
     };
 
-    promtail = {
+    alloy = {
       enable = true;
-      configuration = {
-        server = {
-          http_listen_port = 9080;
-          grpc_listen_port = 0;
-        };
-        clients = [
-          {
-            url = "http://127.0.0.1:3100/loki/api/v1/push";
-          }
-        ];
-        scrape_configs = [
-          {
-            job_name = "journal";
-            journal = {
-              max_age = "12h";
-              labels = {
-                job = "systemd-journal";
-                host = "athena";
-              };
-            };
-            relabel_configs = [
-              {
-                source_labels = ["__journal__systemd_unit"];
-                target_label = "unit";
-              }
-            ];
-          }
-        ];
-      };
+      extraFlags = ["--disable-reporting"];
     };
 
     prometheus = {
@@ -143,7 +137,7 @@
         analytics.reporting_enabled = false;
         news.mews_feed_enabled = false;
 
-        security.secret_key = config.sops.templates.grafanaSecret;
+        security.secret_key = "$__file{${config.sops.placeholder.grafanaSecretKey}}";
 
         server = {
           root_url = "http://grafana.athena.ts";
@@ -167,7 +161,7 @@
             name = "Loki";
             type = "loki";
             access = "proxy";
-            url = "http://127.0.0.1:${toString config.services.loki.server.http_listen_port}";
+            url = "http://127.0.0.1:3100";
           }
         ];
       };
