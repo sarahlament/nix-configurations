@@ -137,7 +137,7 @@
         analytics.reporting_enabled = false;
         news.mews_feed_enabled = false;
 
-        security.secret_key = "$__file{${config.sops.placeholder.grafanaSecretKey}}";
+        security.secret_key = "$__file{${config.sops.secrets.grafanaSecretKey.path}}";
 
         server = {
           root_url = "http://grafana.athena.ts";
