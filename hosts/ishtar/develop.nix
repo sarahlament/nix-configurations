@@ -37,6 +37,8 @@
     uv # Python package manager
     python3 # Python interpreter
     rustup # Rust toolchain installer
+    visualvm # java vm visualizer
+    jetbrains.idea-oss # IntelliJ IDEA
 
     sox # voice for claude code?
   ];
