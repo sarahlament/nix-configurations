@@ -78,6 +78,7 @@
           SMTP_ADDR = "localhost";
           FROM = "git@lament.gay";
           USER = "git";
+          PASSWD = "$__file{${config.sops.secrets.forgejoMailPass.path}}";
         };
         actions.ENABLED = true;
       };
