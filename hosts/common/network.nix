@@ -5,6 +5,7 @@
   ...
 }: {
   networking.networkmanager.enable = lib.mkDefault true;
+  networking.firewall.trustedInterfaces = ["tailnet0"];
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "client";

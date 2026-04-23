@@ -38,7 +38,8 @@
   services = {
     caddy.virtualHosts."http://grafana.athena.ts" = {
       extraConfig = ''
-        reverse_proxy http://100.64.0.1:3000
+        bind 100.64.0.1
+        reverse_proxy localhost:3000
       '';
     };
     loki = {

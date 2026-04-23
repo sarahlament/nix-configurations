@@ -51,7 +51,8 @@
     caddy.virtualHosts."http://git.athena.ts" = {
       #listenAddresses = ["100.64.0.1"];
       extraConfig = ''
-        reverse_proxy http://100.64.0.1:3030
+        bind 100.64.0.1
+        reverse_proxy localhost:3030
       '';
     };
     forgejo = {
@@ -102,24 +103,30 @@
     };
   };
 
-  systemd.services.forgejo = {
-    after = ["tailnet-online.target"];
-    requires = ["tailnet-online.target"];
-    serviceConfig = {
-      EnvironmentFile = config.sops.templates.forgejoServiceEnv.path;
+  systemd.services = {
+    caddy = {
+      after = ["tailnet-online.target"];
+      requires = ["tailnet-online.target"];
     };
-  };
-  systemd.services.gitea-runner-athena = {
-    after = ["tailnet-online.target"];
-    requires = ["tailnet-online.target"];
-    serviceConfig = {
-      DynamicUser = lib.mkForce false; # The nix store doesn't like ephemeral UIDs, so we disable the dynamic user
-      User = "gitea-runner";
-      Group = "gitea-runner";
-      Restart = lib.mkForce "always";
-      RestartSec = lib.mkForce "10s";
-      MemoryMax = lib.mkForce "2G";
-      CPUQuota = lib.mkForce "200%";
+    forgejo = {
+      after = ["tailnet-online.target"];
+      requires = ["tailnet-online.target"];
+      serviceConfig = {
+        EnvironmentFile = config.sops.templates.forgejoServiceEnv.path;
+      };
+    };
+    gitea-runner-athena = {
+      after = ["tailnet-online.target"];
+      requires = ["tailnet-online.target"];
+      serviceConfig = {
+        DynamicUser = lib.mkForce false; # The nix store doesn't like ephemeral UIDs, so we disable the dynamic user
+        User = "gitea-runner";
+        Group = "gitea-runner";
+        Restart = lib.mkForce "always";
+        RestartSec = lib.mkForce "10s";
+        MemoryMax = lib.mkForce "2G";
+        CPUQuota = lib.mkForce "200%";
+      };
     };
   };
 }
