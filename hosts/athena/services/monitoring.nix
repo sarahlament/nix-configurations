@@ -4,9 +4,11 @@
   pkgs,
   ...
 }: {
-  sops.secrets.grafanaSecretKey = { };
+  sops.secrets.grafanaSecretKey = {
+    owner = "grafana";
+    group = "grafana";
+  };
 
-  # alloy config (promtail replacement)
   environment.etc."alloy/config.alloy".text = ''
     loki.source.journal "journal" {
       forward_to = [loki.relabel.journal.receiver]
