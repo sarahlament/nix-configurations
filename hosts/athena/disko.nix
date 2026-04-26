@@ -15,7 +15,7 @@
           mountpoint = "/";
         };
       };
-      linide-swap = {
+      linode-swap = {
         device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi-disk-1";
         type = "disk";
         content = {

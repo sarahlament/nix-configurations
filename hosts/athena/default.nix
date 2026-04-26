@@ -17,5 +17,4 @@
 
     ./services
   ];
-  networking.hostName = "athena";
 }

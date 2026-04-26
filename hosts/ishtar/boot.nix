@@ -5,7 +5,6 @@
   ...
 }: {
   boot = {
-    # as lanzaboote uses its own thing, force systemd-boot to false
     loader = {
       systemd-boot.enable = lib.mkForce false;
       efi.canTouchEfiVariables = true;

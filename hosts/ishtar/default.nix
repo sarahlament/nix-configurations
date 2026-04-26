@@ -29,8 +29,6 @@
   sops.age.keyFile = "/persist/key.age";
   hardware.bluetooth.enable = true;
 
-  networking.hostName = "ishtar";
-
   users.users.lament.extraGroups = [
     "networkmanager"
     "plugdev"

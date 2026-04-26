@@ -37,6 +37,15 @@
       };
     };
 
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs = {
+        flake-compat.follows = "flake-compat";
+        gitignore.follows = "gitignore";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
     my-overlays = {
       url = "git+ssh://git@git.athena.ts:2222/sarahlament/nix-overlays";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -130,18 +139,32 @@
     systems.url = "github:nix-systems/default";
   };
   outputs = inputs @ {nixpkgs, ...}: let
-    mkSystem = {hostName, pkgs ? nixpkgs}:
+    mkSystem = {
+      hostName,
+      pkgs ? nixpkgs,
+    }:
       pkgs.lib.nixosSystem {
         specialArgs = {inherit inputs;};
         modules = [
           ./hosts/common
           ./hosts/${hostName}
+          ./users/lament
+          {networking.hostName = hostName;}
         ];
       };
   in {
-    # this is my personal system config
-    nixosConfigurations.ishtar = mkSystem { hostName = "ishtar"; };
-    nixosConfigurations.athena = mkSystem { hostName = "athena"; pkgs = inputs.nixpkgs-small; };
+    nixosConfigurations.ishtar = mkSystem {hostName = "ishtar";}; # personal desktop
+    nixosConfigurations.athena = mkSystem {
+      hostName = "athena"; # linode VPS
+      pkgs = inputs.nixpkgs-small;
+    };
+
+    checks.x86_64-linux.pre-commit-check = inputs.git-hooks.lib.x86_64-linux.run {
+      src = ./.;
+      hooks = {
+        alejandra.enable = true;
+      };
+    };
 
     # I prefer how alejandra looks opposed to nixfmt
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;

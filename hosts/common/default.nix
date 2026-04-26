@@ -18,8 +18,6 @@
     ./shellTools.nix # tools for all hosts
 
     ./modules # reusable modules in case I need them
-
-    ../../users/lament # I'm obviously going to be on all of my systems
   ];
   system.stateVersion = "26.05";
   nixpkgs.hostPlatform = "x86_64-linux";
