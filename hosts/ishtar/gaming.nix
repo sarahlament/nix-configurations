@@ -8,8 +8,6 @@
     gamescope = {
       args = [
         "--hdr-enabled"
-        "--hdr-debug-force-output"
-        "--hdr-itm-enable"
         "--prefer-output DP-1"
         "-W2560 -H1440 -r165"
       ];
