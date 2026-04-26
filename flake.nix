@@ -38,7 +38,7 @@
     };
 
     my-overlays = {
-      url = "github:sarahlament/nix-overlays";
+      url = "git+ssh://git@git.athena.ts:2222/sarahlament/nix-overlays";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

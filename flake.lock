@@ -379,17 +379,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1775776267,
-        "narHash": "sha256-prCuPf8vhCqt3i33ANcoNsycSIzoeLi4KdLMNcGnz4w=",
-        "owner": "sarahlament",
-        "repo": "nix-overlays",
-        "rev": "ddeed4946b1b6bfd0a895783b2a39b0369766739",
-        "type": "github"
+        "lastModified": 1777181012,
+        "narHash": "sha256-SDL22oe4QWjXQgnmIzZkhLUL8LgC92Xzte+96FPzTtA=",
+        "ref": "refs/heads/main",
+        "rev": "b1a106b20d7b5e2e7bef250acdac5acc0d648fcb",
+        "revCount": 4,
+        "type": "git",
+        "url": "ssh://git@git.athena.ts:2222/sarahlament/nix-overlays"
       },
       "original": {
-        "owner": "sarahlament",
-        "repo": "nix-overlays",
-        "type": "github"
+        "type": "git",
+        "url": "ssh://git@git.athena.ts:2222/sarahlament/nix-overlays"
       }
     },
     "nixos-mailserver": {
