@@ -11,6 +11,9 @@
         "--prefer-output DP-1"
         "-W2560 -H1440 -r165"
       ];
+      env = {
+        "DXVK_HDR" = "1";
+      };
     };
     gamemode.settings = {
       gpu = {
