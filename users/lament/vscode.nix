@@ -16,6 +16,7 @@
         ];
 
         userSettings = {
+          "window.zoomLevel" = 1;
           "workbench.startupEditor" = "none";
           "workbench.welcomePage.walkthroughs.openOnInstall" = false;
           "workbench.settings.editor" = "json";
