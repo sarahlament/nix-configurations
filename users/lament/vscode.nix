@@ -92,4 +92,8 @@
       };
     };
   };
+
+  home.sessionPath = [
+    "~/.local/share/JetBrains/Toolbok/scripts" # not vscode, but no real better place
+  ];
 }
