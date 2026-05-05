@@ -14,7 +14,7 @@
     ./network.nix # basic network configuration
     ./nixconf.nix # 'nix' configuration
     ./packages.nix # shared packages
-    ./sops.nix # sops-nix information
+    ./security.nix # sops-nix information
     ./shellTools.nix # tools for all hosts
 
     ./modules # reusable modules in case I need them
@@ -24,7 +24,6 @@
   nixpkgs.config = {
     allowUnfree = true;
   };
-  security.sudo-rs.wheelNeedsPassword = false;
   hardware.enableRedistributableFirmware = true;
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "America/Chicago";
