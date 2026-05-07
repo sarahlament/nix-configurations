@@ -13,6 +13,8 @@
         extensions = with pkgs.vscode-extensions; [
           jnoortheen.nix-ide
           eamodio.gitlens
+          catppuccin.catppuccin-vsc
+          catppuccin.catppuccin-vsc-icons
         ];
 
         userSettings = {

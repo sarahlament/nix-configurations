@@ -13,7 +13,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # disko let's me declaratively define how my disks are formatted and such
+    # disko lets me declaratively define how my disks are formatted and such
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,18 +23,6 @@
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # renix is my own host manager for NixOS
-    renix = {
-      url = "github:sarahlament/renix";
-      inputs = {
-        crane.follows = "crane";
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-        pre-commit-hooks.inputs.flake-compat.follows = "flake-compat";
-        pre-commit-hooks.inputs.gitignore.follows = "gitignore";
-      };
     };
 
     git-hooks = {

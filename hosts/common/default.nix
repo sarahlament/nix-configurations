@@ -7,7 +7,6 @@
   imports = [
     inputs.disko.nixosModules.disko
     inputs.home-manager.nixosModules.home-manager
-    inputs.renix.nixosModules.renix
     inputs.sops-nix.nixosModules.sops
 
     ./boot.nix # Shared boot options
