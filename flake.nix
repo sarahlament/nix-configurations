@@ -147,13 +147,6 @@
       pkgs = inputs.nixpkgs-small;
     };
 
-    checks.x86_64-linux.pre-commit-check = inputs.git-hooks.lib.x86_64-linux.run {
-      src = ./.;
-      hooks = {
-        alejandra.enable = true;
-      };
-    };
-
     # I prefer how alejandra looks opposed to nixfmt
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
   };

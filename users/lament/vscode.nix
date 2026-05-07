@@ -5,9 +5,8 @@
   ...
 }: {
   programs = {
-    vscode = {
+    vscodium = {
       enable = true;
-      package = pkgs.vscodium;
 
       profiles.default = {
         extensions = with pkgs.vscode-extensions; [
@@ -22,6 +21,8 @@
           "workbench.startupEditor" = "none";
           "workbench.welcomePage.walkthroughs.openOnInstall" = false;
           "workbench.settings.editor" = "json";
+          "workbench.colorTheme" = "Catppuccin Macchiato";
+          "workbench.iconTheme" = "catppuccin noctis icons";
 
           "update.mode" = "none";
           "extensions.ignoreRecommendations" = true;
@@ -81,7 +82,6 @@
           "diffEditor.experimental.showMoves" = true;
           "diffEditor.experimental.useTrueInlineView" = true;
 
-          "workbench.iconTheme" = "charmed-icons";
           "workbench.panel.defaultLocation" = "right";
 
           "terminal.external.linuxExec" = "kitty";
