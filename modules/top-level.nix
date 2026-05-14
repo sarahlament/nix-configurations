@@ -1,6 +1,7 @@
 {
   inputs,
   lib,
+  pkgs,
   ...
 }: {
   imports = [
@@ -10,7 +11,5 @@
     inputs.flake-parts.flakeModules.easyOverlay
   ];
   systems = ["x86_64-linux"];
-  perSystem = {pkgs, ...}: {
-    formatter = pkgs.alejandra;
-  };
+  perSystem.formatter = pkgs.alejandra;
 }
