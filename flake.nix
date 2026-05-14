@@ -1,11 +1,12 @@
 {
-  description = "LamentOS";
   inputs = {
     ###################
     ## SHARED INPUTS ##
     ###################
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-small.url = "github:nixos/nixpkgs/nixos-unstable-small";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:denful/import-tree";
 
     # home manager manages user-level configuration (dotfiles, packages, services)
     home-manager = {
@@ -20,22 +21,8 @@
     };
 
     # sops-nix is an advanced tool to store encrypted secrets along with my configuration safely
-    sops-nix = {
+    sops = {
       url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    git-hooks = {
-      url = "github:cachix/git-hooks.nix";
-      inputs = {
-        flake-compat.follows = "flake-compat";
-        gitignore.follows = "gitignore";
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
-
-    my-overlays = {
-      url = "git+ssh://git@git.athena.ts:2222/sarahlament/nix-overlays";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -107,11 +94,18 @@
     crane = {
       url = "github:ipetkov/crane";
     };
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs = {
+        flake-compat.follows = "flake-compat";
+        gitignore.follows = "gitignore";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
     };
-    flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
@@ -126,28 +120,8 @@
     };
     systems.url = "github:nix-systems/default";
   };
-  outputs = inputs @ {nixpkgs, ...}: let
-    mkSystem = {
-      hostName,
-      pkgs ? nixpkgs,
-    }:
-      pkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs;};
-        modules = [
-          ./hosts/common
-          ./hosts/${hostName}
-          ./users/lament
-          {networking.hostName = hostName;}
-        ];
-      };
-  in {
-    nixosConfigurations.ishtar = mkSystem {hostName = "ishtar";}; # personal desktop
-    nixosConfigurations.athena = mkSystem {
-      hostName = "athena"; # linode VPS
-      pkgs = inputs.nixpkgs-small;
-    };
 
-    # I prefer how alejandra looks opposed to nixfmt
-    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
-  };
+  outputs = inputs @ {flake-parts, ...}:
+    flake-parts.lib.mkFlake {inherit inputs;}
+    (inputs.import-tree ./modules);
 }
