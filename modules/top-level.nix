@@ -11,5 +11,7 @@
     inputs.flake-parts.flakeModules.easyOverlay
   ];
   systems = ["x86_64-linux"];
-  perSystem.formatter = pkgs.alejandra;
+  perSystem = {pkgs, ...}: {
+    formatter = pkgs.alejandra;
+  };
 }

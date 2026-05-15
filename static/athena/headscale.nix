@@ -15,5 +15,10 @@
       type = "A";
       value = "100.64.0.1";
     }
+    {
+      name = "notes.athena.ts";
+      type = "A";
+      value = "100.64.0.1";
+    }
   ];
 }

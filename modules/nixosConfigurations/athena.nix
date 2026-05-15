@@ -17,6 +17,7 @@
 
     caddy
     forgejo
+    gollum
     headscale
     mailserver
     monitoring

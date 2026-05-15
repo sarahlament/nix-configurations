@@ -16,15 +16,13 @@
       ];
     };
 
-    services.caddy = {
-      virtualHosts."headscale.${fqdn}" = {
-        extraConfig = ''
-          reverse_proxy localhost:${toString config.services.headscale.port} {
-            header_up Host {upstream_hostport}
-            header_up X-Real-IP {remote_host}
-          }
-        '';
-      };
+    services.caddy.virtualHosts."headscale.${fqdn}" = {
+      extraConfig = ''
+        reverse_proxy localhost:${toString config.services.headscale.port} {
+          header_up Host {upstream_hostport}
+          header_up X-Real-IP {remote_host}
+        }
+      '';
     };
 
     services.headscale = {
