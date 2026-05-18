@@ -4,32 +4,38 @@
     lib,
     pkgs,
     ...
-  }: {
-    programs.virt-manager.enable = true;
-    virtualisation = {
-      docker.enable = true;
-      libvirtd = {
-        enable = true;
-        qemu.vhostUserPackages = with pkgs; [virtiofsd];
+  }: let 
+    inherit (lib) mkEnableOption mkIf;
+    cfg = config.modules.develop;
+  in  {
+    options.modules.develop.virt.enable = mkEnableOption "Enaable virt things";
+    config = {
+      programs.virt-manager.enable = true;
+      virtualisation = mkIf cfg.virt.enable {
+        docker.enable = true;
+        libvirtd = {
+          enable = true;
+          qemu.vhostUserPackages = with pkgs; [virtiofsd];
+        };
+        spiceUSBRedirection.enable = true;
       };
-      spiceUSBRedirection.enable = true;
-    };
 
-    programs.direnv = {
-      enable = true;
-      nix-direnv.enable = true;
-    };
+      programs.direnv = {
+        enable = true;
+        nix-direnv.enable = true;
+      };
 
-    environment.systemPackages = with pkgs; [
-      nixd # Nix language server
-      alejandra # Nix formatter
-      nodejs # JavaScript runtime
-      uv # Python package manager
-      python3 # Python interpreter
-      rustup # Rust toolchain installer
-      visualvm # java vm visualizer
-      jetbrains-toolbox # IDE manager
-    ];
+      environment.systemPackages = with pkgs; [
+        nixd # Nix language server
+        alejandra # Nix formatter
+        nodejs # JavaScript runtime
+        uv # Python package manager
+        python3 # Python interpreter
+        rustup # Rust toolchain installer
+        visualvm # java vm visualizer
+        jetbrains-toolbox # IDE manager
+      ];
+    };
   };
 
   flake.homeModules.develop = {

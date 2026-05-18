@@ -1,4 +1,8 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosModules.mailserver = {
     config,
     lib,
@@ -7,7 +11,10 @@
   }: let
     fqdn = config.modules.services.caddy.fqdn;
   in {
-    imports = [inputs.nixos-mailserver.nixosModules.mailserver];
+    imports = [
+      inputs.nixos-mailserver.nixosModules.mailserver
+      self.nixosModules.fail2ban
+    ];
 
     sops.secrets.adminMailPass = {};
     sops.secrets.lamentMailPass = {};
@@ -85,6 +92,20 @@
       timerConfig = {
         OnCalendar = "daily";
         Persistent = true;
+      };
+    };
+
+    services.fail2ban.jails = {
+      postfix.settings = {
+        enabled = true;
+        filter = "postfix[mode=aggressive]";
+        port = "smtp,smtps,submission";
+      };
+
+      dovecot.settings = {
+        enabled = true;
+        filter = "dovecot[mode=aggressive]";
+        port = "imap,imaps,smtps,submission";
       };
     };
   };
