@@ -21,8 +21,8 @@
     users.users.root.extraGroups = ["acme"];
     networking.firewall.allowedTCPPorts = [
       25 # SMTP
-      587 # SMTP submission
-      993 # IMAP
+      465 # SUBMISSIONS
+      993 # IMAPS
     ];
 
     # HTTP-only server for ACME challenges
@@ -55,11 +55,11 @@
         privateKeyFile = "/var/lib/acme/mail.${fqdn}/key.pem";
       };
 
-      enableImap = true;
+      enableImap = false;
       enableImapSsl = true;
       enablePop3 = false;
       enablePop3Ssl = false;
-      enableSubmission = true;
+      enableSubmission = false;
       enableSubmissionSsl = true;
 
       dkim.enable = true;
