@@ -51,11 +51,6 @@
     };
 
     services = {
-      caddy.virtualHosts."http://git.athena.ts" = {
-        extraConfig = ''
-          reverse_proxy localhost:3030
-        '';
-      };
       forgejo = {
         enable = true;
         settings = {

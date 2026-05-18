@@ -19,11 +19,5 @@
         Precious::App.set(:wiki_options, wiki_options)
       '';
     };
-
-    services.caddy.virtualHosts."http://notes.athena.ts" = {
-      extraConfig = ''
-        reverse_proxy localhost:${toString config.services.gollum.port}
-      '';
-    };
   };
 }
