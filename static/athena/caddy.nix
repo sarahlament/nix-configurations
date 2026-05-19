@@ -1,11 +1,10 @@
 {
   config,
-  lib,
-  pkgs,
+  self,
   ...
 }: {
   services.caddy.virtualHosts = let
-    mkReverseProxy = port: ''reverse_proxy localhost:${toString port}'';
+    inherit (self.myLib) mkReverseProxy; 
   in {
     "http://notes.athena.ts".extraConfig = mkReverseProxy config.services.gollum.port;
     "http://git.athena.ts".extraConfig = mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;

@@ -27,6 +27,10 @@ modules = activeModules ++ [
 ];
 ```
 
+## Custom lib? In flake-parts?
+
+`flake.myLib` is a custom flake-parts option using `types.lazyAttrsOf types.raw` so that each part of the lib can be written as an individual module and merge together just like `nixosModules` or `homeModules`.
+
 ## Structure
 
 ```

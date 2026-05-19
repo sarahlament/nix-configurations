@@ -1,17 +1,27 @@
 {
   inputs,
   lib,
-  pkgs,
+  self,
   ...
-}: {
+}: let
+  inherit (lib) mkOption types;
+in {
   imports = [
     inputs.git-hooks.flakeModule
     inputs.home-manager.flakeModules.home-manager
     inputs.disko.flakeModules.disko
     inputs.flake-parts.flakeModules.easyOverlay
   ];
-  systems = ["x86_64-linux"];
-  perSystem = {pkgs, ...}: {
-    formatter = pkgs.alejandra;
+  
+  options.flake.myLib = mkOption {
+    type = types.lazyAttrsOf types.raw;
+    default = {};
+  };
+
+  config = {
+    systems = ["x86_64-linux"];
+    perSystem = {pkgs, ...}: {
+      formatter = pkgs.alejandra;
+    };
   };
 }
