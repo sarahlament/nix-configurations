@@ -1,4 +1,8 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosModules.forgejo = {
     config,
     lib,
@@ -6,7 +10,10 @@
     ...
   }: let
     fqdn = config.modules.services.caddy.fqdn;
+    inherit (self.myLib) mkReverseProxy;
   in {
+    imports = [self.nixosModules.ssh];
+
     sops.secrets.forgejoMailPass = {};
     mailserver.accounts = let
       passwords = config.sops.secrets;
@@ -42,7 +49,7 @@
       content = ''
         FORGEJO__mailer__PASSWD=${config.sops.placeholder.forgejoMailPass}
       '';
-      owner = "forgejo";
+      owner = "git";
     };
 
     nix.settings = {
@@ -50,21 +57,39 @@
       trusted-users = ["gitea-runner"];
     };
 
+    users.groups.git = {};
+    users.users.git = {
+      isSystemUser = true;
+      group = "git";
+      home = "/var/lib/forgejo";
+      shell = "${pkgs.bash}/bin/bash";
+    };
+
     services = {
+      openssh.extraConfig = ''
+        AcceptEnv GIT_PROTOCOL
+        Match User git
+          AuthorizedKeysCommandUser git
+          AuthorizedKeysCommand ${pkgs.forgejo}/bin/forgejo keys -c /var/lib/forgejo/custom/conf/app.ini -e git -u %u -t %t -k %k
+      '';
       forgejo = {
         enable = true;
+        user = "git";
         settings = {
           server = {
-            DOMAIN = "git.athena.ts";
-            ROOT_URL = "http://git.athena.ts";
+            DOMAIN = "git.lament.gay";
+            ROOT_URL = "https://git.lament.gay";
+            LANDING_PAGE = "/sarahlament";
             HTTP_PORT = 3030;
-            HTTP_ADDR = "127.0.0.1";
+            HTTP_ADDR = "localhost";
 
-            SSH_DOMAIN = "git.athena.ts";
-            SSH_PORT = 2222;
-            START_SSH_SERVER = true;
-            BUILTIN_SSH_SERVER_USER = "git";
+            SSH_DOMAIN = "lament.gay";
+            SSH_USER = "git";
+            SSH_PORT = 22;
+            START_SSH_SERVER = false;
+            SSH_CREATE_AUTHORIZED_KEYS_FILE = false;
           };
+          repository.USE_COMPAT_SSH_URI = false;
           service = {
             DISABLE_REGISTRATION = true;
             REQUIRE_SIGNIN_TO_VIEW = false;
@@ -80,6 +105,8 @@
           actions.ENABLED = true;
         };
       };
+
+      caddy.virtualHosts."https://git.${fqdn}".extraConfig = mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;
 
       gitea-actions-runner.instances.athena = {
         enable = true;

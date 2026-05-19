@@ -4,7 +4,7 @@ My personal NixOS configurations, using the [Dendritic Pattern](https://github.c
 
 **TL;DR**
 
-The dendritic pattern takes your flake and literally breaks it into parts. Each file is its own module, be it a `nixosModules` or `homeModules` module, or even an entire `nixosConfiguration`, typically via [flake-parts](https://github.com/hercules-ci/flake-parts) and [import-tree](https://github.com/denful/import-tree).
+The dendritic pattern takes your flake and literally breaks it into parts. Each file is its own module, be it a `nixosModules` or `homeModules` module, or even an entire `nixosConfiguration` definition, typically via [flake-parts](https://github.com/hercules-ci/flake-parts) and [import-tree](https://github.com/denful/import-tree).
 
 ## How do I do it?
 
@@ -12,7 +12,7 @@ The top-level `flake.nix` uses flake-part's helper function, then pass `import-t
 
 ## How are modules used?
 
-Each module is defined through `flake.{nixosModules,homeModules,etc}.moduleName`, which can then be referenced through `self.{nixosModules,homeModules,etc}.moduleName`. These modules are then imported into each `nixosConfiguration.hostName` as such:
+Each module is defined through `flake.{nixosModules,homeModules,etc}.moduleName`, which can then be referenced through `self.{nixosModules,homeModules,etc}.moduleName`. These modules are then imported into each `nixosConfigurations.hostName` as such:
 
 ```nix
 activeModules = with self.nixosModules; [
