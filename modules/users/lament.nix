@@ -48,13 +48,8 @@
         users.lament = {
           imports = with self.homeModules;
             [
-              btop
               git
               hyfetch
-              kitty
-              nixvim
-              shell
-              zsh
             ]
             ++ optionals (cfg.desktop.enable) [
               develop
