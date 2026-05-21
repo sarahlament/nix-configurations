@@ -23,6 +23,7 @@
     kde
     workstation
 
+    root
     lament
   ];
 in {

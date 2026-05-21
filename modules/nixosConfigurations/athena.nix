@@ -23,6 +23,7 @@
     monitoring
     vaultwarden
 
+    root
     lament
   ];
 in {
