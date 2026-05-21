@@ -3,7 +3,7 @@
   self,
   ...
 }: {
-  flake.nixosModules.lament = {
+  flake.nixosModules.lamentUser = {
     config,
     lib,
     pkgs,

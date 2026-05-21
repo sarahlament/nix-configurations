@@ -11,7 +11,7 @@
     badDecisionSecurity
     networking
     nixconf
-    shell
+    sysShell
     sops
     ssh
 
@@ -23,8 +23,8 @@
     monitoring
     vaultwarden
 
-    root
-    lament
+    rootUser
+    lamentUser
   ];
 in {
   flake.nixosConfigurations.athena = inputs.nixpkgs-small.lib.nixosSystem {

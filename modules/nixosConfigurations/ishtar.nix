@@ -13,7 +13,7 @@
     networking
     nixconf
     pipewire
-    shell
+    sysShell
     sops
     ssh
     stylix
@@ -23,8 +23,8 @@
     kde
     workstation
 
-    root
-    lament
+    rootUser
+    lamentUser
   ];
 in {
   flake.nixosConfigurations.ishtar = inputs.nixpkgs.lib.nixosSystem {

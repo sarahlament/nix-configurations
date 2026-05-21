@@ -3,7 +3,7 @@
   self,
   ...
 }: {
-  flake.nixosModules.shell = {
+  flake.nixosModules.sysShell = {
     config,
     lib,
     pkgs,
@@ -24,7 +24,7 @@
       btop
       kitty
       nixvim
-      shell
+      homeShell
     ];
   };
 }
