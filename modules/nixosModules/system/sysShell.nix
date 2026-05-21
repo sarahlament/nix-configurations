@@ -22,9 +22,10 @@
 
     home-manager.sharedModules = with self.homeModules; [
       btop
+      homeShell
       kitty
       nixvim
-      homeShell
+      posh
     ];
   };
 }
