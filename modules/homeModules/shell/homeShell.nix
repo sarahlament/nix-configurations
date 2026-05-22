@@ -17,13 +17,13 @@
 
         cat = "bat";
         ls = "eza";
-        la = "eza -a --grid";
+        la = "eza -a";
         lt = "eza --tree --level=1";
-        ll = "eza -l --grid";
-        lla = "eza -la --grid";
+        ll = "eza -l";
+        lla = "eza -la";
         ltt = "eza --tree";
         grep = "rg --color=auto";
-        kssh = "kitten ssh ";
+        kssh = "kitten ssh";
       };
     };
 

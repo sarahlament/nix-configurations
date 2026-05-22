@@ -22,6 +22,22 @@ in {
     systems = ["x86_64-linux"];
     perSystem = {pkgs, ...}: {
       formatter = pkgs.alejandra;
+      pre-commit = {
+        check.enable = true;
+        settings = {
+          package = pkgs.prek;
+          hooks = {
+            alejandra = {
+              enable = true;
+              package = pkgs.alejandra;
+            };
+            deadnix = {
+              enable = true;
+              package = pkgs.deadnix;
+            };
+          };
+        };
+      };
     };
   };
 }

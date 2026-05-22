@@ -54,7 +54,14 @@
             ++ optionals (cfg.desktop.enable) [
               develop
               vscode
-              (inputs.import-tree (self + "/static/lament/desktop"))
+              {
+                programs.firefox.enable = true;
+                stylix.targets.nixvim.transparentBackground = {
+                  main = true;
+                  numberLine = true;
+                  signColumn = true;
+                };
+              }
             ]; # ++ optionals (cfg.server.enable)[]; if needed/wanted
 
           home = {

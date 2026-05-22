@@ -39,21 +39,20 @@ modules/
     athena.nix             ## Linode VPS, service host
     ishtar.nix             ## Personal desktop
   nixosModules/
-    system/
     hardware/
-    services/
     profiles/
+    services/
+    system/
   homeModules/
-    shell/
     apps/
+    shell/
   diskoConfigurations/
     ${hostName}.nix
     module.nix              ## This is a module, but here because it handles the diskoConfigurations
   packages/
   users/
-static/
+static/                     ## Sometimes, a config doesn't warrant a full module or is host-specific, so we use this for overrides
   {hostname}/
-  lament/desktop/
   packages/
 ```
 
