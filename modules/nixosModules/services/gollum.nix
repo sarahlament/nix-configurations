@@ -4,9 +4,7 @@
     lib,
     pkgs,
     ...
-  }: let
-    fqdn = config.modules.services.caddy.fqdn;
-  in {
+  }: {
     services.gollum = {
       enable = true;
       address = "localhost";

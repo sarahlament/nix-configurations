@@ -4,10 +4,10 @@
     lib,
     pkgs,
     ...
-  }: let 
+  }: let
     inherit (lib) mkEnableOption mkIf;
     cfg = config.modules.develop;
-  in  {
+  in {
     options.modules.develop.virt.enable = mkEnableOption "Enaable virt things";
     config = {
       programs.virt-manager.enable = true;

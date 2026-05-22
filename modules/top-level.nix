@@ -12,7 +12,7 @@ in {
     inputs.disko.flakeModules.disko
     inputs.flake-parts.flakeModules.easyOverlay
   ];
-  
+
   options.flake.myLib = mkOption {
     type = types.lazyAttrsOf types.raw;
     default = {};
@@ -20,10 +20,13 @@ in {
 
   config = {
     systems = ["x86_64-linux"];
-    perSystem = {pkgs, ...}: {
+    perSystem = {
+      config,
+      pkgs,
+      ...
+    }: {
       formatter = pkgs.alejandra;
       pre-commit = {
-        check.enable = true;
         settings = {
           package = pkgs.prek;
           hooks = {
@@ -34,9 +37,17 @@ in {
             deadnix = {
               enable = true;
               package = pkgs.deadnix;
+
+              settings = {
+                noLambdaPatternNames = true;
+                noLambdaArg = true;
+              };
             };
           };
         };
+      };
+      devShells.default = pkgs.mkShell {
+        shellHook = config.pre-commit.installationScript;
       };
     };
   };
