@@ -8,7 +8,6 @@
     disko
     linode
 
-    badDecisionSecurity
     networking
     nixconf
     sysShell

@@ -13,6 +13,7 @@
     time.timeZone = "America/Chicago";
     users.defaultUserShell = pkgs.zsh;
     programs.zsh.enable = true;
+    security.sudo-rs.enable = true;
 
     environment.systemPackages = with pkgs; [
       unrar

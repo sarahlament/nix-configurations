@@ -26,12 +26,7 @@
           hash = "sha256-LOcMK57SjR8wp8gVYaCYLnWqgYwEvzksn5rUdX71z4g=";
         };
 
-        globalConfig = ''
-          tls {
-            dns linode {env.LINODE_TOKEN}
-            dns_ttl 300s
-          }
-        '';
+        globalConfig = "acme_dns linode {env.LINODE_TOKEN}";
         virtualHosts.${fqdn} = {
           extraConfig = ''
             root * /var/www/${fqdn}

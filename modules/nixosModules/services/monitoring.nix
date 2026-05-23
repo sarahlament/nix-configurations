@@ -121,7 +121,7 @@
 
         scrapeConfigs = [
           {
-            job_name = "athena";
+            job_name = "${config.networking.hostName}";
             static_configs = [
               {
                 targets = ["localhost:${toString config.services.prometheus.exporters.node.port}"];
@@ -145,8 +145,8 @@
           security.secret_key = "$__file{${config.sops.secrets.grafanaSecretKey.path}}";
 
           server = {
-            root_url = "https://grafana.lament.gay";
-            domain = "grafana.lament.gay";
+            root_url = "https://grafana.${fqdn}";
+            domain = "grafana.${fqdn}";
             http_port = 3000;
           };
         };

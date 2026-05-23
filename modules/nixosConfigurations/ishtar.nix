@@ -9,7 +9,6 @@
     lanzaboote
     nvidia
 
-    badDecisionSecurity
     networking
     nixconf
     pipewire
@@ -44,6 +43,7 @@ in {
           modules.lament.desktop.enable = true;
 
           nixpkgs.overlays = [self.overlays.default];
+          security.sudo-rs.wheelNeedsPassword = false;
         }
       ];
   };

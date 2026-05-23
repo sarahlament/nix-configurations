@@ -45,7 +45,6 @@
     };
     nix.settings = {
       allowed-users = ["gitea-runner"];
-      trusted-users = ["gitea-runner"];
     };
 
     users.groups.git = {};
@@ -70,13 +69,13 @@
         user = "git";
         settings = {
           server = {
-            DOMAIN = "git.lament.gay";
-            ROOT_URL = "https://git.lament.gay";
+            DOMAIN = "git.${fqdn}";
+            ROOT_URL = "https://git.${fqdn}";
             LANDING_PAGE = "/sarahlament";
             HTTP_PORT = 3030;
             HTTP_ADDR = "localhost";
 
-            SSH_DOMAIN = "lament.gay";
+            SSH_DOMAIN = fqdn;
             SSH_USER = "git";
             SSH_PORT = 22;
             START_SSH_SERVER = false;
@@ -91,7 +90,7 @@
             ENABLED = true;
             PROTOCOL = "smtp";
             SMTP_ADDR = "localhost";
-            FROM = "git@lament.gay";
+            FROM = "git@${fqdn}";
             USER = "git";
             PASSWD = "$__file{${config.sops.secrets.forgejoMailPass.path}}";
           };
@@ -103,7 +102,7 @@
         enable = true;
         name = "athena";
         url = "http://127.0.0.1:3030";
-        tokenFile = config.sops.templates.runnerEnv.path;
+        tokenFile = config.sops.secrets.forgejoRunnerToken.path;
         labels = [
           "native:host"
         ];
