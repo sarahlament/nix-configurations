@@ -15,6 +15,12 @@
     imports = [self.nixosModules.ssh];
 
     sops.secrets.forgejoMailPass = {};
+    sops.templates.forgejoServiceEnv = {
+      content = ''
+        FORGEJO__mailer__PASSWD=${config.sops.placeholder.forgejoMailPass}
+      '';
+      owner = "git";
+    };
     mailserver.accounts = let
       passwords = config.sops.secrets;
     in {
@@ -33,25 +39,10 @@
       createHome = true;
     };
     users.groups.gitea-runner = {};
-
     sops.secrets.forgejoRunnerToken = {
       owner = "gitea-runner";
       group = "gitea-runner";
     };
-    sops.templates.runnerEnv = {
-      content = ''
-        TOKEN=${config.sops.placeholder.forgejoRunnerToken}
-      '';
-      owner = "gitea-runner";
-    };
-
-    sops.templates.forgejoServiceEnv = {
-      content = ''
-        FORGEJO__mailer__PASSWD=${config.sops.placeholder.forgejoMailPass}
-      '';
-      owner = "git";
-    };
-
     nix.settings = {
       allowed-users = ["gitea-runner"];
       trusted-users = ["gitea-runner"];
@@ -72,6 +63,8 @@
           AuthorizedKeysCommandUser git
           AuthorizedKeysCommand ${pkgs.forgejo}/bin/forgejo keys -c /var/lib/forgejo/custom/conf/app.ini -e git -u %u -t %t -k %k
       '';
+
+      caddy.virtualHosts."https://git.${fqdn}".extraConfig = mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;
       forgejo = {
         enable = true;
         user = "git";
@@ -106,8 +99,6 @@
         };
       };
 
-      caddy.virtualHosts."https://git.${fqdn}".extraConfig = mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;
-
       gitea-actions-runner.instances.athena = {
         enable = true;
         name = "athena";
@@ -129,9 +120,10 @@
     systemd.services = {
       forgejo = {
         serviceConfig = {
-          EnvironmentFile = config.sops.templates.forgejoServiceEnv.path;
+          EnvironmentFile = config.sops.secrets.forgejoRunnerToken.path;
         };
       };
+
       gitea-runner-athena = {
         serviceConfig = {
           DynamicUser = lib.mkForce false; # The nix store doesn't like ephemeral UIDs, so we disable the dynamic user

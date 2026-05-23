@@ -4,6 +4,8 @@
   pkgs,
   ...
 }: {
+  sops.secrets.adminMailPass = {};
+  sops.secrets.lamentMailPass = {};
   mailserver.accounts = let
     passwords = config.sops.secrets;
   in {

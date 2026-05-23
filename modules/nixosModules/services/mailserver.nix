@@ -16,8 +16,6 @@
       self.nixosModules.fail2ban
     ];
 
-    sops.secrets.adminMailPass = {};
-    sops.secrets.lamentMailPass = {};
     users.users.root.extraGroups = ["acme"];
     networking.firewall.allowedTCPPorts = [
       25 # SMTP
@@ -100,6 +98,8 @@
         enabled = true;
         filter = "postfix[mode=aggressive]";
         port = "smtp,smtps,submission";
+        maxretry = 2;
+        bantime = "72h";
       };
 
       dovecot.settings = {
