@@ -13,6 +13,7 @@
       description = "FQDN for caddy";
       default = "localhost";
     };
+
     config = {
       networking.firewall.allowedTCPPorts = [
         80 # HTTP
@@ -20,7 +21,17 @@
       ];
       services.caddy = {
         enable = true;
+        package = pkgs.caddy.withPlugins {
+          plugins = ["github.com/caddy-dns/linode@v0.8.0"];
+          hash = "sha256-LOcMK57SjR8wp8gVYaCYLnWqgYwEvzksn5rUdX71z4g=";
+        };
 
+        globalConfig = ''
+          tls {
+            dns linode {env.LINODE_TOKEN}
+            dns_ttl 300s
+          }
+        '';
         virtualHosts.${fqdn} = {
           extraConfig = ''
             root * /var/www/${fqdn}
@@ -29,6 +40,8 @@
         };
       };
 
+      sops.secrets.linode-token = {};
+      systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.linode-token.path;
       systemd.tmpfiles.rules = [
         "d /var/www/${fqdn} 0755 caddy caddy -"
       ];

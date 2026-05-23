@@ -1,10 +1,17 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosModules.monitoring = {
     config,
     lib,
     pkgs,
     ...
-  }: {
+  }: let
+    fqdn = config.modules.services.caddy.fqdn;
+    inherit (self.myLib) mkReverseProxy;
+  in {
     sops.secrets.grafanaSecretKey = {
       owner = "grafana";
       group = "grafana";
@@ -130,6 +137,7 @@
           grafana-github-datasource
           grafana-lokiexplore-app
         ];
+
         settings = {
           analytics.reporting_enabled = false;
           news.news_feed_enabled = false;
@@ -137,8 +145,8 @@
           security.secret_key = "$__file{${config.sops.secrets.grafanaSecretKey.path}}";
 
           server = {
-            root_url = "http://grafana.athena.ts";
-            domain = "grafana.athena.ts";
+            root_url = "https://grafana.lament.gay";
+            domain = "grafana.lament.gay";
             http_port = 3000;
           };
         };
@@ -163,5 +171,7 @@
         };
       };
     };
+
+    services.caddy.virtualHosts."https://grafana.${fqdn}".extraConfig = mkReverseProxy config.services.grafana.settings.server.http_port;
   };
 }
