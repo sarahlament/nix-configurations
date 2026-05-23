@@ -23,7 +23,8 @@ activeModules = with self.nixosModules; [
 ];
 # then, within the host or user definition
 modules = activeModules ++ [
-  # other things, such as {home.stateVersion = "26.05";}
+  # other things, such as 
+  {home.stateVersion = "26.05";}
 ];
 ```
 
@@ -36,8 +37,8 @@ modules = activeModules ++ [
 ```
 modules/
   nixosConfigurations/
-    athena.nix             ## Linode VPS, service host
-    ishtar.nix             ## Personal desktop
+    athena.nix  ## Linode VPS, service host
+    ishtar.nix  ## Personal desktop
   nixosModules/
     hardware/
     profiles/
@@ -48,12 +49,12 @@ modules/
     shell/
   diskoConfigurations/
     ${hostName}.nix
-    module.nix              ## This is a module, but here because it handles the diskoConfigurations
+    module.nix  ## placement by colocation, diskoConfiguration handler
   packages/
-  users/
-static/                     ## Sometimes, a config doesn't warrant a full module or is host-specific, so we use this for overrides
+  users/        ## see notes below
+static/         ## host-specific, or not modularized yet
   {hostname}/
-  packages/
+  packages/     ## see note below
 ```
 
 Modules are organized by output type then by semantic category.
