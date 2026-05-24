@@ -29,13 +29,6 @@
     #########################
     ## HOME MANAGER INPUTS ##
     #########################
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.systems.follows = "systems";
-      inputs.flake-parts.follows = "flake-parts";
-    };
-
     nvf = {
       url = "github:notashelf/nvf";
       inputs = {
@@ -78,7 +71,6 @@
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.3";
       inputs = {
-        crane.follows = "crane";
         flake-compat.follows = "flake-compat";
         flake-parts.follows = "flake-parts";
         nixpkgs.follows = "nixpkgs";
@@ -101,9 +93,6 @@
     ## DEDUPLICATION ##
     ###################
     # these are declared to deduplicate sources within my flake.lock
-    crane = {
-      url = "github:ipetkov/crane";
-    };
     git-hooks = {
       url = "github:cachix/git-hooks.nix";
       inputs = {
