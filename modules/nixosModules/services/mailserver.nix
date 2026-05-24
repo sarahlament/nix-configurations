@@ -97,7 +97,7 @@
       postfix.settings = {
         enabled = true;
         filter = "postfix[mode=aggressive]";
-        port = "smtp,smtps,submission";
+        port = "smtp,submissions,submission";
         maxretry = 2;
         bantime = "72h";
       };
@@ -105,7 +105,7 @@
       dovecot.settings = {
         enabled = true;
         filter = "dovecot[mode=aggressive]";
-        port = "imap,imaps,smtps,submission";
+        port = "imap,imaps,submissions,submission";
       };
     };
   };

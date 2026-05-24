@@ -20,7 +20,14 @@
         "10.0.64.0/16"
       ];
 
-      jails.DEFAULT.settings.findtime = "10m";
+      jails.DEFAULT.settings.findtime = "6h";
+      jails.recidive.settings = {
+        enable = true;
+        filter = "recidive";
+        action = "nftables-allports[name=recidivist]";
+        findtime = "24h";
+        bantime = "1w";
+      };
     };
   };
 }
