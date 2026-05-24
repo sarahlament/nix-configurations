@@ -36,6 +36,16 @@
       inputs.flake-parts.follows = "flake-parts";
     };
 
+    nvf = {
+      url = "github:notashelf/nvf";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-compat.follows = "flake-compat";
+        flake-parts.follows = "flake-parts";
+        systems.follows = "systems";
+      };
+    };
+
     ###################
     ## ATHENA INPUTS ##
     ###################
