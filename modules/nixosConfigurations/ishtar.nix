@@ -41,6 +41,7 @@ in {
           modules.boot.desktop.enable = true;
           modules.boot.zswap.enable = true;
           modules.lament.desktop.enable = true;
+          modules.root.stylixDisabler = true;
 
           nixpkgs.overlays = [self.overlays.default];
           security.sudo-rs.wheelNeedsPassword = false;
