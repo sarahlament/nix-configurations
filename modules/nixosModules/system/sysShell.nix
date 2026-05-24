@@ -25,7 +25,7 @@
       btop
       homeShell
       kitty
-      nixvim
+      nvf
       posh
     ];
   };
