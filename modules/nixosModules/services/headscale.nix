@@ -55,8 +55,8 @@
           server = {
             enabled = true;
             region_id = 999;
-            region_code = "athena";
-            region_name = "Athena Embedded DERP";
+            region_code = config.networking.hostName;
+            region_name = "${config.networking.hostName} Embedded DERP";
             stun_listen_addr = "0.0.0.0:3478";
           };
           urls = ["https://controlplane.tailscale.com/derpmap/default"];
