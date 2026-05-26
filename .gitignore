@@ -24,3 +24,6 @@ Thumbs.db
 *.bak
 *.qcow2
 bkup/
+
+# Generated files
+.pre-commit-config.yaml

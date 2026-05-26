@@ -8,7 +8,7 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:denful/import-tree";
     home-manager = {
-      url = "github:nix-community/home-manager/master";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     disko = {
@@ -75,7 +75,6 @@
         rust-overlay.follows = "rust-overlay";
       };
     };
-
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs = {

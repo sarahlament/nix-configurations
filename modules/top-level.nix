@@ -42,14 +42,25 @@ in {
                 noLambdaArg = true;
               };
             };
+            justfiles = {
+              enable = false;
+              package = pkgs.just;
+              description = "Checks justfiles";
+              entry = "${pkgs.just} --fmt --check";
+            };
           };
         };
       };
       devShells.default = pkgs.mkShell {
-        shellHook = config.pre-commit.installationScript;
+        shellHook = ''
+          ${config.pre-commit.installationScript}
+          export NH_FLAKE=$(pwd)
+        '';
         packages = with pkgs; [
           just
         ];
+
+        NH_ELEVATION_STRATEGY = "auto";
       };
     };
   };
