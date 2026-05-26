@@ -7,23 +7,25 @@
     nixpkgs-small.url = "github:nixos/nixpkgs/nixos-unstable-small";
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:denful/import-tree";
-
-    # home manager manages user-level configuration (dotfiles, packages, services)
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # disko lets me declaratively define how my disks are formatted and such
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # sops-nix is an advanced tool to store encrypted secrets along with my configuration safely
     sops = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs = {
+        flake-compat.follows = "flake-compat";
+        gitignore.follows = "gitignore";
+        nixpkgs.follows = "nixpkgs";
+      };
     };
 
     #########################
@@ -42,7 +44,6 @@
     ###################
     ## ATHENA INPUTS ##
     ###################
-    # simple, declarative mailserver for NixOS
     nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
       inputs = {
@@ -55,9 +56,7 @@
     ###################
     ## ISHTAR INPUTS ##
     ###################
-    # stylix provides system-level theming
     stylix = {
-      # I'm going to test matugen theming once again
       #url = "github:nix-community/stylix/";
       url = "github:nix-community/stylix/?ref=pull/892/head";
       inputs = {
@@ -66,8 +65,6 @@
         systems.follows = "systems";
       };
     };
-
-    # lanzaboote is a secure boot implementation, requiring your own keys
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.3";
       inputs = {
@@ -79,7 +76,6 @@
       };
     };
 
-    # anime games launcher
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs = {
@@ -92,15 +88,7 @@
     ###################
     ## DEDUPLICATION ##
     ###################
-    # these are declared to deduplicate sources within my flake.lock
-    git-hooks = {
-      url = "github:cachix/git-hooks.nix";
-      inputs = {
-        flake-compat.follows = "flake-compat";
-        gitignore.follows = "gitignore";
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
+    systems.url = "github:nix-systems/default";
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
@@ -117,7 +105,6 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    systems.url = "github:nix-systems/default";
   };
 
   outputs = inputs @ {flake-parts, ...}:

@@ -8,9 +8,9 @@
 in {
   imports = [
     inputs.git-hooks.flakeModule
-    inputs.home-manager.flakeModules.home-manager
     inputs.disko.flakeModules.disko
     inputs.flake-parts.flakeModules.easyOverlay
+    inputs.home-manager.flakeModules.home-manager
   ];
 
   options.flake.myLib = mkOption {
@@ -37,7 +37,6 @@ in {
             deadnix = {
               enable = true;
               package = pkgs.deadnix;
-
               settings = {
                 noLambdaPatternNames = true;
                 noLambdaArg = true;
@@ -48,6 +47,9 @@ in {
       };
       devShells.default = pkgs.mkShell {
         shellHook = config.pre-commit.installationScript;
+        packages = with pkgs; [
+          just
+        ];
       };
     };
   };
