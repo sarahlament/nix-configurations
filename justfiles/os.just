@@ -1,8 +1,11 @@
-switch host=`hostname -s` *args: (build host)
-    nh os switch --host {{host}} --target-host {{host}} {{args}}
+deploy host=`hostname -s` *args: (build host)
+    nh os switch --hostname={{host}} --target-host={{host}} {{args}}
 
-build host=`hostname -s`:
-    nh os build --host {{host}}
+switch *args:
+    nh os switch {{args}}
+
+build host=`hostname -s` *args:
+    nh os build --hostname={{host}} {{args}}
 
 repl host=`hostname -s`:
     nixos-rebuild repl --flake "$NH_FLAKE/.#{{host}}"

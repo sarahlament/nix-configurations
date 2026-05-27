@@ -127,13 +127,16 @@
 
         # Conform: A powerful and fast code formatter
         formatter.conform-nvim = {
-          enable = true;
+          enable = false;
           setupOpts = {
             format_on_save = {
               lsp_format = "fallback";
               timeout_ms = 500;
             };
             formatters_by_ft = {
+              gitrebase = [];
+              gitignore = [];
+              gitcommit = [];
               nix = ["alejandra"];
               toml = ["taplo"];
               json = ["prettier"];

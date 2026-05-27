@@ -28,6 +28,8 @@
         findtime = "24h";
         bantime = "1w";
       };
+
+      extraPackages = [pkgs.sendmail];
     };
   };
 }
