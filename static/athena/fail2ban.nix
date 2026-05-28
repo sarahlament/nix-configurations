@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: {
-  services.fail2ban.jails.DEFAULT.settings = {
-    destemail = "admin@lament.gay";
-    sender = "system-notification@lament.gay";
-    sendername = "fail2ban";
-    action = "%(action_mwl)s";
-  };
+}: let
+  notify = pkgs.fail2ban-email;
+in {
+  services.fail2ban.extraPackages = [notify];
+  environment.etc."fail2ban/action.d/fail2ban-email.local".text = ''
+    [Definition]
+    norestored = 1
+    actionban = ${notify}/bin/fail2ban-email "<name>" "<ip>" "<bantime>"
+  '';
 }

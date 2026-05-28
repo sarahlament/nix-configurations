@@ -23,7 +23,7 @@
         enable = true;
         package = pkgs.caddy.withPlugins {
           plugins = ["github.com/caddy-dns/linode@v0.8.0"];
-          hash = "sha256-LOcMK57SjR8wp8gVYaCYLnWqgYwEvzksn5rUdX71z4g=";
+          hash = "sha256-PVD5zn7gcljGbRrw8ZHMdZxowymNDcXgYuvD1wGijAU=";
         };
 
         globalConfig = "acme_dns linode {env.LINODE_TOKEN}";

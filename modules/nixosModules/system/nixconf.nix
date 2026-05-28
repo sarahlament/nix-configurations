@@ -1,4 +1,8 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosModules.nixconf = {
     config,
     lib,
@@ -24,6 +28,7 @@
         ];
       };
     };
+    nixpkgs.overlays = [self.overlays.default];
 
     programs.nh = {
       enable = true;

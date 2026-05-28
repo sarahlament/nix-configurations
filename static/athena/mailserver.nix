@@ -21,6 +21,7 @@
       aliases = [
         "postmaster@lament.gay"
         "abuse@lament.gay"
+        "system@lament.gay"
       ];
     };
   };

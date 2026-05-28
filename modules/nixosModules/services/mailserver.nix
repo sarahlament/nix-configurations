@@ -101,11 +101,14 @@
         maxretry = 2;
         bantime = "72h";
       };
-
-      dovecot.settings = {
+      dovecot2.settings = {
         enabled = true;
         filter = "dovecot[mode=aggressive]";
         port = "imap,imaps,submissions,submission";
+        action = ''
+          nftables-allports
+            fail2ban-email
+        '';
       };
     };
   };
