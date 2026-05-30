@@ -6,13 +6,12 @@
   activeModules = with self.nixosModules; [
     boot
     disko
-    linode
+    linodeBase
 
     networking
     nixconf
     sysShell
     sops
-    ssh
 
     caddy
     forgejo
@@ -39,7 +38,7 @@ in {
           nixpkgs.hostPlatform = "x86_64-linux";
 
           modules.boot.zram.enable = true;
-          modules.services.caddy.fqdn = "lament.gay";
+          modules.networking.ssh.public = true;
         }
       ];
   };

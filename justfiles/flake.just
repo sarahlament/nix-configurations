@@ -9,8 +9,5 @@ update:
 check:
     nix flake check
 
-fmt:
-    nix fmt run $NH_FLAKE
-
 repl:
     nix repl --expr 'builtins.getFlake "$NH_FLAKE"'

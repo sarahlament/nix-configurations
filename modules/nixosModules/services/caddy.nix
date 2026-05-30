@@ -1,45 +1,36 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosModules.caddy = {
     config,
     lib,
     pkgs,
     ...
   }: let
-    inherit (lib) mkOption types;
-    fqdn = config.modules.services.caddy.fqdn;
+    inherit (self.myLib.constants) fqdn;
   in {
-    options.modules.services.caddy.fqdn = mkOption {
-      type = types.str;
-      description = "FQDN for caddy";
-      default = "localhost";
-    };
-
-    config = {
-      networking.firewall.allowedTCPPorts = [
-        80 # HTTP
-        443 # HTTPS
-      ];
-      services.caddy = {
-        enable = true;
-        package = pkgs.caddy.withPlugins {
-          plugins = ["github.com/caddy-dns/linode@v0.8.0"];
-          hash = "sha256-PVD5zn7gcljGbRrw8ZHMdZxowymNDcXgYuvD1wGijAU=";
-        };
-
-        globalConfig = "acme_dns linode {env.LINODE_TOKEN}";
-        virtualHosts.${fqdn} = {
-          extraConfig = ''
-            root * /var/www/${fqdn}
-            file_server
-          '';
-        };
+    networking.firewall.allowedTCPPorts = [
+      80 # HTTP
+      443 # HTTPS
+    ];
+    services.caddy = {
+      enable = true;
+      package = pkgs.caddy.withPlugins {
+        plugins = ["github.com/caddy-dns/linode@v0.8.0"];
+        hash = "sha256-PVD5zn7gcljGbRrw8ZHMdZxowymNDcXgYuvD1wGijAU=";
       };
 
-      sops.secrets.linode-token = {};
-      systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.linode-token.path;
-      systemd.tmpfiles.rules = [
-        "d /var/www/${fqdn} 0755 caddy caddy -"
-      ];
+      virtualHosts.${fqdn} = {
+        extraConfig = ''
+          root * /var/www/${fqdn}
+          file_server
+        '';
+      };
     };
+    systemd.tmpfiles.rules = [
+      "d /var/www/${fqdn} 0755 caddy caddy -"
+    ];
   };
 }

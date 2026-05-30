@@ -9,8 +9,8 @@
     pkgs,
     ...
   }: let
-    fqdn = config.modules.services.caddy.fqdn;
-    inherit (self.myLib) mkReverseProxy;
+    inherit (self.myLib.constants) fqdn;
+    inherit (self.myLib.helpers) mkReverseProxy;
   in {
     sops.secrets.grafanaSecretKey = {
       owner = "grafana";

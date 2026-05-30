@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.nixosModules.linode = {
+  flake.nixosModules.linodeBase = {
     config,
     lib,
     modulesPath,

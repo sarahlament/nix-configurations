@@ -1,11 +1,15 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosModules.vaultwarden = {
     config,
     lib,
     pkgs,
     ...
   }: let
-    fqdn = config.modules.services.caddy.fqdn;
+    inherit (self.myLib.constants) fqdn;
   in {
     services.caddy = {
       virtualHosts."vaultwarden.${fqdn}" = {

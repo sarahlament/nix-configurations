@@ -1,11 +1,15 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosModules.headscale = {
     config,
     lib,
     pkgs,
     ...
   }: let
-    fqdn = config.modules.services.caddy.fqdn;
+    inherit (self.myLib.constants) fqdn;
   in {
     networking = {
       firewall.allowedTCPPorts = [
@@ -47,8 +51,7 @@
         };
 
         prefixes = {
-          v4 = "100.64.0.0/10";
-          v6 = "fd7a:115c:a1e0::/48";
+          inherit (self.myLib.constants.addresses.tailnet) v4 v6;
         };
 
         derp = {

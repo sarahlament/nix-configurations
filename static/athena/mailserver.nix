@@ -4,6 +4,7 @@
   pkgs,
   ...
 }: {
+  # accounts are not module definitions
   sops.secrets.adminMailPass = {};
   sops.secrets.lamentMailPass = {};
   mailserver.accounts = let

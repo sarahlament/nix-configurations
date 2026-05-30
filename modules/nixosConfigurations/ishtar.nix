@@ -14,7 +14,6 @@
     pipewire
     sysShell
     sops
-    ssh
     stylix
 
     develop

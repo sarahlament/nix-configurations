@@ -9,11 +9,9 @@
     pkgs,
     ...
   }: let
-    fqdn = config.modules.services.caddy.fqdn;
-    inherit (self.myLib) mkReverseProxy;
+    inherit (self.myLib.constants) fqdn;
+    inherit (self.myLib.helpers) mkReverseProxy;
   in {
-    imports = [self.nixosModules.ssh];
-
     sops.secrets.forgejoMailPass = {};
     sops.templates.forgejoServiceEnv = {
       content = ''

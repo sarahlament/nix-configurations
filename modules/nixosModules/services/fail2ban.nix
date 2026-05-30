@@ -1,5 +1,3 @@
-# we auto-import fail2ban as a 'dependency' for public-facing services, so it should never
-# have to be explicitly added to the system's modules
 {
   inputs,
   self,
@@ -10,39 +8,43 @@
     lib,
     pkgs,
     ...
-  }: {
-    networking.nftables.enable = true;
-    services.fail2ban = {
-      enable = true;
-      bantime = "1h";
-      banaction = "nftables-allports";
-      banaction-allports = "nftables-allports";
-      bantime-increment = {
+  }: let
+    inherit (self.myLib.constants.addresses) tailnet;
+    inherit (lib) mkEnableOption mkIf;
+    cfg = config.modules.services.f2b;
+  in {
+    options.modules.services.f2b.recidiveJail = mkEnableOption "Enable the recidivist jail";
+    config = {
+      # normally we would also define a jail here, but NixOS ships with one for sshd by default
+      services.fail2ban = {
         enable = true;
-        overalljails = true;
+        extraPackages = with pkgs; [fail2ban-email];
+        bantime = "1h";
+        banaction = "nftables-allports"; # knock on a door you shouldn't, get banned from all
+        bantime-increment = {
+          enable = true;
+          overalljails = true;
+        };
+        ignoreIP = [
+          tailnet.v4
+          tailnet.v6
+        ];
+        jails.recidive.settings = mkIf cfg.recidiveJail {
+          enabled = true;
+          filter = "recidive";
+          findtime = "48h";
+          bantime = "30d";
+          action = ''
+            nftables-allports[name=recidivist]
+              fail2ban-email
+          '';
+        };
       };
-      ignoreIP = [
-        "192.168.0.0/16"
-        "10.0.64.0/16"
-      ];
-
-      jails.DEFAULT.settings = {
-        findtime = "6h";
-        action = ''
-          nftables-allports
-            fail2ban-email
-        '';
-      };
-      jails.recidive.settings = {
-        enable = true;
-        filter = "recidive";
-        action = ''
-          nftables-allports[name=recidivist]
-            fail2ban-email
-        '';
-        findtime = "48h";
-        bantime = "30d";
-      };
+      environment.etc."fail2ban/action.d/fail2ban-email.local".text = ''
+        [Definition]
+        norestored = 1
+        actionban = ${pkgs.fail2ban-email}/bin/fail2ban-email "<name>" "<ip>" "<bantime>"
+      '';
     };
   };
 }

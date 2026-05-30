@@ -9,12 +9,15 @@
     pkgs,
     ...
   }: let
-    fqdn = config.modules.services.caddy.fqdn;
+    inherit (self.myLib.constants) fqdn;
+    inherit (lib) mkDefault;
   in {
     imports = [
-      inputs.nixos-mailserver.nixosModules.mailserver
+      # normally, I would avoid auto-importing my own modules and rely on strict composing through modules. mailserver gets an exception for this reason: for my email notifier to work, it *requires* the 'fail2ban-email' action provided by the main module
       self.nixosModules.fail2ban
+      inputs.nixos-mailserver.nixosModules.mailserver
     ];
+    modules.services.f2b.recidiveJail = mkDefault true;
 
     users.users.root.extraGroups = ["acme"];
     networking.firewall.allowedTCPPorts = [
@@ -93,22 +96,23 @@
       };
     };
 
-    services.fail2ban.jails = {
+    services.fail2ban.jails = let
+      action = ''
+        nftables-allports
+          fail2ban-email
+      '';
+    in {
       postfix.settings = {
         enabled = true;
         filter = "postfix[mode=aggressive]";
         port = "smtp,submissions,submission";
-        maxretry = 2;
-        bantime = "72h";
+        action = action;
       };
       dovecot2.settings = {
         enabled = true;
         filter = "dovecot[mode=aggressive]";
         port = "imap,imaps,submissions,submission";
-        action = ''
-          nftables-allports
-            fail2ban-email
-        '';
+        action = action;
       };
     };
   };

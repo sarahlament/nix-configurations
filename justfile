@@ -12,3 +12,6 @@ push:
 
 rebase diff="":
     git rebase -i {{ if diff == "" { "origin/main" } else { "HEAD~" + diff } }}
+
+fmt:
+    nix fmt .

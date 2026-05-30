@@ -55,7 +55,10 @@
               develop
               vscode
               {
-                programs.firefox.enable = true;
+                programs = {
+                  obsidian.enable = true;
+                  firefox.enable = true;
+                };
                 stylix.targets.nixvim.transparentBackground = {
                   main = true;
                   numberLine = true;
