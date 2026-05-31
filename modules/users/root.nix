@@ -9,22 +9,19 @@
     pkgs,
     ...
   }: {
-    options.modules.root.stylixDisabler = lib.mkEnableOption "Disable stylix things on desktop";
+    options.modules.root.stylix.enable = lib.mkEnableOption "Should root use stylix";
     # I want some shell things to work the same as they do for my user, so
     # root gets a home-manager definition to take advantage of sharedModules
     config = {
-      home-manager.users.root =
-        {
-          home = {
-            stateVersion = config.system.stateVersion;
-            username = "root";
-            homeDirectory = "/root";
-            shell.enableShellIntegration = true;
-          };
-        }
-        // lib.optionalAttrs config.modules.root.stylixDisabler {
-          stylix.enable = false;
+      home-manager.users.root = {
+        home = {
+          stateVersion = config.system.stateVersion;
+          username = "root";
+          homeDirectory = "/root";
+          shell.enableShellIntegration = true;
         };
+        stylix.enable = config.modules.root.stylix.enable;
+      };
     };
   };
 }

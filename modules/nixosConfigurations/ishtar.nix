@@ -40,7 +40,7 @@ in {
           modules.boot.desktop.enable = true;
           modules.boot.zswap.enable = true;
           modules.lament.desktop.enable = true;
-          modules.root.stylixDisabler = true;
+          modules.stylix.wallpaper.enable = true;
 
           security.sudo-rs.wheelNeedsPassword = false;
         }

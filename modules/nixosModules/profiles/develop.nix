@@ -1,4 +1,8 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosModules.develop = {
     config,
     lib,
@@ -19,6 +23,7 @@
         };
         spiceUSBRedirection.enable = true;
       };
+      home-manager.sharedModules = mkIf cfg.virt.enable [self.homeModules.virt-manager];
 
       programs.direnv = {
         enable = true;
@@ -39,7 +44,8 @@
     };
   };
 
-  flake.homeModules.develop = {
+  # normally, this would live in modules/homeModules but with how little it is (and it's necessity for virt (a dev concern)) it stays here
+  flake.homeModules.virt-manager = {
     config,
     lib,
     pkgs,

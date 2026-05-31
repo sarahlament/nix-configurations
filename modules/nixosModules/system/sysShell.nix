@@ -23,6 +23,7 @@
 
     home-manager.sharedModules = with self.homeModules; [
       btop
+      fastfetch
       homeShell
       kitty
       nvf

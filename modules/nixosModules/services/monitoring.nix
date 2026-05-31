@@ -23,7 +23,7 @@
         max_age    = "12h"
         labels     = {
           job  = "systemd-journal",
-          host = "athena",
+          host = "${config.networking.hostName}",
         }
       }
 

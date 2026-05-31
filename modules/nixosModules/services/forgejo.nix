@@ -19,30 +19,13 @@
       '';
       owner = "git";
     };
-    mailserver.accounts = let
-      passwords = config.sops.secrets;
-    in {
+    mailserver.accounts = {
       "git@${fqdn}" = {
-        hashedPasswordFile = passwords.forgejoMailPass.path;
+        hashedPasswordFile = config.sops.secrets.forgejoMailPass.path;
         aliases = [
           "forgejo@${fqdn}"
         ];
       };
-    };
-
-    users.users.gitea-runner = {
-      isSystemUser = true;
-      group = "gitea-runner";
-      home = "/var/lib/gitea-runner/athena";
-      createHome = true;
-    };
-    users.groups.gitea-runner = {};
-    sops.secrets.forgejoRunnerToken = {
-      owner = "gitea-runner";
-      group = "gitea-runner";
-    };
-    nix.settings = {
-      allowed-users = ["gitea-runner"];
     };
 
     users.groups.git = {};
@@ -54,14 +37,14 @@
     };
 
     services = {
+      caddy.virtualHosts."https://git.${fqdn}".extraConfig = mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;
+
       openssh.extraConfig = ''
         AcceptEnv GIT_PROTOCOL
         Match User git
           AuthorizedKeysCommandUser git
           AuthorizedKeysCommand ${pkgs.forgejo}/bin/forgejo keys -c /var/lib/forgejo/custom/conf/app.ini -e git -u %u -t %t -k %k
       '';
-
-      caddy.virtualHosts."https://git.${fqdn}".extraConfig = mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;
       forgejo = {
         enable = true;
         user = "git";
@@ -95,41 +78,12 @@
           actions.ENABLED = true;
         };
       };
-
-      gitea-actions-runner.instances.athena = {
-        enable = true;
-        name = "athena";
-        url = "http://127.0.0.1:3030";
-        tokenFile = config.sops.secrets.forgejoRunnerToken.path;
-        labels = [
-          "native:host"
-        ];
-        hostPackages = with pkgs; [
-          nix
-          git
-          bash
-          coreutils
-          alejandra
-        ];
-      };
     };
 
     systemd.services = {
       forgejo = {
         serviceConfig = {
           EnvironmentFile = config.sops.secrets.forgejoRunnerToken.path;
-        };
-      };
-
-      gitea-runner-athena = {
-        serviceConfig = {
-          DynamicUser = lib.mkForce false; # The nix store doesn't like ephemeral UIDs, so we disable the dynamic user
-          User = "gitea-runner";
-          Group = "gitea-runner";
-          Restart = lib.mkForce "always";
-          RestartSec = lib.mkForce "10s";
-          MemoryMax = lib.mkForce "2G";
-          CPUQuota = lib.mkForce "200%";
         };
       };
     };
