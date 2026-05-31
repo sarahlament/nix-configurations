@@ -52,7 +52,6 @@
               hyfetch
             ]
             ++ optionals (cfg.desktop.enable) [
-              develop
               vscode
               {
                 programs = {
