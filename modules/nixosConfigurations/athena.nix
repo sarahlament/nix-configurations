@@ -8,6 +8,7 @@
     disko
     linodeBase
 
+    buildMachines
     networking
     nixconf
     sysShell

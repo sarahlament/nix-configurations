@@ -23,6 +23,7 @@
 
     rootUser
     lamentUser
+    nixbldRemoteUser
   ];
 in {
   flake.nixosConfigurations.ishtar = inputs.nixpkgs.lib.nixosSystem {
