@@ -34,6 +34,8 @@
         bash
         coreutils
         alejandra
+        deadnix
+        nodejs
       ];
     };
     systemd.services.gitea-runner-athena = {
