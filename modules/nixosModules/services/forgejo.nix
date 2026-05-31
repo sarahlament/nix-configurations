@@ -13,12 +13,6 @@
     inherit (self.myLib.helpers) mkReverseProxy;
   in {
     sops.secrets.forgejoMailPass = {};
-    sops.templates.forgejoServiceEnv = {
-      content = ''
-        FORGEJO__mailer__PASSWD=${config.sops.placeholder.forgejoMailPass}
-      '';
-      owner = "git";
-    };
     mailserver.accounts = {
       "git@${fqdn}" = {
         hashedPasswordFile = config.sops.secrets.forgejoMailPass.path;
@@ -49,6 +43,22 @@
         enable = true;
         user = "git";
         settings = {
+          DEFAULT = {
+            APP_NAME = "git.lament";
+            APP_SLOGAN = "gay, just like me";
+          };
+          repository = {
+            PREFERED_LICENSES = "MIT";
+            USE_COMPAT_SSH_URI = false;
+            GO_GET_CLONE_URL_PROTOCOL = "ssh";
+            ENABLE_PUSH_CREATE_USER = true;
+            DISABLE_STARS = true;
+            DISABLE_FORKS = true;
+          };
+          "ui.meta" = {
+            AUTHOR = "Sarah Lament";
+            DESCRIPTION = "gay, just like me";
+          };
           server = {
             DOMAIN = "git.${fqdn}";
             ROOT_URL = "https://git.${fqdn}";
@@ -62,7 +72,6 @@
             START_SSH_SERVER = false;
             SSH_CREATE_AUTHORIZED_KEYS_FILE = false;
           };
-          repository.USE_COMPAT_SSH_URI = false;
           service = {
             DISABLE_REGISTRATION = true;
             REQUIRE_SIGNIN_TO_VIEW = false;
@@ -70,20 +79,13 @@
           mailer = {
             ENABLED = true;
             PROTOCOL = "smtp";
-            SMTP_ADDR = "localhost";
+            SMTP_ADDR = "127.0.0.1";
+            SMTP_PORT = 25;
             FROM = "git@${fqdn}";
             USER = "git";
-            PASSWD = "$__file{${config.sops.secrets.forgejoMailPass.path}}";
+            PASSWD = "file:${config.sops.secrets.forgejoMailPass.path}";
           };
           actions.ENABLED = true;
-        };
-      };
-    };
-
-    systemd.services = {
-      forgejo = {
-        serviceConfig = {
-          EnvironmentFile = config.sops.secrets.forgejoRunnerToken.path;
         };
       };
     };
