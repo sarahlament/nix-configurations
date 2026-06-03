@@ -29,12 +29,15 @@
         nftables.enable = true;
       };
 
-      services.tailscale = {
-        enable = true;
-        useRoutingFeatures = "client";
-        extraUpFlags = [
-          "--login-server https://headscale.lament.gay"
-        ];
+      services = {
+        resolved.enable = true;
+        tailscale = {
+          enable = true;
+          useRoutingFeatures = "client";
+          extraUpFlags = [
+            "--login-server https://headscale.lament.gay"
+          ];
+        };
       };
       warnings = lib.optional (cfg.public && !config.services.fail2ban.enable) "SSH is public without fail2ban enabled...";
     };
