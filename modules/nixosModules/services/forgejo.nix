@@ -24,6 +24,12 @@
 
     users.groups.git = {};
     users.users.git = {
+      # forgejo doesn't like AuthorizedKeysCommand because of the nix store's perms. I'm the only user, so I'll go ahead and hardcode my own key as authorized
+      openssh.authorizedKeys.keys = [
+        ''
+          command="${pkgs.forgejo}/bin/forgejo serv --config /var/lib/forgejo/custom/conf/app.ini key-1",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWSe/rbjk1/7meA90ZAg1hR3TcbKUgjB4GEl18SF1bZ
+        ''
+      ];
       isSystemUser = true;
       group = "git";
       home = "/var/lib/forgejo";
@@ -35,9 +41,6 @@
 
       openssh.extraConfig = ''
         AcceptEnv GIT_PROTOCOL
-        Match User git
-          AuthorizedKeysCommandUser git
-          AuthorizedKeysCommand ${pkgs.forgejo}/bin/forgejo keys -c /var/lib/forgejo/custom/conf/app.ini -e git -u %u -t %t -k %k
       '';
       forgejo = {
         enable = true;
