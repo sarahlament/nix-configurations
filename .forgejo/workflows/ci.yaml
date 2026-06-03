@@ -32,4 +32,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: "Deploy: {{ matrix.host }}"
-        run: sudo nixos-rebuild switch --flake .#${{ matrix.host }} --target-host ${{ matrix.host }}
+        run: /run/wrappers/bin/sudo nixos-rebuild switch --flake .#${{ matrix.host }} --target-host ${{ matrix.host }}
