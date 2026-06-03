@@ -24,12 +24,11 @@ jobs:
 
   deploy:
     runs-on: native
-    strategy:
-      matrix:
-        host: [ishtar, athena]
     needs: [check, build]
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4
-      - name: "Deploy: {{ matrix.host }}"
-        run: /run/wrappers/bin/sudo nixos-rebuild switch --flake .#${{ matrix.host }} --target-host ${{ matrix.host }}
+      - name: "Deploy: Athena"
+        run: /run/wrappers/bin/sudo nixos-rebuild switch --flake .#athena
+      - name: "Deploy: Ishtar"
+        run: /run/wrappers/bin/sudo nixos-rebuild switch --flake .#ishtar --target-host ishtar
