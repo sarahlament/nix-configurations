@@ -41,6 +41,7 @@
       ];
       hostPackages = with pkgs; [
         sudo-rs
+        openssh
         nix
         nixos-rebuild
         git
