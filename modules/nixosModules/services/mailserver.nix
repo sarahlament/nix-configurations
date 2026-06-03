@@ -41,7 +41,7 @@
       certs."mail.${fqdn}" = {
         webroot = "/var/lib/acme/acme-challenge";
         group = "dovecot2";
-        postRun = "systemctl reload postfix dovecot2";
+        postRun = "systemctl reload postfix dovecot";
       };
     };
 
@@ -108,11 +108,12 @@
         port = "smtp,submissions,submission";
         action = action;
       };
-      dovecot2.settings = {
+      dovecot.settings = {
         enabled = true;
         filter = "dovecot[mode=aggressive]";
         port = "imap,imaps,submissions,submission";
         action = action;
+        journalmatch = "_SYSTEMD_UNIT=dovecot.service";
       };
     };
   };

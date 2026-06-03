@@ -9,8 +9,9 @@
     nix.distributedBuilds = true;
     nix.buildMachines = [
       {
-        hostName = "ishtar";
+        hostName = "ishtar.ts";
         systems = ["x86_64-linux"];
+        protocol = "ssh-ng";
         sshUser = "nixbldRemote";
         sshKey = config.sops.secrets.nixbldKey.path;
       }

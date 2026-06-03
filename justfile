@@ -37,7 +37,7 @@ flakerepl:
     nix repl --expr 'builtins.getFlake "$NH_FLAKE"'
 
 # switch a *remote* machine
-deploy host=`hostname -s` *args: (build host)
+deploy host=`hostname -s` *args:
     nh os switch --hostname={{host}} --target-host={{host}} {{args}}
 
 # switch the *local* machine

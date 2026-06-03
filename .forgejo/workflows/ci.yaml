@@ -1,0 +1,35 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: native
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Eval Check: Flake"
+        run: nix flake check
+
+  build:
+    runs-on: native
+    strategy:
+      matrix:
+        host: [ishtar, athena]
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Build Check: ${{ matrix.host }}"
+        run: nixos-rebuild build --flake .#${{ matrix.host }} --no-link
+
+  deploy:
+    runs-on: native
+    strategy:
+      matrix:
+        host: [ishtar, athena]
+    needs: [check, build]
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Deploy: {{ matrix.host }}"
+        run: sudo nixos-rebuild switch --flake .#${{ matrix.host }} --target-host ${{ matrix.host }}

@@ -25,7 +25,7 @@
       };
       networking = {
         networkmanager.enable = lib.mkDefault true;
-        firewall.trustedInterfaces = ["tailnet0"];
+        firewall.trustedInterfaces = ["tailscale0"];
         nftables.enable = true;
       };
 

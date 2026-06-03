@@ -16,9 +16,20 @@
       owner = "gitea-runner";
       group = "gitea-runner";
     };
-    nix.settings = {
-      allowed-users = ["gitea-runner"];
-    };
+
+    # in order for my CI runner to update athena on successful merge, we need it to be able to run 'nixos-rebuild' without a password. to facilitate this, I allow that single command, and fully deny login via ssh
+    services.openssh.settings.DenyUsers = ["gitea-runner"];
+    security.sudo-rs.extraRules = [
+      {
+        users = ["gitea-runner"];
+        commands = [
+          {
+            command = "${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake *";
+            options = ["NOPASSWD"];
+          }
+        ];
+      }
+    ];
 
     services.gitea-actions-runner.instances.athena = {
       enable = true;
@@ -30,6 +41,7 @@
       ];
       hostPackages = with pkgs; [
         nix
+        nixos-rebuild
         git
         bash
         coreutils
