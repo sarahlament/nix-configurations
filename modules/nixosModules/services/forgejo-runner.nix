@@ -40,6 +40,7 @@
         "native:host"
       ];
       hostPackages = with pkgs; [
+        sudo-rs
         nix
         nixos-rebuild
         git
