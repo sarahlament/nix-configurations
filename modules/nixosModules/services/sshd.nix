@@ -44,7 +44,7 @@
         # admins cannot login via public ip
         extraConfig = ''
           Match Group wheel Address !100.64.0.0/10
-          PubkeyAuthentication no
+            PubkeyAuthentication no
         '';
       };
 
