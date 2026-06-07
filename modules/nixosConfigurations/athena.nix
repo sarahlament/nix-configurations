@@ -4,15 +4,11 @@
   ...
 }: let
   activeModules = with self.nixosModules; [
-    boot
+    core
     disko
-    linodeBase
 
     buildMachines
-    networking
-    nixconf
-    sysShell
-    sops
+    linodeBase
 
     caddy
     forgejo

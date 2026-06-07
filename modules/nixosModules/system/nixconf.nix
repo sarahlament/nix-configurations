@@ -13,7 +13,7 @@
       allowUnfree = true;
     };
 
-    # we create our own nixbld user for remote activation. since this is shared across hosts
+    # we create our own nixbld user for remote activation
     users.groups.nixbldRemote = {};
     users.users.nixbldRemote = {
       isSystemUser = true;
@@ -26,7 +26,7 @@
     };
     nix = {
       settings = {
-        trusted-users = ["nixbldRemote"];
+        trusted-users = ["@wheel"];
         experimental-features = [
           "nix-command"
           "flakes"

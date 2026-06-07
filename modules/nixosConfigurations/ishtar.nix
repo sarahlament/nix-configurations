@@ -4,16 +4,12 @@
   ...
 }: let
   activeModules = with self.nixosModules; [
-    boot
+    core
     disko
     lanzaboote
     nvidia
 
-    networking
-    nixconf
     pipewire
-    sysShell
-    sops
     stylix
 
     forgejo-runner

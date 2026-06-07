@@ -1,11 +1,15 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosModules.buildMachines = {
     config,
     lib,
     pkgs,
     ...
   }: {
-    sops.secrets.nixbldKey = {};
+    sops.secrets.nixbldKey = {sopsFile = self + "/privkeys.yaml";};
     nix.distributedBuilds = true;
     nix.buildMachines = [
       {

@@ -48,8 +48,13 @@
         users.lament = {
           imports = with self.homeModules;
             [
+              btop
+              fastfetch
               git
+              homeShell
               hyfetch
+              kitty
+              posh
             ]
             ++ optionals (cfg.desktop.enable) [
               vscode

@@ -9,19 +9,37 @@
     pkgs,
     ...
   }: let
-    inherit (lib) mkEnableOption;
+    inherit (lib) mkEnableOption mapAttrs;
+    inherit (self.myLib) directory;
     cfg = config.modules.networking.ssh;
   in {
     options.modules.networking.ssh.public = mkEnableOption "public-facing config";
     config = {
+      sops.secrets."${config.networking.hostName}PrivKey" = {
+        sopsFile = self + "/privkeys.yaml";
+        reloadUnits = ["sshd.service"];
+      };
       services.openssh = {
         enable = true;
         openFirewall = cfg.public;
+        generateHostKeys = false; # I do this personally
         settings = {
           PasswordAuthentication = false;
           KbdInteractiveAuthentication = false;
           PermitRootLogin = "no";
         };
+        hostKeys = [
+          {
+            type = "ed25519";
+            path = config.sops.secrets."${config.networking.hostName}PrivKey".path;
+          }
+        ];
+        knownHosts =
+          mapAttrs (name: host: {
+            hostNames = [name "${name}.ts" host.tailip];
+            publicKey = host.publicKey;
+          })
+          directory;
       };
       networking = {
         networkmanager.enable = lib.mkDefault true;

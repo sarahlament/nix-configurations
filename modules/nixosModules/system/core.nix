@@ -3,12 +3,20 @@
   self,
   ...
 }: {
-  flake.nixosModules.sysShell = {
+  flake.nixosModules.core = {
     config,
     lib,
     pkgs,
     ...
   }: {
+    imports = with self.nixosModules; [
+      boot
+      networking
+      nixconf
+      nvf
+      sops
+    ];
+
     i18n.defaultLocale = "en_US.UTF-8";
     time.timeZone = "America/Chicago";
     users.defaultUserShell = pkgs.zsh;
@@ -19,15 +27,6 @@
       unrar
       jq
       curl
-    ];
-
-    home-manager.sharedModules = with self.homeModules; [
-      btop
-      fastfetch
-      homeShell
-      kitty
-      nvf
-      posh
     ];
   };
 }

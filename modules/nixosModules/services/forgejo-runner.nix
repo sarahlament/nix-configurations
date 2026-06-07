@@ -22,10 +22,12 @@
     sops.secrets.forgejoRunnerToken = {
       owner = "nixrun";
       group = "nixrun";
+      restartUnits = ["gitea-runner-nixrun.service"];
     };
     sops.secrets.nixbldKey = {
       owner = "nixrun";
       group = "nixrun";
+      sopsFile = self + "/privkeys.yaml";
       path = "/var/lib/gitea-runner/nixrun/.ssh/id_ed25519";
       mode = "0600";
     };

@@ -1,11 +1,11 @@
 {inputs, ...}: {
-  flake.homeModules.nvf = {
+  flake.nixosModules.nvf = {
     config,
     pkgs,
     lib,
     ...
   }: {
-    imports = [inputs.nvf.homeManagerModules.nvf];
+    imports = [inputs.nvf.nixosModules.nvf];
     programs.nvf = {
       enable = true;
       defaultEditor = true;

@@ -23,9 +23,11 @@
       };
     };
 
+    sops.secrets.vaultwardenToken = {};
     services.vaultwarden = {
       enable = true;
       backupDir = "/var/backup/vaultwarden";
+      environmentFile = config.sops.secrets.vaultwardenToken.path;
 
       config = {
         DOMAIN = "https://vaultwarden.${fqdn}";
@@ -35,15 +37,6 @@
         ROCKET_PORT = 8222;
         ROCKET_LOG = "critical";
       };
-
-      environmentFile = config.sops.templates.vaultwardenEnv.path;
-    };
-
-    sops.secrets.vaultwardenToken = {};
-    sops.templates.vaultwardenEnv = {
-      content = ''
-        AUTH_TOKEN=${config.sops.placeholder.vaultwardenToken}
-      '';
     };
   };
 }

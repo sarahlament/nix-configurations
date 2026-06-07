@@ -7,5 +7,7 @@ creation_rules:
     key_groups:
     - age:
       - *lament
-      - *ishtar
-      - *athena
+  - path_regex: privkeys.yaml$
+    key_groups:
+    - age:
+      - *lament
