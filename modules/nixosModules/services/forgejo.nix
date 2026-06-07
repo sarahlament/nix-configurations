@@ -39,9 +39,6 @@
     services = {
       caddy.virtualHosts."https://git.${fqdn}".extraConfig = mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;
 
-      openssh.extraConfig = ''
-        AcceptEnv GIT_PROTOCOL
-      '';
       forgejo = {
         enable = true;
         user = "git";
