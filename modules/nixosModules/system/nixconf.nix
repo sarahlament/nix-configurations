@@ -29,11 +29,8 @@
         users = ["nixbldRemote"];
         commands = [
           {
-            command = "${pkgs.nix}/bin/nix-env -p /nix/var/nix/profiles/system --set *";
-            options = ["NOPASSWD"];
-          }
-          {
-            command = "/nix/var/nix/profiles/system/bin/switch-to-configuration switch";
+            # I hate to do this, but the 'least permission' would be on /bin/sh, which is just root with extra steps...
+            command = "ALL";
             options = ["NOPASSWD"];
           }
         ];
