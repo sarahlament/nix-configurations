@@ -24,18 +24,6 @@
       openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH8B07n/Z9HSnUkD5w5tm26eSwSiQnaxUVRexV9B/Wvm nixbldRemote@lament.gay"];
       shell = pkgs.bash;
     };
-    security.sudo-rs.extraRules = [
-      {
-        users = ["nixbldRemote"];
-        commands = [
-          {
-            # I hate to do this, but the 'least permission' would be on /bin/sh, which is just root with extra steps...
-            command = "ALL";
-            options = ["NOPASSWD"];
-          }
-        ];
-      }
-    ];
 
     nix = {
       settings = {

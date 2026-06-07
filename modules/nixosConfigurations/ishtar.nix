@@ -39,8 +39,6 @@ in {
           modules.boot.zswap.enable = true;
           modules.lament.desktop.enable = true;
           modules.stylix.wallpaper = true;
-
-          security.sudo-rs.wheelNeedsPassword = false;
         }
       ];
   };
