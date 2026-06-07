@@ -16,7 +16,6 @@
 
     caddy
     forgejo
-    forgejo-runner
     gollum
     headscale
     mailserver

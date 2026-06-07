@@ -20,9 +20,7 @@
         enable = true;
         enableReleaseChecks = false;
         image = mkIf cfg.wallpaper wallpaperSrc;
-        colorGeneration = {
-          polarity = "dark";
-        };
+        polarity = "dark";
 
         fonts = {
           monospace = {

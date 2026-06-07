@@ -16,6 +16,8 @@
     sops
     stylix
 
+    forgejo-runner
+
     develop
     gaming
     kde
@@ -23,7 +25,6 @@
 
     rootUser
     lamentUser
-    nixbldRemoteUser
   ];
 in {
   flake.nixosConfigurations.ishtar = inputs.nixpkgs.lib.nixosSystem {

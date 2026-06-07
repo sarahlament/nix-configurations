@@ -22,7 +22,7 @@
             "workbench.startupEditor" = "none";
             "workbench.welcomePage.walkthroughs.openOnInstall" = false;
             "workbench.settings.editor" = "json";
-            "workbench.colorTheme" = "Catppuccin Macchiato";
+            # "workbench.colorTheme" = lib.mkForce "Catppuccin Macchiato";
             "workbench.iconTheme" = "catppuccin noctis icons";
 
             "update.mode" = "none";

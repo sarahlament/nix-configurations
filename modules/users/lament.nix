@@ -58,7 +58,7 @@
                   obsidian.enable = true;
                   firefox.enable = true;
                 };
-                stylix.targets.nixvim.transparentBackground = {
+                stylix.targets.nvf.transparentBackground = {
                   main = true;
                   numberLine = true;
                   signColumn = true;

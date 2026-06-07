@@ -12,8 +12,21 @@
     nixpkgs.config = {
       allowUnfree = true;
     };
+
+    # we create our own nixbld user for remote activation. since this is shared across hosts
+    users.groups.nixbldRemote = {};
+    users.users.nixbldRemote = {
+      isSystemUser = true;
+      group = "nixbldRemote";
+      extraGroups = ["wheel"];
+      home = "/var/lib/nixbldRemote/";
+      createHome = true;
+      openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH8B07n/Z9HSnUkD5w5tm26eSwSiQnaxUVRexV9B/Wvm nixbldRemote@lament.gay"];
+      shell = pkgs.bash;
+    };
     nix = {
       settings = {
+        trusted-users = ["nixbldRemote"];
         experimental-features = [
           "nix-command"
           "flakes"

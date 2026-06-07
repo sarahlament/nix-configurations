@@ -57,8 +57,8 @@
     ## ISHTAR INPUTS ##
     ###################
     stylix = {
-      #url = "github:nix-community/stylix/";
-      url = "github:nix-community/stylix/?ref=pull/892/head";
+      url = "github:nix-community/stylix/";
+      #url = "github:nix-community/stylix/?ref=pull/892/head";
       inputs = {
         flake-parts.follows = "flake-parts";
         nixpkgs.follows = "nixpkgs";

@@ -1,66 +1,85 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosModules.forgejo-runner = {
     config,
     lib,
     pkgs,
     ...
-  }: {
-    users.users.gitea-runner = {
+  }: let
+    inherit (lib) mkForce;
+    inherit (self.myLib.constants) fqdn;
+  in {
+    users.groups.nixrun = {};
+    users.users.nixrun = {
       isSystemUser = true;
-      group = "gitea-runner";
-      home = "/var/lib/gitea-runner/athena";
+      group = "nixrun";
+      home = "/var/lib/gitea-runner/nixrun";
       createHome = true;
     };
-    users.groups.gitea-runner = {};
     sops.secrets.forgejoRunnerToken = {
-      owner = "gitea-runner";
-      group = "gitea-runner";
+      owner = "nixrun";
+      group = "nixrun";
+    };
+    sops.secrets.nixbldKey = {
+      owner = "nixrun";
+      group = "nixrun";
+      path = "/var/lib/gitea-runner/nixrun/.ssh/id_ed25519";
+      mode = "0600";
     };
 
-    # in order for my CI runner to update athena on successful merge, we need it to be able to run 'nixos-rebuild' without a password. to facilitate this, I allow that single command, and fully deny login via ssh
-    services.openssh.settings.DenyUsers = ["gitea-runner"];
-    security.sudo-rs.extraRules = [
-      {
-        users = ["gitea-runner"];
-        commands = [
-          {
-            command = "${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake *";
-            options = ["NOPASSWD"];
-          }
+    services.gitea-actions-runner = let
+      cfg = config.services.gitea-actions-runner.instances.nixrun;
+    in {
+      package = pkgs.forgejo-runner;
+      instances.nixrun = {
+        enable = true;
+        name = "nixrun";
+        url = "https://git.${fqdn}";
+        tokenFile = config.sops.secrets.forgejoRunnerToken.path;
+        labels = ["native:host"];
+        settings = {
+          server = {
+            connections = {
+              forgejo = {
+                url = "https://git.lament.gay";
+                uuid = "91e77b7a-896a-4562-a9af-becb14b936b5";
+                token_url = "file://${cfg.tokenFile}";
+                labels = cfg.labels;
+              };
+            };
+          };
+        };
+        hostPackages = with pkgs; [
+          sudo-rs
+          openssh
+          nix
+          nixos-rebuild
+          git
+          bash
+          coreutils
+          alejandra
+          deadnix
+          nodejs
         ];
-      }
-    ];
-
-    services.gitea-actions-runner.instances.athena = {
-      enable = true;
-      name = "athena";
-      url = "http://127.0.0.1:3030";
-      tokenFile = config.sops.secrets.forgejoRunnerToken.path;
-      labels = [
-        "native:host"
-      ];
-      hostPackages = with pkgs; [
-        sudo-rs
-        openssh
-        nix
-        nixos-rebuild
-        git
-        bash
-        coreutils
-        alejandra
-        deadnix
-        nodejs
-      ];
+      };
     };
-    systemd.services.gitea-runner-athena = {
+    systemd.services.gitea-runner-nixrun = {
       serviceConfig = {
-        DynamicUser = lib.mkForce false; # The nix store doesn't like ephemeral UIDs, so we disable the dynamic user
-        User = "gitea-runner";
-        Group = "gitea-runner";
-        Restart = lib.mkForce "always";
-        RestartSec = lib.mkForce "10s";
-        MemoryMax = lib.mkForce "2G";
-        CPUQuota = lib.mkForce "200%";
+        DynamicUser = mkForce false; # The nix store doesn't like ephemeral UIDs, so we disable the dynamic user
+        User = mkForce "nixrun";
+        Group = mkForce "nixrun";
+        Restart = mkForce "always";
+        RestartSec = mkForce "10s";
+        MemoryMax = mkForce "2G";
+        CPUQuota = mkForce "200%";
+
+        # We're using the new approach for declaring the .runner file, so we force the ExecStartPre to remove the register step
+        ExecStartPre = mkForce [
+          (pkgs.writeShellScript "gitea-runner-setup-nixrun" "mkdir -vp $STATE_DIRECTORY/nixrun")
+        ];
       };
     };
   };
