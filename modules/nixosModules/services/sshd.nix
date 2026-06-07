@@ -11,6 +11,7 @@
   }: let
     inherit (lib) mkEnableOption mapAttrs;
     inherit (self.myLib) directory;
+    inherit (self.myLib.constants.addresses) tailnet;
     cfg = config.modules.ssh;
   in {
     options.modules.ssh.public = mkEnableOption "public-facing config";
@@ -43,7 +44,7 @@
 
         # admins cannot login via public ip
         extraConfig = ''
-          Match Group wheel Address !100.64.0.0/10
+          Match User lament,nixbldRemote Address *,!${tailnet.v4},!${tailnet.v6}
             PubkeyAuthentication no
         '';
       };
