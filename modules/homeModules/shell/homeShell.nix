@@ -17,11 +17,11 @@
 
         cat = "bat";
         ls = "eza";
-        la = "eza -a";
-        lt = "eza --tree --level=1";
-        ll = "eza -l";
-        lla = "eza -la";
-        ltt = "eza --tree";
+        la = "ls -a";
+        lt = "ls --tree --level=1";
+        ll = "ls -l";
+        lla = "ls -la";
+        ltt = "ls --tree";
         grep = "rg --color=auto";
         kssh = "kitten ssh";
       };
@@ -63,7 +63,6 @@
           "--follow-symlinks"
           "--no-filesize"
           "--no-time"
-          "--no-permissions"
           "--octal-permissions"
         ];
       };
