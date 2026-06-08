@@ -20,6 +20,7 @@
         enable = true;
         enableReleaseChecks = false;
         image = mkIf cfg.wallpaper wallpaperSrc;
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
         polarity = "dark";
 
         fonts = {
