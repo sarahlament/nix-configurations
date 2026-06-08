@@ -17,11 +17,6 @@
     ];
     services.caddy = {
       enable = true;
-      package = pkgs.caddy.withPlugins {
-        plugins = ["github.com/caddy-dns/linode@v0.8.0"];
-        hash = "sha256-PVD5zn7gcljGbRrw8ZHMdZxowymNDcXgYuvD1wGijAU=";
-      };
-
       virtualHosts.${fqdn} = {
         extraConfig = ''
           root * /var/www/${fqdn}
