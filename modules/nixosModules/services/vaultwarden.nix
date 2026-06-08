@@ -12,7 +12,7 @@
     inherit (self.myLib.constants) fqdn;
   in {
     services.caddy = {
-      virtualHosts."vaultwarden.${fqdn}" = {
+      virtualHosts."vault.${fqdn}" = {
         extraConfig = ''
           encode zstd gzip
 
