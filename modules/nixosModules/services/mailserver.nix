@@ -74,6 +74,17 @@
       };
     };
 
+    # base admin account
+    sops.secrets.adminMailPass = {};
+    mailserver.accounts."admin@lament.gay" = {
+      hashedPasswordFile = config.sops.secrets.adminMailPass.path;
+      aliases = [
+        "postmaster@lament.gay"
+        "abuse@lament.gay"
+        "system@lament.gay"
+      ];
+    };
+
     # Mail backup
     systemd.tmpfiles.rules = [
       "d /var/backup/mail 0700 root root -"

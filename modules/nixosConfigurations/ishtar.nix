@@ -18,9 +18,6 @@
     gaming
     kde
     workstation
-
-    rootUser
-    lamentUser
   ];
 in {
   flake.nixosConfigurations.ishtar = inputs.nixpkgs.lib.nixosSystem {

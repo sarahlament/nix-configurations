@@ -12,7 +12,6 @@
     inherit (lib) mkEnableOption optionals;
     cfg = config.modules.lament;
   in {
-    imports = [inputs.home-manager.nixosModules.home-manager];
     options.modules.lament = {
       desktop.enable = mkEnableOption "Enable desktop config";
     };
@@ -41,42 +40,32 @@
         user = "lament";
       };
 
-      home-manager = {
-        useGlobalPkgs = true;
-        useUserPackages = true;
-        backupFileExtension = "hmb";
-        users.lament = {
-          imports = with self.homeModules;
-            [
-              btop
-              fastfetch
-              git
-              homeShell
-              hyfetch
-              kitty
-              posh
-            ]
-            ++ optionals (cfg.desktop.enable) [
-              vscode
-              {
-                programs = {
-                  obsidian.enable = true;
-                  firefox.enable = true;
-                };
-                stylix.targets.nvf.transparentBackground = {
-                  main = true;
-                  numberLine = true;
-                  signColumn = true;
-                };
-              }
-            ]; # ++ optionals (cfg.server.enable)[]; if needed/wanted
+      home-manager.users.lament = {
+        imports = with self.homeModules;
+          [
+            git
+            kitty
+          ]
+          ++ optionals (cfg.desktop.enable) [
+            vscode
+            {
+              programs = {
+                obsidian.enable = true;
+                firefox.enable = true;
+              };
+              stylix.targets.nvf.transparentBackground = {
+                main = true;
+                numberLine = true;
+                signColumn = true;
+              };
+            }
+          ]; # ++ optionals (cfg.server.enable)[]; if needed/wanted
 
-          home = {
-            stateVersion = config.system.stateVersion;
-            username = "lament";
-            homeDirectory = "/home/lament";
-            shell.enableShellIntegration = true;
-          };
+        home = {
+          stateVersion = config.system.stateVersion;
+          username = "lament";
+          homeDirectory = "/home/lament";
+          shell.enableShellIntegration = true;
         };
       };
     };

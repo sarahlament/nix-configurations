@@ -42,12 +42,6 @@ in {
                 noLambdaArg = true;
               };
             };
-            justfiles = {
-              enable = false;
-              package = pkgs.just;
-              description = "Checks justfiles";
-              entry = "${pkgs.just} --fmt --check";
-            };
           };
         };
       };
@@ -57,6 +51,7 @@ in {
           export NH_FLAKE=$(pwd)
         '';
         packages = with pkgs; [
+          jq
           just
         ];
 

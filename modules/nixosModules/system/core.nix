@@ -10,12 +10,18 @@
     ...
   }: {
     imports = with self.nixosModules; [
+      inputs.home-manager.nixosModules.home-manager
+
       boot
+      buildMachines
       networking
       nixconf
       nvf
       ssh
       sops
+
+      rootUser
+      lamentUser
     ];
 
     i18n.defaultLocale = "en_US.UTF-8";
@@ -31,9 +37,22 @@
     3: even if the key is leaked, @wheel is denied login via public ip, so you'd need to be within the tailnet to do anything to begin with
     */
 
+    # home-manager is a system module, so we define base options here
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      backupFileExtension = "hmb";
+
+      sharedModules = with self.homeModules; [
+        btop
+        fastfetch
+        homeShell
+        hyfetch
+        posh
+      ];
+    };
+
     environment.systemPackages = with pkgs; [
-      unrar
-      jq
       curl
     ];
   };

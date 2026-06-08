@@ -6,8 +6,6 @@
   activeModules = with self.nixosModules; [
     core
     disko
-
-    buildMachines
     linodeBase
 
     caddy
@@ -17,9 +15,6 @@
     mailserver
     monitoring
     vaultwarden
-
-    rootUser
-    lamentUser
   ];
 in {
   flake.nixosConfigurations.athena = inputs.nixpkgs-small.lib.nixosSystem {

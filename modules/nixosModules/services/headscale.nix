@@ -36,9 +36,9 @@
 
       settings = {
         server_url = "https://headscale.${fqdn}";
-
         noise.private_key_path = "/var/lib/headscale/noise_private.key";
-
+        ephemeral_node_inactivity_timeout = "30m";
+        logtail.enabled = false;
         database = {
           type = "sqlite3";
           sqlite.path = "/var/lib/headscale/db.sqlite";
@@ -49,7 +49,6 @@
           magic_dns = true;
           nameservers.global = ["1.1.1.1" "9.9.9.9"];
         };
-
         prefixes = {
           inherit (self.myLib.constants.addresses.tailnet) v4 v6;
         };
@@ -66,9 +65,6 @@
           auto_update_enabled = true;
           update_frequency = "24h";
         };
-
-        logtail.enabled = false;
-        ephemeral_node_inactivity_timeout = "30m";
       };
     };
   };

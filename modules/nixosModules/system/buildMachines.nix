@@ -11,7 +11,7 @@
   }: {
     sops.secrets.nixbldKey = {sopsFile = self + "/privkeys.yaml";};
     nix.distributedBuilds = true;
-    nix.buildMachines = [
+    nix.buildMachines = lib.mkIf (config.networking.hostName != "ishtar") [
       {
         hostName = "ishtar.ts";
         systems = ["x86_64-linux"];
