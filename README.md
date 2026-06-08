@@ -16,15 +16,14 @@ Each module is defined through `flake.{nixosModules,homeModules,etc}.moduleName`
 
 ```nix
 activeModules = with self.nixosModules; [
-  boot disko lanzaboote nvidia
-  networking nixconf shell sops ssh
+  core disko lanzaboote nvidia
   kde gaming develop stylix workstation
   lament # yes, even my user itself is a module
 ];
 # then, within the host or user definition
 modules = activeModules ++ [
   # other things, such as 
-  {home.stateVersion = "26.05";}
+  {system.stateVersion = "26.05";}
 ];
 ```
 
@@ -50,8 +49,8 @@ modules/
   diskoConfigurations/
     ${hostName}.nix
     module.nix  ## placement by colocation, diskoConfiguration handler
-  packages/
   users/        ## see notes below
+  packages.nix  ## single entrypoint for packages
 static/         ## host-specific, or not modularized yet
   {hostname}/
   packages/     ## see note below
