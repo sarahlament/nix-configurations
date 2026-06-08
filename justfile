@@ -1,6 +1,10 @@
+set quiet
+
 alias help := default
 alias fr := flakerepl
 alias or := osrepl
+
+branch := `git branch --show-current`
 
 # base project recipes
 [private]
@@ -38,16 +42,35 @@ flakerepl:
 
 # switch a *remote* machine
 deploy host=`hostname -s` *args:
-    nh os switch --hostname={{host}} --target-host={{host}} {{args}}
+    nh os switch --hostname={{ host }} --target-host={{ host }} {{ args }}
 
 # switch the *local* machine
 switch *args:
-    nh os switch {{args}}
+    nh os switch {{ args }}
 
 # build a host
 build host=`hostname -s` *args:
-    nh os build --hostname={{host}} {{args}}
+    nh os build --hostname={{ host }} {{ args }}
 
 # run the repl on a host
 osrepl host=`hostname -s`:
-    nixos-rebuild repl --flake "$NH_FLAKE/.#{{host}}"
+    nixos-rebuild repl --flake "$NH_FLAKE/.#{{ host }}"
+
+# nvd diff since main
+nvd host=`hostname -s`:
+    if [ {{ branch }} = main ]; then \
+        echo "Cannot diff on main"; \
+    else \
+        nh os build --hostname={{ host }}; \
+        mv ./result ./result-new; \
+        git switch main; \
+        nh os build --hostname={{ host }}; \
+        git switch {{ branch }}; \
+        nvd diff ./result ./result-new; \
+        rm ./result ./result-new; \
+    fi
+
+# cleanup current branch after merge
+cleanup target=branch:
+    git switch main
+    git branch -D {{ target }}

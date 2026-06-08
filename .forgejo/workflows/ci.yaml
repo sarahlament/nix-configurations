@@ -7,6 +7,9 @@ on:
 jobs:
   check:
     runs-on: native
+    if: >-
+      !contains(github.event.pull_request.title || '', '[ci-skip]')
+      && !contains(github.event.head_commit.message || '', '[ci-skip]')
     steps:
       - uses: actions/checkout@v4
       - name: "Eval Check: Flake"
@@ -14,6 +17,7 @@ jobs:
 
   build:
     runs-on: native
+    needs: [check]
     strategy:
       matrix:
         host: [ishtar, athena]
