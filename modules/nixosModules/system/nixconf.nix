@@ -42,7 +42,18 @@
         ];
       };
     };
-    nixpkgs.overlays = [self.overlays.default];
+    nixpkgs.overlays = [
+      self.overlays.default
+
+      # I'm tired of this always rebuilding, so we pin it here
+      (final: prev: {
+        numix-cursor-theme =
+          (import (fetchTarball {
+            url = "https://github.com/nixos/nixpkgs/archive/a799d3e3886da994fa307f817a6bc705ae538eeb.tar.gz";
+            sha256 = "sha256:11mhk782xy1n58518f86k6fcvxjaaim3mk9nmhx68fg5i2jg9ayx";
+          }) {inherit (final) system;}).numix-cursor-theme;
+      })
+    ];
 
     programs.nh = {
       enable = true;
