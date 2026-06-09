@@ -36,9 +36,11 @@
       shell = "${pkgs.bash}/bin/bash";
     };
 
-    systemd.tmpfiles.rules = [
-      "L+ /var/lib/forgejo/custom/public/assets/css - - - - ${pkgs.catppuccin-gitea}/var/lib/forgejo/custom/public/assets/css"
-    ];
+    catppuccin = {
+      enable = true;
+      autoEnable = false;
+      forgejo.enable = true;
+    };
     services = {
       caddy.virtualHosts."https://git.${fqdn}".extraConfig = mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;
 
@@ -57,10 +59,6 @@
             ENABLE_PUSH_CREATE_USER = true;
             DISABLE_STARS = true;
             DISABLE_FORKS = true;
-          };
-          ui = {
-            THEMES = "catppuccin-mocha-mauve";
-            DEFAULT = "catppuccin-mocha-mauve";
           };
           "ui.meta" = {
             AUTHOR = "Sarah Lament";

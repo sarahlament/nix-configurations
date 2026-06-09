@@ -11,6 +11,7 @@
   }: {
     imports = with self.nixosModules; [
       inputs.home-manager.nixosModules.home-manager
+      inputs.catppuccin.nixosModules.catppuccin
 
       boot
       buildMachines

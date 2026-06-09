@@ -19,9 +19,8 @@
       ];
       text = builtins.readFile (self + "/static/packages/fail2ban-email.sh");
     };
-    packages.catppuccin-gitea = pkgs.callPackage (self + "/static/packages/catppuccin-gitea.nix") {};
     overlayAttrs = {
-      inherit (config.packages) lsfg-vk fail2ban-email catppuccin-gitea;
+      inherit (config.packages) lsfg-vk fail2ban-email;
     };
   };
 }
