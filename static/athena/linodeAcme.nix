@@ -13,7 +13,7 @@ in {
     globalConfig = "acme_dns linode {env.LINODE_TOKEN}";
     package = pkgs.caddy.withPlugins {
       plugins = ["github.com/caddy-dns/linode@v0.8.0"];
-      hash = "sha256-PVD5zn7gcljGbRrw8ZHMdZxowymNDcXgYuvD1wGijAU=";
+      hash = "sha256-6vQy74JTlThRd6OFEdnF+IyTxWwhP14TARcFdgKuz/8=";
     };
   };
 
