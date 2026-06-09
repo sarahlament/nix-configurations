@@ -36,6 +36,9 @@
       shell = "${pkgs.bash}/bin/bash";
     };
 
+    systemd.tmpfiles.rules = [
+      "L+ /var/lib/forgejo/custom/public/assets/css - - - - ${pkgs.catppuccin-gitea}/var/lib/forgejo/custom/public/assets/css"
+    ];
     services = {
       caddy.virtualHosts."https://git.${fqdn}".extraConfig = mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;
 
@@ -44,8 +47,8 @@
         user = "git";
         settings = {
           DEFAULT = {
-            APP_NAME = "git.lament";
-            APP_SLOGAN = "gay, just like me";
+            APP_NAME = "git";
+            APP_SLOGAN = "just the code";
           };
           repository = {
             PREFERED_LICENSES = "MIT";
@@ -56,11 +59,12 @@
             DISABLE_FORKS = true;
           };
           ui = {
-            THEMES = "";
+            THEMES = "catppuccin-mocha-mauve";
+            DEFAULT = "catppuccin-mocha-mauve";
           };
           "ui.meta" = {
             AUTHOR = "Sarah Lament";
-            DESCRIPTION = "gay, just like me";
+            DESCRIPTION = "just the code";
           };
           server = {
             DOMAIN = "git.${fqdn}";
@@ -69,7 +73,7 @@
             HTTP_PORT = 3030;
             HTTP_ADDR = "localhost";
 
-            SSH_DOMAIN = fqdn;
+            SSH_DOMAIN = "athena.ts";
             SSH_USER = "git";
             SSH_PORT = 22;
             START_SSH_SERVER = false;
