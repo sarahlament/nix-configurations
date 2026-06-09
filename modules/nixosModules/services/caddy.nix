@@ -15,6 +15,7 @@
       80 # HTTP
       443 # HTTPS
     ];
+
     services.caddy = {
       enable = true;
       virtualHosts.${fqdn} = {

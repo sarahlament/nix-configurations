@@ -13,7 +13,7 @@
     inherit (lib) mkDefault;
   in {
     imports = [
-      # normally, I would avoid auto-importing my own modules and rely on strict composing through modules. mailserver gets an exception for this reason: for my email notifier to work, it *requires* the 'fail2ban-email' action provided by the main module
+      # normally, I would avoid importing cross-module, however mailserver gets an exception: the jails *rely* on the f2b emailer script within the main module
       self.nixosModules.fail2ban
       inputs.nixos-mailserver.nixosModules.mailserver
     ];
@@ -25,25 +25,6 @@
       465 # SUBMISSIONS
       993 # IMAPS
     ];
-
-    # HTTP-only server for ACME challenges
-    services.caddy.extraConfig = ''
-      http://mail.${fqdn} {
-        root * /var/lib/acme/acme-challenge
-        file_server
-      }
-    '';
-
-    security.acme = {
-      acceptTerms = true;
-      defaults.email = "sarah@${fqdn}";
-
-      certs."mail.${fqdn}" = {
-        webroot = "/var/lib/acme/acme-challenge";
-        group = "dovecot2";
-        postRun = "systemctl reload postfix dovecot";
-      };
-    };
 
     mailserver = {
       enable = true;
