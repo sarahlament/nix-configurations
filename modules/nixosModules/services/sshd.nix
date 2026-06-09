@@ -9,12 +9,20 @@
     pkgs,
     ...
   }: let
-    inherit (lib) mkEnableOption mapAttrs;
+    inherit (lib) mkEnableOption mkOption mkIf types mapAttrs;
     inherit (self.myLib) directory;
     inherit (self.myLib.constants.addresses) tailnet;
     cfg = config.modules.ssh;
   in {
-    options.modules.ssh.public = mkEnableOption "public-facing config";
+    options.modules.ssh = {
+      public = mkEnableOption "public-facing config";
+      publicUsers = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        example = ["git"];
+        description = "users allowed public login";
+      };
+    };
     config = {
       sops.secrets."${config.networking.hostName}PrivKey" = {
         sopsFile = self + "/privkeys.yaml";
@@ -43,8 +51,9 @@
           directory;
 
         # admins cannot login via public ip
-        extraConfig = ''
-          Match User lament,nixbldRemote Address *,!${tailnet.v4},!${tailnet.v6}
+        extraConfig = mkIf (cfg.public
+          && (cfg.publicUsers != [])) ''
+          Match User ${lib.concatStringsSep "," (["*"] ++ map (u: "!${u}") cfg.publicUsers)} Address *,!${tailnet.v4},!${tailnet.v6}
             PubkeyAuthentication no
         '';
       };

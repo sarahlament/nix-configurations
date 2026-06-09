@@ -30,7 +30,6 @@ in {
           nixpkgs.hostPlatform = "x86_64-linux";
 
           modules.boot.zram.enable = true;
-          modules.ssh.public = true;
         }
       ];
   };

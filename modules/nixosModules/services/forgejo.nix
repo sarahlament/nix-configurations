@@ -55,6 +55,9 @@
             DISABLE_STARS = true;
             DISABLE_FORKS = true;
           };
+          ui = {
+            THEMES = "";
+          };
           "ui.meta" = {
             AUTHOR = "Sarah Lament";
             DESCRIPTION = "gay, just like me";
