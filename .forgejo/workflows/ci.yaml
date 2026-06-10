@@ -39,7 +39,7 @@ jobs:
 
   deploy:
     runs-on: native
-    needs: [check, build]
+    needs: [dry-activate]
     strategy:
       matrix:
         host: [ishtar, athena]
