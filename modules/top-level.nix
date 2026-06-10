@@ -48,14 +48,13 @@ in {
       devShells.default = pkgs.mkShell {
         shellHook = ''
           ${config.pre-commit.installationScript}
-          export NH_FLAKE=$(pwd)
+          export FLAKE=$(pwd)
+          alias j='just'
         '';
         packages = with pkgs; [
           jq
           just
         ];
-
-        NH_ELEVATION_STRATEGY = "auto";
       };
     };
   };

@@ -26,10 +26,10 @@ fmt:
 # update the lockfile, then commit if changed
 update:
     nix flake update
-    if git diff --quiet $NH_FLAKE/flake.lock; then \
+    if git diff --quiet $FLAKE/flake.lock; then \
         echo "No updates found"; \
     else \
-        git add $NH_FLAKE/flake.lock && git commit -m "flake: updated"; \
+        git add $FLAKE/flake.lock && git commit -m "flake: updated"; \
     fi
 
 # eval check
@@ -38,7 +38,7 @@ check:
 
 # run the repl on the flake
 flakerepl:
-    nix repl --expr 'builtins.getFlake "$NH_FLAKE"'
+    nix repl --expr 'builtins.getFlake "$FLAKE"'
 
 # switch a *remote* machine
 deploy host=`hostname -s` *args:
@@ -54,7 +54,7 @@ build host=`hostname -s` *args:
 
 # run the repl on a host
 osrepl host=`hostname -s`:
-    nixos-rebuild repl --flake "$NH_FLAKE/.#{{ host }}"
+    nixos-rebuild repl --flake "$FLAKE/.#{{ host }}"
 
 # nvd diff since main
 nvd host=`hostname -s`:

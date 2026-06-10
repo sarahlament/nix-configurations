@@ -53,13 +53,6 @@
                 obsidian.enable = true;
                 firefox.enable = true;
               };
-              /*
-                stylix.targets.nvf.transparentBackground = {
-                main = true;
-                numberLine = true;
-                signColumn = true;
-              };
-              */
             }
           ]; # ++ optionals (cfg.server.enable)[]; if needed/wanted
 
