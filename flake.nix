@@ -83,6 +83,10 @@
         rust-overlay.follows = "rust-overlay";
       };
     };
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     ###################
     ## DEDUPLICATION ##
