@@ -29,7 +29,7 @@ update:
     if git diff --quiet $NH_FLAKE/flake.lock; then \
         echo "No updates found"; \
     else \
-        git add $NH_FLAKE/flake.lock && git commit -m "flake: updated";\
+        git add $NH_FLAKE/flake.lock && git commit -m "flake: updated"; \
     fi
 
 # eval check
@@ -72,5 +72,10 @@ nvd host=`hostname -s`:
 
 # cleanup current branch after merge
 cleanup target=branch:
-    git switch main
-    git branch -D {{ target }}
+    if [ {{ target }} == main ]; then \
+        echo "Refusing to cleanup main"; \
+    else \
+        git switch main; \
+        git pull; \
+        git branch -D {{ target }}; \
+    fi

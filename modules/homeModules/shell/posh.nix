@@ -13,41 +13,14 @@
       enable = true;
       settings = {
         "$schema" = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json";
-        palette = let
-          hasStylix = config.lib ? stylix;
-          stylixhash =
-            if hasStylix
-            then config.lib.stylix.colors.withHashtag
-            else null;
-        in {
-          active_focus =
-            if hasStylix
-            then stylixhash.base0E
-            else "magenta";
-          system_info =
-            if hasStylix
-            then stylixhash.base0E
-            else "magenta";
-          time_display =
-            if hasStylix
-            then stylixhash.base0C
-            else "cyan";
-          dev_context =
-            if hasStylix
-            then stylixhash.base09
-            else "orange";
-          status_success =
-            if hasStylix
-            then stylixhash.base0B
-            else "green";
-          status_warning =
-            if hasStylix
-            then stylixhash.base0A
-            else "yellow";
-          status_error =
-            if hasStylix
-            then stylixhash.base08
-            else "red";
+        palette = {
+          active_focus = "#cba6f7";
+          system_info = "#cba6f7";
+          time_display = "#94e2d5";
+          dev_context = "#fab387";
+          status_success = "#a6e3a1";
+          status_warning = "#f9e2af";
+          status_error = "#f38ba8";
         };
         upgrade = {
           source = "cdn";

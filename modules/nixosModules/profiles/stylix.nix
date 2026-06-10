@@ -54,11 +54,6 @@
           popups = 0.95;
         };
       };
-
-      boot = {
-        plymouth.enable = true;
-        kernelParams = ["splash"];
-      };
     };
   };
 }

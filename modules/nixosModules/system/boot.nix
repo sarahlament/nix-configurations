@@ -58,7 +58,12 @@
             "zswap.max_pool_percent=20"
             "zswap.shrinker_enabled=1"
           ]
-          ++ (optionals cfg.desktop.enable) ["quiet"];
+          ++ (optionals cfg.desktop.enable) [
+            "quiet"
+            "splash"
+          ];
+
+        plymouth.enable = cfg.desktop.enable;
       };
 
       zramSwap.enable = mkIf cfg.zram.enable true;

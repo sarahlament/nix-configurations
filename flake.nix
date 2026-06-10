@@ -27,10 +27,6 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
-    catppuccin = {
-      url = "github:catppuccin/nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     #########################
     ## HOME MANAGER INPUTS ##

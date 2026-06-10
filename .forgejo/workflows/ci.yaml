@@ -12,7 +12,7 @@ jobs:
       && !contains(github.event.head_commit.message || '', '[ci-skip]')
     steps:
       - uses: actions/checkout@v4
-      - name: "Eval Check: Flake"
+      - name: "check"
         run: nix flake check
 
   build:
@@ -23,8 +23,19 @@ jobs:
         host: [ishtar, athena]
     steps:
       - uses: actions/checkout@v4
-      - name: "Build Check: ${{ matrix.host }}"
+      - name: "build"
         run: nixos-rebuild build --flake .#${{ matrix.host }} --no-link
+
+  dry-activate:
+    runs-on: native
+    needs: [build]
+    strategy:
+      matrix:
+        host: [ishtar, athena]
+    steps:
+      - uses: actions/checkout@v4
+      - name: "dry-activate"
+        run: nixos-rebuild dry-activate --flake .#${{ matrix.host }} --target-host nixbldRemote@${{ matrix.host }}.ts --sudo
 
   deploy:
     runs-on: native
@@ -35,5 +46,5 @@ jobs:
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4
-      - name: "Deploy: ${{ matrix.host }}"
+      - name: "deploy"
         run: nixos-rebuild switch --flake .#${{ matrix.host }} --target-host nixbldRemote@${{ matrix.host }}.ts --sudo

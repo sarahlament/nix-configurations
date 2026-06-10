@@ -10,9 +10,8 @@
     nvidia
 
     pipewire
-    stylix
-
     forgejo-runner
+    stylix
 
     develop
     gaming

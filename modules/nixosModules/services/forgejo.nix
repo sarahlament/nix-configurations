@@ -24,22 +24,20 @@
 
     users.groups.git = {};
     users.users.git = {
-      # forgejo doesn't like AuthorizedKeysCommand because of the nix store's perms. I'm the only user, so I'll go ahead and hardcode my own key as authorized
-      openssh.authorizedKeys.keys = [
-        ''
-          command="${pkgs.forgejo}/bin/forgejo serv --config /var/lib/forgejo/custom/conf/app.ini key-1",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWSe/rbjk1/7meA90ZAg1hR3TcbKUgjB4GEl18SF1bZ
-        ''
-      ];
       isSystemUser = true;
       group = "git";
       home = "/var/lib/forgejo";
       shell = "${pkgs.bash}/bin/bash";
     };
 
-    catppuccin = {
-      enable = true;
-      autoEnable = false;
-      forgejo.enable = true;
+    # I've shamelessly stolen catppuccin's config for their themes here
+    systemd.tmpfiles.settings."10-catppuccin-forgejo-theme" = let
+      cfg = config.services.forgejo;
+      inherit (cfg) customDir;
+    in {
+      "${customDir}/public/assets/css"."C+" = {argument = toString pkgs.forgejo-themes;};
+      "${customDir}/public/assets".d = {inherit (cfg) user group;};
+      "${customDir}/public".d = {inherit (cfg) user group;};
     };
     services = {
       caddy.virtualHosts."https://git.${fqdn}".extraConfig = mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;
@@ -60,6 +58,12 @@
             DISABLE_STARS = true;
             DISABLE_FORKS = true;
           };
+          ui = let
+            theme = "catppuccin-mocha-mauve";
+          in {
+            DEFAULT_THEME = theme;
+            THEMES = theme;
+          };
           "ui.meta" = {
             AUTHOR = "Sarah Lament";
             DESCRIPTION = "just the code";
@@ -75,7 +79,7 @@
             SSH_USER = "git";
             SSH_PORT = 22;
             START_SSH_SERVER = false;
-            SSH_CREATE_AUTHORIZED_KEYS_FILE = false;
+            SSH_CREATE_AUTHORIZED_KEYS_FILE = true;
           };
           service = {
             DISABLE_REGISTRATION = true;

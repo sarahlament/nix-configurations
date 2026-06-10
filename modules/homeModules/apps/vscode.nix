@@ -13,7 +13,6 @@
           extensions = with pkgs.vscode-extensions; [
             jnoortheen.nix-ide
             eamodio.gitlens
-            catppuccin.catppuccin-vsc
             catppuccin.catppuccin-vsc-icons
           ];
 
@@ -22,7 +21,6 @@
             "workbench.startupEditor" = "none";
             "workbench.welcomePage.walkthroughs.openOnInstall" = false;
             "workbench.settings.editor" = "json";
-            "workbench.colorTheme" = lib.mkForce "Catppuccin Macchiato";
             "workbench.iconTheme" = "catppuccin noctis icons";
 
             "update.mode" = "none";
