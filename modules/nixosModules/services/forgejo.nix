@@ -41,10 +41,20 @@
     };
     services = {
       caddy.virtualHosts."https://git.${fqdn}".extraConfig = mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;
+      borgbackup.jobs.${config.networking.hostName} = {
+        preHook = "systemctl start forgejo-dump.service";
+        paths = [config.services.forgejo.dump.backupDir];
+      };
 
       forgejo = {
         enable = true;
         user = "git";
+        dump = {
+          enable = true;
+          backupDir = "/var/backup/forgejo";
+          type = "tar";
+          file = "forgejo-dump";
+        };
         settings = {
           DEFAULT = {
             APP_NAME = "git";

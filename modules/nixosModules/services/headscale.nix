@@ -29,6 +29,8 @@
       '';
     };
 
+    services.borgbackup.jobs.${config.networking.hostName}.paths = ["/var/lib/headscale"];
+
     services.headscale = {
       enable = true;
       address = "127.0.0.1";

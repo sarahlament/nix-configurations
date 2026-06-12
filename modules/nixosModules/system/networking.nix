@@ -20,6 +20,10 @@
           "--login-server https://headscale.lament.gay"
         ];
       };
+
+      borgbackup.jobs.${config.networking.hostName} = {
+        paths = ["/var/lib/tailscale"];
+      };
     };
   };
 }

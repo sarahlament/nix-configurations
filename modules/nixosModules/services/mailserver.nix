@@ -66,27 +66,10 @@
       ];
     };
 
-    # Mail backup
-    systemd.tmpfiles.rules = [
-      "d /var/backup/mail 0700 root root -"
+    services.borgbackup.jobs.${config.networking.hostName}.paths = [
+      config.mailserver.dkim.keyDirectory
+      config.mailserver.storage.path
     ];
-
-    systemd.services.mail-backup = {
-      description = "Backup mail data";
-      serviceConfig.Type = "oneshot";
-      script = ''
-        rsync -a /var/vmail/ /var/backup/mail/
-      '';
-      path = [pkgs.rsync];
-    };
-
-    systemd.timers.mail-backup = {
-      wantedBy = ["timers.target"];
-      timerConfig = {
-        OnCalendar = "daily";
-        Persistent = true;
-      };
-    };
 
     services.fail2ban.jails = let
       action = ''

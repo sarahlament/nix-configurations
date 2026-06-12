@@ -25,6 +25,15 @@
         '';
       };
     };
+
+    services.borgbackup.jobs.${config.networking.hostName} = {
+      paths = ["/var/lib/caddy"];
+      exclude = [
+        "/var/lib/caddy/**/locks"
+        "/var/lib/caddy/**/challenge_tokens"
+        "/var/lib/caddy/**/instance.uuid"
+      ];
+    };
     systemd.tmpfiles.rules = [
       "d /var/www/${fqdn} 0755 caddy caddy -"
     ];

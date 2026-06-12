@@ -27,4 +27,8 @@ in {
       environmentFile = config.sops.secrets.linodeToken.path;
     };
   };
+
+  services.borgbackup.jobs.${config.networking.hostName}.paths = [
+    config.security.acme.certs."mail.${fqdn}".directory
+  ];
 }

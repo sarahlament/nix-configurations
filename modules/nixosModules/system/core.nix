@@ -13,6 +13,7 @@
       inputs.home-manager.nixosModules.home-manager
 
       boot
+      borgbackup
       buildMachines
       networking
       nixconf

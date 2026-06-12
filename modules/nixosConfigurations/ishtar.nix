@@ -33,6 +33,7 @@ in {
 
           modules.boot.desktop.enable = true;
           modules.boot.zswap.enable = true;
+          modules.services.borg.subuser = "sub2";
           modules.lament.desktop.enable = true;
           modules.stylix.wallpaper = true;
         }

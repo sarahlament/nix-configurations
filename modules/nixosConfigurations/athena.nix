@@ -30,6 +30,7 @@ in {
           nixpkgs.hostPlatform = "x86_64-linux";
 
           modules.boot.zram.enable = true;
+          modules.services.borg.subuser = "sub1";
         }
       ];
   };
