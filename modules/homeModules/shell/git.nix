@@ -8,6 +8,7 @@
     home.shellAliases = {
       g = "git";
       gs = "g stat";
+      gsw = "g switch -c";
       gp = "g pull";
       gput = "g push";
       ga = "g add";
@@ -22,8 +23,7 @@
       gdc = "gd --cached";
       gdcs = "PAGER=cat gdc --stat";
       glog = "PAGER=cat g prettylog -n10";
-      gamend = "gc --amend -u";
-      gcfl = "ga flake.lock && gcm \"updated flake.lock\"";
+      gamend = "gc --amend";
     };
 
     programs = {

@@ -26,6 +26,7 @@
 
       services.borgbackup.jobs.${hostName} = {
         doInit = false;
+        archiveBaseName = hostName;
         repo = mkBorgRepo cfg.subuser;
         extraArgs = ["--remote-path=borg-1.4"];
         environment = {BORG_RSH = "ssh -i ${config.sops.secrets."${cfg.subuser}Ssh".path}";};
