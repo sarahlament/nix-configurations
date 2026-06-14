@@ -10,6 +10,7 @@
     ...
   }: let
     inherit (self.myLib.constants) fqdn;
+    inherit (self.myLib.helpers) mkSopsFile;
     inherit (lib) mkDefault;
   in {
     imports = [
@@ -56,13 +57,13 @@
     };
 
     # base admin account
-    sops.secrets.adminMailPass = {};
-    mailserver.accounts."admin@lament.gay" = {
+    sops.secrets.adminMailPass = {sopsFile = mkSopsFile "pass";};
+    mailserver.accounts."admin@${fqdn}" = {
       hashedPasswordFile = config.sops.secrets.adminMailPass.path;
       aliases = [
-        "postmaster@lament.gay"
-        "abuse@lament.gay"
-        "system@lament.gay"
+        "postmaster@${fqdn}"
+        "abuse@${fqdn}"
+        "system@${fqdn}"
       ];
     };
 

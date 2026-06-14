@@ -10,6 +10,7 @@
     ...
   }: let
     inherit (lib) mkEnableOption optionals;
+    inherit (self.myLib.helpers) mkSopsFile;
     cfg = config.modules.lament;
   in {
     options.modules.lament = {
@@ -17,13 +18,21 @@
     };
 
     config = {
-      sops.secrets.lamentUserPass.neededForUsers = true;
+      sops.secrets.lamentUserPass = {
+        sopsFile = mkSopsFile "pass";
+        neededForUsers = true;
+      };
+      sops.secrets.lamentKey = {
+        sopsFile = mkSopsFile "privkeys";
+        owner = "lament";
+        path = "/home/lament/.ssh/id_ed25519";
+      };
       nix.settings.trusted-users = ["lament"];
       users.users.lament = {
         description = "Sarah Lament";
         hashedPasswordFile = config.sops.secrets.lamentUserPass.path;
         isNormalUser = true;
-        openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWSe/rbjk1/7meA90ZAg1hR3TcbKUgjB4GEl18SF1bZ"]; # personal key
+        openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWSe/rbjk1/7meA90ZAg1hR3TcbKUgjB4GEl18SF1bZ"];
         extraGroups = [
           "wheel"
           "systemd-journal"

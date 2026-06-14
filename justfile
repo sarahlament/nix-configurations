@@ -79,3 +79,10 @@ cleanup target=branch:
         git pull; \
         git branch -D {{ target }}; \
     fi
+
+sops file="none":
+    if [ {{ file }} == none ]; then \
+        echo "No file specified"; \
+    else \
+        sops edit "sops/{{ file }}.yaml"; \
+    fi

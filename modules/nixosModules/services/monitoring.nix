@@ -10,11 +10,11 @@
     ...
   }: let
     inherit (self.myLib.constants) fqdn;
-    inherit (self.myLib.helpers) mkReverseProxy;
+    inherit (self.myLib.helpers) mkReverseProxy mkSopsFile;
   in {
     sops.secrets.grafanaSecretKey = {
+      sopsFile = mkSopsFile "services";
       owner = "grafana";
-      group = "grafana";
     };
 
     environment.etc."alloy/config.alloy".text = ''

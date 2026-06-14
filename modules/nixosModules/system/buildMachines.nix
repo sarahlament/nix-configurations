@@ -2,14 +2,16 @@
   inputs,
   self,
   ...
-}: {
+}: let
+  inherit (self.myLib.helpers) mkSopsFile;
+in {
   flake.nixosModules.buildMachines = {
     config,
     lib,
     pkgs,
     ...
   }: {
-    sops.secrets.nixbldKey = {sopsFile = self + "/privkeys.yaml";};
+    sops.secrets.nixbldKey = {sopsFile = mkSopsFile "privkeys";};
     nix.distributedBuilds = true;
     nix.buildMachines = lib.mkIf (config.networking.hostName != "ishtar") [
       {

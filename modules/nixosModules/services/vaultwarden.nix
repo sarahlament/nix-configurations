@@ -10,9 +10,11 @@
     ...
   }: let
     inherit (self.myLib.constants) fqdn;
-    inherit (self.myLib.helpers) mkReverseProxy;
+    inherit (self.myLib.helpers) mkReverseProxy mkSopsFile;
   in {
-    sops.secrets.vaultwardenToken = {};
+    sops.secrets.vaultwardenToken = {
+      sopsFile = mkSopsFile "services";
+    };
     services = {
       borgbackup.jobs.${config.networking.hostName} = {
         preHook = "systemctl start backup-vaultwarden.service";

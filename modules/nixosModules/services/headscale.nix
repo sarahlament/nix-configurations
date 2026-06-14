@@ -10,6 +10,8 @@
     ...
   }: let
     inherit (self.myLib.constants) fqdn;
+    inherit (self.myLib.helpers) mkSopsFile;
+    inherit (config.networking) hostName;
   in {
     networking = {
       firewall.allowedTCPPorts = [
@@ -31,6 +33,16 @@
 
     services.borgbackup.jobs.${config.networking.hostName}.paths = ["/var/lib/headscale"];
 
+    sops.secrets = {
+      "${hostName}Noise" = {
+        sopsFile = mkSopsFile "services";
+        owner = config.services.headscale.user;
+      };
+      "${hostName}DERP" = {
+        sopsFile = mkSopsFile "services";
+        owner = config.services.headscale.user;
+      };
+    };
     services.headscale = {
       enable = true;
       address = "127.0.0.1";

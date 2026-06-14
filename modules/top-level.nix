@@ -52,8 +52,10 @@ in {
           alias j='just'
         '';
         packages = with pkgs; [
+          age
           jq
           just
+          sops
         ];
       };
     };

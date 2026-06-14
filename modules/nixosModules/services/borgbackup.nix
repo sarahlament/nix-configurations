@@ -10,7 +10,7 @@
     ...
   }: let
     inherit (lib) mkOption types;
-    inherit (self.myLib.helpers) mkBorgRepo;
+    inherit (self.myLib.helpers) mkBorgRepo mkSopsFile;
     inherit (config.networking) hostName;
     cfg = config.modules.services.borg;
   in {
@@ -21,8 +21,8 @@
       };
     };
     config = {
-      sops.secrets."${cfg.subuser}Ssh" = {sopsFile = self + "/borg.yaml";};
-      sops.secrets."${cfg.subuser}Repo" = {sopsFile = self + "/borg.yaml";};
+      sops.secrets."${cfg.subuser}Ssh" = {sopsFile = mkSopsFile "borg";};
+      sops.secrets."${cfg.subuser}Repo" = {sopsFile = mkSopsFile "borg";};
 
       services.borgbackup.jobs.${hostName} = {
         doInit = false;

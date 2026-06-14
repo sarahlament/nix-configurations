@@ -12,6 +12,7 @@
     inherit (lib) mkEnableOption mkOption mkIf types mapAttrs;
     inherit (self.myLib) directory;
     inherit (self.myLib.constants.addresses) tailnet;
+    inherit (self.myLib.helpers) mkSopsFile;
     cfg = config.modules.ssh;
   in {
     options.modules.ssh = {
@@ -25,7 +26,7 @@
     };
     config = {
       sops.secrets."${config.networking.hostName}PrivKey" = {
-        sopsFile = self + "/privkeys.yaml";
+        sopsFile = mkSopsFile "privkeys";
         reloadUnits = ["sshd.service"];
       };
       services.openssh = {

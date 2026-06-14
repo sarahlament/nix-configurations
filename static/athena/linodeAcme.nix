@@ -6,8 +6,9 @@
   ...
 }: let
   inherit (self.myLib.constants) fqdn;
+  inherit (self.myLib.helpers) mkSecret;
 in {
-  sops.secrets.linodeToken = {};
+  sops.secrets.linodeToken = mkSecret {file = "services";};
   systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.linodeToken.path;
   services.caddy = {
     globalConfig = "acme_dns linode {env.LINODE_TOKEN}";

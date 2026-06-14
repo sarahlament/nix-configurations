@@ -11,6 +11,7 @@
   }: let
     inherit (lib) mkForce;
     inherit (self.myLib.constants) fqdn;
+    inherit (self.myLib.helpers) mkSopsFile;
   in {
     users.groups.nixrun = {};
     users.users.nixrun = {
@@ -20,16 +21,14 @@
       createHome = true;
     };
     sops.secrets.forgejoRunnerToken = {
+      sopsFile = mkSopsFile "services";
       owner = "nixrun";
-      group = "nixrun";
       restartUnits = ["gitea-runner-nixrun.service"];
     };
     sops.secrets.nixbldKey = {
+      sopsFile = mkSopsFile "privkeys";
       owner = "nixrun";
-      group = "nixrun";
-      sopsFile = self + "/privkeys.yaml";
       path = "/var/lib/gitea-runner/nixrun/.ssh/id_ed25519";
-      mode = "0600";
     };
 
     services.gitea-actions-runner = let

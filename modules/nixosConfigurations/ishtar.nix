@@ -36,6 +36,8 @@ in {
           modules.services.borg.subuser = "sub2";
           modules.lament.desktop.enable = true;
           modules.stylix.wallpaper = true;
+
+          fileSystems."/persist".neededForBoot = true;
         }
       ];
   };

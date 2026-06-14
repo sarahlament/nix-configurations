@@ -10,9 +10,9 @@
     ...
   }: let
     inherit (self.myLib.constants) fqdn;
-    inherit (self.myLib.helpers) mkReverseProxy;
+    inherit (self.myLib.helpers) mkReverseProxy mkSopsFile;
   in {
-    sops.secrets.forgejoMailPass = {};
+    sops.secrets.forgejoMailPass = {sopsFile = mkSopsFile "pass";};
     mailserver.accounts = {
       "git@${fqdn}" = {
         hashedPasswordFile = config.sops.secrets.forgejoMailPass.path;
