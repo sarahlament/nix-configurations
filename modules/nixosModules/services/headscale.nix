@@ -50,7 +50,7 @@
 
       settings = {
         server_url = "https://headscale.${fqdn}";
-        noise.private_key_path = "/var/lib/headscale/noise_private.key";
+        noise.private_key_path = config.sops.secrets."${hostName}Noise".path;
         ephemeral_node_inactivity_timeout = "30m";
         logtail.enabled = false;
         database = {
@@ -73,6 +73,7 @@
             region_id = 999;
             region_code = config.networking.hostName;
             region_name = "${config.networking.hostName} Embedded DERP";
+            private_key_path = config.sops.secrets."${hostName}DERP".path;
             stun_listen_addr = "0.0.0.0:3478";
           };
           urls = ["https://controlplane.tailscale.com/derpmap/default"];
