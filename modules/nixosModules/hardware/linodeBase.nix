@@ -21,7 +21,6 @@
         timeout = 0;
         grub = {
           enable = true;
-          forceInstall = true;
           device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi-disk-0";
 
           extraConfig = ''
