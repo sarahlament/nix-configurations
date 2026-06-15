@@ -53,6 +53,8 @@ in {
         '';
         packages = with pkgs; [
           age
+          dig
+          delve
           jq
           just
           sops

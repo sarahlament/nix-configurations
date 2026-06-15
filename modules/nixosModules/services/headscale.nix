@@ -14,12 +14,8 @@
     inherit (config.networking) hostName;
   in {
     networking = {
-      firewall.allowedTCPPorts = [
-        3478 # DERP (whatever tf that is lmfao)
-      ];
-      firewall.allowedUDPPorts = [
-        3478 # apparently it's needed for both TCP and UDP??
-      ];
+      firewall.allowedTCPPorts = [3478];
+      firewall.allowedUDPPorts = [3478];
     };
 
     services.caddy.virtualHosts."headscale.${fqdn}" = {
@@ -62,6 +58,7 @@
           base_domain = "ts";
           magic_dns = true;
           nameservers.global = ["1.1.1.1" "9.9.9.9"];
+          override_local_dns = false;
         };
         prefixes = {
           inherit (self.myLib.constants.addresses.tailnet) v4 v6;
@@ -71,8 +68,8 @@
           server = {
             enabled = true;
             region_id = 999;
-            region_code = config.networking.hostName;
-            region_name = "${config.networking.hostName} Embedded DERP";
+            region_code = hostName;
+            region_name = "${hostName} Embedded DERP";
             private_key_path = config.sops.secrets."${hostName}DERP".path;
             stun_listen_addr = "0.0.0.0:3478";
           };

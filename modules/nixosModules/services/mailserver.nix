@@ -34,8 +34,7 @@
       domains = ["${fqdn}"];
 
       x509 = {
-        certificateFile = "/var/lib/acme/mail.${fqdn}/fullchain.pem";
-        privateKeyFile = "/var/lib/acme/mail.${fqdn}/key.pem";
+        useACMEHost = "mail.${fqdn}";
       };
 
       enableImap = false;
