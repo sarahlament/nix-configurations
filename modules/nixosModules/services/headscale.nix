@@ -11,6 +11,7 @@
   }: let
     inherit (self.myLib.constants) fqdn;
     inherit (self.myLib.helpers) mkSopsFile;
+    inherit (self.myLib.constants.addresses) tailnet;
     inherit (config.networking) hostName;
   in {
     networking = {
@@ -55,7 +56,7 @@
         };
 
         dns = {
-          base_domain = "ts";
+          base_domain = tailnet.domain;
           magic_dns = true;
           nameservers.global = ["1.1.1.1" "9.9.9.9"];
           override_local_dns = false;

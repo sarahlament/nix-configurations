@@ -10,7 +10,7 @@
     ...
   }: let
     inherit (lib) mkEnableOption mkOption mkIf types mapAttrs;
-    inherit (self.myLib) directory;
+    inherit (self.myLib.directory) hosts;
     inherit (self.myLib.constants.addresses) tailnet;
     inherit (self.myLib.helpers) mkSopsFile;
     cfg = config.modules.ssh;
@@ -49,7 +49,7 @@
             hostNames = [name "${name}.ts" host.tailip];
             publicKey = host.publicKey;
           })
-          directory;
+          hosts;
 
         # admins cannot login via public ip
         extraConfig = mkIf (cfg.public

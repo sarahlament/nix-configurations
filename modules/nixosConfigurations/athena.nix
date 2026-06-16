@@ -12,6 +12,7 @@
     forgejo
     gollum
     headscale
+    kresd
     mailserver
     monitoring
     vaultwarden

@@ -4,7 +4,9 @@
     lib,
     pkgs,
     ...
-  }: {
+  }: let
+    inherit (lib) mkDefault;
+  in {
     networking = {
       networkmanager.enable = lib.mkDefault true;
       firewall.trustedInterfaces = ["tailscale0"];
@@ -12,7 +14,7 @@
     };
 
     services = {
-      resolved.enable = true;
+      resolved.enable = mkDefault true;
       tailscale = {
         enable = true;
         useRoutingFeatures = "client";
