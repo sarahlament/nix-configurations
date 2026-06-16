@@ -39,7 +39,7 @@ in {
       dnsProvider = "porkbun";
       group = "dovecot2";
       extraLegoRenewFlags = ["--reuse-key"];
-      postRun = "systemctl reload postfix dovecot";
+      reloadServices = ["postfix.service" "dovecot.service"];
       environmentFile = config.sops.templates.porkbunAcme.path;
     };
   };
