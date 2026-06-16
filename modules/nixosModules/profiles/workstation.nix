@@ -13,7 +13,6 @@
       hardware.bluetooth.enable = mkIf cfg.bluetooth.enable true;
       services = {
         flatpak.enable = true;
-        fwupd.enable = true;
         tuned = {
           enable = true;
           ppdSettings.main = {
