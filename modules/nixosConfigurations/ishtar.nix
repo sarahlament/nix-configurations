@@ -17,6 +17,7 @@
     gaming
     kde
     workstation
+    remoteDesktop
   ];
 in {
   flake.nixosConfigurations.ishtar = inputs.nixpkgs.lib.nixosSystem {
