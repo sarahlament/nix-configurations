@@ -8,7 +8,8 @@
     home.shellAliases = {
       g = "git";
       gs = "g stat";
-      gsw = "g switch -c";
+      gsw = "g switch";
+      gswc = "gsw -c";
       gp = "g pull";
       gput = "g push";
       ga = "g add";
