@@ -19,15 +19,6 @@
       firewall.allowedUDPPorts = [3478];
     };
 
-    services.caddy.virtualHosts."headscale.${fqdn}" = {
-      extraConfig = ''
-        reverse_proxy localhost:${toString config.services.headscale.port} {
-          header_up Host {upstream_hostport}
-          header_up X-Real-IP {remote_host}
-        }
-      '';
-    };
-
     services.borgbackup.jobs.${config.networking.hostName}.paths = ["/var/lib/headscale"];
 
     sops.secrets = {
@@ -40,10 +31,18 @@
         owner = config.services.headscale.user;
       };
     };
+
+    # because we need the extra header to pass the Host, we can't use my mkReverseProxy here
+    services.caddy.virtualHosts."https://headscale.lament.gay".extraConfig = ''
+      reverse_proxy localhost:${toString config.services.headscale.port} {
+        header_up Host {upstream_hostport}
+        header_up X-Real-Ip {remote_host}
+      }
+    '';
     services.headscale = {
       enable = true;
-      address = "127.0.0.1";
-      port = 8080;
+      address = "0.0.0.0";
+      port = 8443;
 
       settings = {
         server_url = "https://headscale.${fqdn}";

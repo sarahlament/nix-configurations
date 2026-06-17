@@ -5,7 +5,6 @@
   self,
   ...
 }: let
-  inherit (self.myLib.constants) fqdn;
   inherit (self.myLib.helpers) mkSopsFile;
 in {
   sops = {
@@ -32,19 +31,4 @@ in {
       hash = "sha256-MlKX2obWac+jP4j9UHFMxsY/DRaqw9JCVAdI7erhFwo=";
     };
   };
-  security.acme = {
-    acceptTerms = true;
-    defaults.email = "sarah@${fqdn}";
-    certs."mail.${fqdn}" = {
-      dnsProvider = "porkbun";
-      group = "dovecot2";
-      extraLegoRenewFlags = ["--reuse-key"];
-      reloadServices = ["postfix.service" "dovecot.service"];
-      environmentFile = config.sops.templates.porkbunAcme.path;
-    };
-  };
-
-  services.borgbackup.jobs.${config.networking.hostName}.paths = [
-    config.security.acme.certs."mail.${fqdn}".directory
-  ];
 }

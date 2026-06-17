@@ -8,6 +8,7 @@
     disko
     linodeBase
 
+    acme
     caddy
     forgejo
     gollum

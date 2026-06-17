@@ -19,7 +19,7 @@
         enable = true;
         useRoutingFeatures = "client";
         extraUpFlags = [
-          "--login-server https://headscale.lament.gay"
+          "--login-server https://hs.lament.gay:8443"
         ];
       };
 

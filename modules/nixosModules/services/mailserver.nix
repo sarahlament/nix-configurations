@@ -20,6 +20,12 @@
     ];
     modules.services.f2b.recidiveJail = mkDefault true;
 
+    security.acme.certs."mail.${fqdn}" = {
+      group = "dovecot2";
+      extraLegoRenewFlags = ["--reuse-key"];
+      reloadServices = ["postfix.service" "dovecot.service"];
+    };
+
     users.users.root.extraGroups = ["acme"];
     networking.firewall.allowedTCPPorts = [
       25 # SMTP
@@ -67,6 +73,7 @@
     };
 
     services.borgbackup.jobs.${config.networking.hostName}.paths = [
+      config.security.acme.certs."mail.${fqdn}".directory
       config.mailserver.dkim.keyDirectory
       config.mailserver.storage.path
     ];
