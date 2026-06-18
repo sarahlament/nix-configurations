@@ -8,14 +8,10 @@
     lib,
     pkgs,
     ...
-  }: let
-    inherit (lib) mkEnableOption mkIf;
-    cfg = config.modules.develop;
-  in {
-    options.modules.develop.virt.enable = mkEnableOption "Enaable virt things";
+  }: {
     config = {
       programs.virt-manager.enable = true;
-      virtualisation = mkIf cfg.virt.enable {
+      virtualisation = {
         docker.enable = true;
         libvirtd = {
           enable = true;
@@ -23,7 +19,7 @@
         };
         spiceUSBRedirection.enable = true;
       };
-      home-manager.sharedModules = mkIf cfg.virt.enable [self.homeModules.virt-manager];
+      home-manager.sharedModules = [self.homeModules.virt-manager];
 
       programs.direnv = {
         enable = true;
@@ -32,14 +28,15 @@
       };
 
       environment.systemPackages = with pkgs; [
-        nixd # Nix language server
         alejandra # Nix formatter
+        distrobox # seamlessly use other distros with docker
+        jetbrains-toolbox # IDE manager
+        nixd # Nix language server
         nodejs # JavaScript runtime
-        uv # Python package manager
         python3 # Python interpreter
         rustup # Rust toolchain installer
+        uv # Python package manager
         visualvm # java vm visualizer
-        jetbrains-toolbox # IDE manager
       ];
     };
   };
