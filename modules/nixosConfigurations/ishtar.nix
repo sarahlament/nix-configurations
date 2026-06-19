@@ -38,6 +38,9 @@ in {
           modules.stylix.wallpaper = true;
 
           fileSystems."/persist".neededForBoot = true;
+
+          # the CC plugin doesn't like me :L
+          programs.nix-ld.enable = true;
         }
       ];
   };

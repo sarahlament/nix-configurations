@@ -14,7 +14,6 @@
             jnoortheen.nix-ide
             eamodio.gitlens
             catppuccin.catppuccin-vsc-icons
-            anthropic.claude-code
           ];
 
           userSettings = {
