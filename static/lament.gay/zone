@@ -36,6 +36,3 @@ headscale       IN CNAME    lament.gay.
 notes           IN CNAME    tailnet.lament.gay.
 vault           IN CNAME    tailnet.lament.gay.
 www             IN CNAME    lament.gay.
-
-
-dnshenet-key    IN TXT      sIQZ0rRKW1lgWlLCmSeAoNj9gBLDgeT77epFw6pxFlg
