@@ -67,6 +67,7 @@
       hashedPasswordFile = config.sops.secrets.adminMailPass.path;
       aliases = [
         "postmaster@${fqdn}"
+        "hostmaster@${fqdn}"
         "abuse@${fqdn}"
         "system@${fqdn}"
       ];

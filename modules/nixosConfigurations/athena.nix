@@ -13,6 +13,7 @@
     forgejo
     gollum
     headscale
+    knot
     kresd
     mailserver
     monitoring
