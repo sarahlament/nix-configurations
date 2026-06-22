@@ -32,6 +32,7 @@ tailnet         IN A        100.64.0.1
 
 git             IN CNAME    lament.gay.
 grafana         IN CNAME    tailnet.lament.gay.
+headscale       IN CNAME    lament.gay.
 notes           IN CNAME    tailnet.lament.gay.
 vault           IN CNAME    tailnet.lament.gay.
 www             IN CNAME    lament.gay.
