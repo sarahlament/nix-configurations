@@ -48,7 +48,7 @@
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
       inputs = {
         flake-compat.follows = "flake-compat";
-        git-hooks.inputs.gitignore.follows = "gitignore";
+        git-hooks.follows = "git-hooks";
         nixpkgs.follows = "nixpkgs-small";
       };
     };
@@ -66,13 +66,11 @@
       };
     };
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.3";
+      url = "github:nix-community/lanzaboote/v1.1.0";
       inputs = {
-        flake-compat.follows = "flake-compat";
-        flake-parts.follows = "flake-parts";
         nixpkgs.follows = "nixpkgs";
-        pre-commit-hooks-nix.inputs.gitignore.follows = "gitignore";
         rust-overlay.follows = "rust-overlay";
+        pre-commit.follows = "git-hooks";
       };
     };
     aagl = {
