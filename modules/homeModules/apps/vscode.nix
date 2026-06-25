@@ -89,6 +89,9 @@
             "catppuccin-noctis-icons.hidesExplorerArrows" = false;
             "geminicodeassist.project" = "supple-shard-xm6t3";
             "claudeCode.selectedModel" = "opus";
+
+            "mermaidLivePreview.useVSCodeTheme" = false;
+            "mermaidLivePreview.theme" = "dark";
           };
         };
       };
