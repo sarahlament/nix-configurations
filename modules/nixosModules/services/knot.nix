@@ -11,7 +11,7 @@
   }: let
     inherit (self.myLib.constants) fqdn;
     inherit (self.myLib.constants.addresses) nameserver;
-    inherit (self.myLib.constants.addresses.public) athena;
+    inherit (self.myLib.directory.hosts.${config.networking.hostName}.ip) public;
     inherit (self.myLib.helpers) mkSopsFile;
     zoneFile = self + "/static/${fqdn}/zone";
   in {
@@ -38,7 +38,7 @@
       settings = {
         log.syslog.any = "info";
         server = {
-          listen = ["${athena.v4}@53" "${athena.v6}@53" "127.0.0.1@5353" "::1@5353"];
+          listen = ["${public.v4}@53" "${public.v6}@53" "127.0.0.1@5353" "::1@5353"];
           automatic-acl = false;
         };
         database.storage = "/var/lib/knot";

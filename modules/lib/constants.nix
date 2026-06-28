@@ -7,15 +7,7 @@
   flake.myLib.constants = {
     fqdn = "lament.gay";
     addresses = {
-      public.athena = {
-        v4 = "104.200.16.195";
-        v6 = "2600:3c00::2000:31ff:fe65:8d63";
-      };
-      tailnet = {
-        v4 = "100.64.0.0/10";
-        v6 = "fd7a:115c:a1e0::/48";
-        domain = "ts";
-      };
+      internal = "fd67:d6a7:d6f3::/48";
       nameserver = {
         secondary = {
           v4 = "216.218.133.2";

@@ -11,7 +11,8 @@
   }: let
     inherit (lib) mkEnableOption mkOption mkIf types mapAttrs;
     inherit (self.myLib.directory) hosts;
-    inherit (self.myLib.constants.addresses) tailnet;
+    inherit (self.myLib.constants) fqdn;
+    inherit (self.myLib.constants.addresses) internal;
     inherit (self.myLib.helpers) mkSopsFile;
     cfg = config.modules.ssh;
   in {
@@ -25,7 +26,7 @@
       };
     };
     config = {
-      sops.secrets."${config.networking.hostName}PrivKey" = {
+      sops.secrets."${config.networking.hostName}SshKey" = {
         sopsFile = mkSopsFile "privkeys";
         reloadUnits = ["sshd.service"];
       };
@@ -41,20 +42,20 @@
         hostKeys = [
           {
             type = "ed25519";
-            path = config.sops.secrets."${config.networking.hostName}PrivKey".path;
+            path = config.sops.secrets."${config.networking.hostName}SshKey".path;
           }
         ];
         knownHosts =
           mapAttrs (name: host: {
-            hostNames = [name "${name}.ts" host.tailip];
-            publicKey = host.publicKey;
+            hostNames = [name "${name}.${fqdn}" host.ip.internal];
+            publicKey = host.keys.sshPub;
           })
           hosts;
 
         # admins cannot login via public ip
         extraConfig = mkIf (cfg.public
           && (cfg.publicUsers != [])) ''
-          Match User ${lib.concatStringsSep "," (["*"] ++ map (u: "!${u}") cfg.publicUsers)} Address *,!${tailnet.v4},!${tailnet.v6}
+          Match User ${lib.concatStringsSep "," (["*"] ++ map (u: "!${u}") cfg.publicUsers)} Address *,!${internal}
             PubkeyAuthentication no
         '';
       };

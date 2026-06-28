@@ -34,9 +34,7 @@
     };
 
     networking = {
-      networkmanager.enable = false;
       usePredictableInterfaceNames = false;
-      useDHCP = true;
       tempAddresses = "disabled";
     };
 

@@ -12,7 +12,6 @@
     caddy
     forgejo
     gollum
-    headscale
     knot
     kresd
     mailserver

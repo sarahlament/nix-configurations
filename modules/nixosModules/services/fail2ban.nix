@@ -9,8 +9,8 @@
     pkgs,
     ...
   }: let
-    inherit (self.myLib.constants.addresses) tailnet;
     inherit (lib) mkEnableOption mkIf;
+    inherit (self.myLib.constants.addresses) internal;
     cfg = config.modules.services.f2b;
   in {
     options.modules.services.f2b.recidiveJail = mkEnableOption "Enable the recidivist jail";
@@ -25,10 +25,7 @@
           enable = true;
           overalljails = true;
         };
-        ignoreIP = [
-          tailnet.v4
-          tailnet.v6
-        ];
+        ignoreIP = [internal];
         jails.recidive.settings = mkIf cfg.recidiveJail {
           enabled = true;
           filter = "recidive";

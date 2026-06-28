@@ -15,6 +15,7 @@
     services.gollum = {
       enable = true;
       address = "localhost";
+      port = 4567;
 
       extraConfig = ''
         wiki_options = {

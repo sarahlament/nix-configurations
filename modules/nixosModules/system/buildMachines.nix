@@ -15,7 +15,7 @@ in {
     nix.distributedBuilds = true;
     nix.buildMachines = lib.mkIf (config.networking.hostName != "ishtar") [
       {
-        hostName = "ishtar.ts";
+        hostName = "${self.myLib.directory.hosts.ishtar.ip.internal}";
         systems = ["x86_64-linux"];
         protocol = "ssh-ng";
         sshUser = "nixbldRemote";

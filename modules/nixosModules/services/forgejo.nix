@@ -85,7 +85,7 @@
             HTTP_PORT = 3030;
             HTTP_ADDR = "localhost";
 
-            SSH_DOMAIN = "athena.ts";
+            SSH_DOMAIN = "${config.networking.hostName}.${fqdn}";
             SSH_USER = "git";
             SSH_PORT = 22;
             START_SSH_SERVER = false;

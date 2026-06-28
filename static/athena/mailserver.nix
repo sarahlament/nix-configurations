@@ -6,10 +6,10 @@
   ...
 }: let
   inherit (self.myLib.constants) fqdn;
-  inherit (self.myLib.helpers) mkSecret;
+  inherit (self.myLib.helpers) mkSopsFile;
 in {
   # accounts are not module definitions
-  sops.secrets.lamentMailPass = mkSecret {file = "pass";};
+  sops.secrets.lamentMailPass = {sopsFile = mkSopsFile "pass";};
   mailserver.accounts = let
     passwords = config.sops.secrets;
   in {

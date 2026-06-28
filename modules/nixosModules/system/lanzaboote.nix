@@ -6,6 +6,8 @@
     ...
   }: {
     imports = [inputs.lanzaboote.nixosModules.lanzaboote];
+
+    services.borgbackup.jobs.${config.networking.hostName}.paths = ["/persist/pki"];
     boot = {
       loader = {
         systemd-boot.enable = lib.mkForce false;
