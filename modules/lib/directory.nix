@@ -31,7 +31,7 @@
     peers = {
       phone = {
         ip.internal = "fd67:d6a7:d6f3::100";
-        keys.wgPub = "HvMMOedLooxLgwMR8Yq9wOCHkIvrdd6KztZWD4hCSwU=";
+        keys.wgPub = "HqF57zMQiERxyZ4lG5A3uHJFddMr5kHabnP4cIlFXCI=";
       };
     };
     services = {
