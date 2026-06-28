@@ -32,6 +32,7 @@
       enable = true;
       listenPlain = ["127.0.0.1:53" "[::1]:53" "[${ip.internal}]:53"];
       extraConfig = ''
+        trust_anchors.set_insecure({'${fqdn}'})
         modules.load('hints')
         hints.use_nodata(true)
 

@@ -55,6 +55,12 @@
       restartUnits = ["wireguard-internal.service"];
     };
     services.resolved.enable = mkForce false;
+
+    # phone -> ishtar (spoke<->spoke) routes through the hub, so the hub must forward.
+    # IPv6 gates its forwarding datapath on the GLOBAL knob; per-interface forwarding
+    # is only the NDP host/router role, so this has to be conf.all, not conf.internal.
+    boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = mkIf isHub 1;
+
     networking = {
       useDHCP = true;
       dhcpcd.extraConfig = "nohook resolv.conf";
@@ -75,10 +81,6 @@
           if isHub
           then spokePeers
           else [hubPeer];
-
-        # hub-routed spoke<->spoke (phone -> ishtar) needs forwarding on the hub.
-        # not needed yet (2 nodes, services live on the hub). when it is:
-        postSetup = mkIf isHub "echo 1 > /proc/sys/net/ipv6/conf/internal/forwarding";
       };
     };
   };
