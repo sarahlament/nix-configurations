@@ -10,7 +10,8 @@
     ...
   }: let
     inherit (self.myLib.constants) fqdn;
-    inherit (self.myLib.helpers) mkReverseProxy mkSopsFile;
+    inherit (self.myLib.helpers) mkPrivateProxy mkSopsFile;
+    inherit (self.myLib.directory.hosts.${config.networking.hostName}) ip;
   in {
     sops.secrets.grafanaSecretKey = {
       sopsFile = mkSopsFile "services";
@@ -172,6 +173,6 @@
       };
     };
 
-    services.caddy.virtualHosts."https://grafana.${fqdn}".extraConfig = mkReverseProxy config.services.grafana.settings.server.http_port;
+    services.caddy.virtualHosts."https://grafana.${fqdn}".extraConfig = mkPrivateProxy ip.internal config.services.grafana.settings.server.http_port;
   };
 }

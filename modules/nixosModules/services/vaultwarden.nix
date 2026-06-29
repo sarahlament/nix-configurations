@@ -10,7 +10,8 @@
     ...
   }: let
     inherit (self.myLib.constants) fqdn;
-    inherit (self.myLib.helpers) mkReverseProxy mkSopsFile;
+    inherit (self.myLib.helpers) mkPrivateProxy mkSopsFile;
+    inherit (self.myLib.directory.hosts.${config.networking.hostName}) ip;
   in {
     sops.secrets.vaultwardenToken = {
       sopsFile = mkSopsFile "services";
@@ -24,7 +25,7 @@
         virtualHosts."vault.${fqdn}" = {
           extraConfig = ''
             encode zstd gzip
-            ${mkReverseProxy config.services.vaultwarden.config.ROCKET_PORT}
+            ${mkPrivateProxy ip.internal config.services.vaultwarden.config.ROCKET_PORT}
           '';
         };
       };

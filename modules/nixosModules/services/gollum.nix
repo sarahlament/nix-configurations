@@ -10,7 +10,8 @@
     ...
   }: let
     inherit (self.myLib.constants) fqdn;
-    inherit (self.myLib.helpers) mkReverseProxy;
+    inherit (self.myLib.helpers) mkPrivateProxy;
+    inherit (self.myLib.directory.hosts.${config.networking.hostName}) ip;
   in {
     services.gollum = {
       enable = true;
@@ -25,6 +26,6 @@
         Precious::App.set(:wiki_options, wiki_options)
       '';
     };
-    services.caddy.virtualHosts."https://notes.${fqdn}".extraConfig = mkReverseProxy config.services.gollum.port;
+    services.caddy.virtualHosts."https://notes.${fqdn}".extraConfig = mkPrivateProxy ip.internal config.services.gollum.port;
   };
 }

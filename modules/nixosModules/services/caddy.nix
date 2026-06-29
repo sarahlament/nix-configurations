@@ -16,6 +16,10 @@
       443 # HTTPS
     ];
 
+    # private vhosts bind to the WG internal address, which may not be up yet
+    # when caddy starts; let it bind regardless of interface state.
+    boot.kernel.sysctl."net.ipv6.ip_nonlocal_bind" = 1;
+
     systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.templates.acmeTsig.path;
     services.caddy = {
       enable = true;
