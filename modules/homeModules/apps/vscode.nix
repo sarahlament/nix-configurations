@@ -92,6 +92,7 @@
 
             "mermaidLivePreview.useVSCodeTheme" = false;
             "mermaidLivePreview.theme" = "dark";
+            "markdown-preview-enhanced.previewTheme" = "vscode.css";
           };
         };
       };
