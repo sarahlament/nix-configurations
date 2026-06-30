@@ -12,10 +12,10 @@
     caddy
     forgejo
     gollum
+    grafana
     knot
     kresd
     mailserver
-    monitoring
     vaultwarden
   ];
 in {

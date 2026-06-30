@@ -15,6 +15,7 @@
         roles = {
           resolver = true;
           mailserver = true;
+          monitor = true;
           knot = true;
           wgHub = true;
         };

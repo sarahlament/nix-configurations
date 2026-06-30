@@ -15,6 +15,7 @@
       boot
       borgbackup
       buildMachines
+      monitoring
       networking
       nixconf
       nvf

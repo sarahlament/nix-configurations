@@ -3,7 +3,7 @@
   self,
   ...
 }: {
-  flake.nixosModules.monitoring = {
+  flake.nixosModules.grafana = {
     config,
     lib,
     pkgs,
@@ -11,38 +11,13 @@
   }: let
     inherit (self.myLib.constants) fqdn;
     inherit (self.myLib.helpers) mkPrivateProxy mkSopsFile;
+    inherit (self.myLib.directory) hosts;
     inherit (self.myLib.directory.hosts.${config.networking.hostName}) ip;
   in {
     sops.secrets.grafanaSecretKey = {
       sopsFile = mkSopsFile "services";
       owner = "grafana";
     };
-
-    environment.etc."alloy/config.alloy".text = ''
-      loki.source.journal "journal" {
-        forward_to = [loki.relabel.journal.receiver]
-        max_age    = "12h"
-        labels     = {
-          job  = "systemd-journal",
-          host = "${config.networking.hostName}",
-        }
-      }
-
-      loki.relabel "journal" {
-        forward_to = [loki.write.local.receiver]
-
-        rule {
-          source_labels = ["__journal__systemd_unit"]
-          target_label  = "unit"
-        }
-      }
-
-      loki.write "local" {
-        endpoint {
-          url = "http://127.0.0.1:3100/loki/api/v1/push"
-        }
-      }
-    '';
 
     services = {
       loki = {
@@ -103,31 +78,19 @@
         };
       };
 
-      alloy = {
-        enable = true;
-        extraFlags = ["--disable-reporting"];
-      };
-
       prometheus = {
         enable = true;
         port = 9090;
 
-        exporters = {
-          node = {
-            enable = true;
-            enabledCollectors = ["systemd"];
-            port = 9100;
-          };
-        };
-
         scrapeConfigs = [
           {
-            job_name = "${config.networking.hostName}";
-            static_configs = [
-              {
-                targets = ["localhost:${toString config.services.prometheus.exporters.node.port}"];
-              }
-            ];
+            job_name = "nodes";
+            static_configs =
+              lib.mapAttrsToList (name: host: {
+                targets = ["[${host.ip.internal}]:9100"];
+                labels.host = name;
+              })
+              hosts;
           }
         ];
       };
