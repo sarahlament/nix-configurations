@@ -26,15 +26,12 @@
           auth_enabled = false;
 
           server.http_listen_port = 3100;
-
+          common = {
+            instance_addr = "127.0.0.1";
+            ring.kvstore.store = "inmemory";
+            replication_factor = 1;
+          };
           ingester = {
-            lifecycler = {
-              address = "127.0.0.1";
-              ring = {
-                kvstore.store = "inmemory";
-                replication_factor = 1;
-              };
-            };
             chunk_idle_period = "5m";
             chunk_retain_period = "30s";
           };
