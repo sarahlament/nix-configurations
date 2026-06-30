@@ -55,6 +55,7 @@ in {
           age
           dig
           delve
+          forgejo-cli
           jq
           just
           sops
