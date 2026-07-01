@@ -19,20 +19,35 @@
   in {
     environment.etc."alloy/config.alloy".text = ''
       loki.source.journal "journal" {
-        forward_to = [loki.relabel.journal.receiver]
-        max_age    = "12h"
-        labels     = {
+        forward_to    = [loki.write.local.receiver]
+        max_age       = "12h"
+        relabel_rules = loki.relabel.journal.rules
+        labels        = {
           job  = "systemd-journal",
           host = "${config.networking.hostName}",
         }
       }
 
       loki.relabel "journal" {
-        forward_to = [loki.write.local.receiver]
-
+        forward_to = []
         rule {
           source_labels = ["__journal__systemd_unit"]
-          target_label  = "unit"
+          target_label  = "service_name"
+        }
+
+        rule {
+          source_labels = ["service_name"]
+          regex         = "(.+)\\.service"
+          replacement   = "$1"
+          target_label  = "service_name"
+        }
+
+        rule {
+          source_labels = ["service_name", "__journal_syslog_identifier"]
+          separator     = ";"
+          regex         = ";(.+)"
+          replacement   = "$1"
+          target_label  = "service_name"
         }
       }
 
