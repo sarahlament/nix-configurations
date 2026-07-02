@@ -1,4 +1,4 @@
-{inputs, ...}: {
+{ ... }: {
   flake.diskoConfigurations = {
     athena.disko.devices = {
       disk = {

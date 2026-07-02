@@ -1,12 +1,7 @@
-{inputs, ...}: {
-  flake.nixosModules.nvidia = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
-    services.xserver.videoDrivers = ["nvidia"];
-    boot.initrd.kernelModules = ["nvidia"];
+{ ... }: {
+  flake.nixosModules.nvidia = { config, ... }: {
+    services.xserver.videoDrivers = [ "nvidia" ];
+    boot.initrd.kernelModules = [ "nvidia" ];
 
     services.udev.extraRules = ''
       KERNEL=="card*", SUBSYSTEM=="drm", GROUP="video", MODE="0660"

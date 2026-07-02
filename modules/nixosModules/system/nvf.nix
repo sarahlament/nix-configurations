@@ -1,11 +1,6 @@
-{inputs, ...}: {
-  flake.nixosModules.nvf = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: {
-    imports = [inputs.nvf.nixosModules.nvf];
+{ inputs, ... }: {
+  flake.nixosModules.nvf = { pkgs, ... }: {
+    imports = [ inputs.nvf.nixosModules.nvf ];
     programs.nvf = {
       enable = true;
       defaultEditor = true;
@@ -56,7 +51,10 @@
           {
             key = "<leader><Tab>";
             action = "<cmd>ConformFormat<cr>";
-            mode = ["n" "v"];
+            mode = [
+              "n"
+              "v"
+            ];
             desc = "Format code";
           }
 
@@ -103,7 +101,7 @@
               enable = true;
               settings = {
                 nil = {
-                  formatting.command = ["alejandra"];
+                  formatting.command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
                   nix.flake = {
                     autoArchive = true;
                     nixpkgsInputName = "nixos-unstable";
@@ -134,16 +132,16 @@
               timeout_ms = 500;
             };
             formatters_by_ft = {
-              gitrebase = [];
-              gitignore = [];
-              gitcommit = [];
-              nix = ["alejandra"];
-              toml = ["taplo"];
-              json = ["prettier"];
-              yaml = ["prettier"];
-              markdown = ["prettier"];
-              sh = ["shfmt"];
-              bash = ["shfmt"];
+              gitrebase = [ ];
+              gitignore = [ ];
+              gitcommit = [ ];
+              nix = [ "nixfmt" ];
+              toml = [ "taplo" ];
+              json = [ "prettier" ];
+              yaml = [ "prettier" ];
+              markdown = [ "prettier" ];
+              sh = [ "shfmt" ];
+              bash = [ "shfmt" ];
             };
           };
         };

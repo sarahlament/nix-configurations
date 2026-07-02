@@ -1,9 +1,4 @@
-{
-  inputs,
-  lib,
-  self,
-  ...
-}: {
+{ ... }: {
   flake.myLib.constants = {
     fqdn = "lament.gay";
     addresses = {

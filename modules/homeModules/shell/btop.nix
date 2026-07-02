@@ -1,10 +1,5 @@
-{inputs, ...}: {
-  flake.homeModules.btop = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
+{ ... }: {
+  flake.homeModules.btop = { ... }: {
     programs = {
       btop = {
         enable = true;

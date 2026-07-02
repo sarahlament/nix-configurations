@@ -1,10 +1,5 @@
-{inputs, ...}: {
-  flake.homeModules.homeShell = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
+{ ... }: {
+  flake.homeModules.homeShell = { ... }: {
     home = {
       sessionVariables = {
         MAKEFLAGS = "-j16"; # Parallel make jobs
@@ -39,7 +34,7 @@
         history.append = true;
         syntaxHighlighting.enable = true;
 
-        setOptions = ["NO_AUTOPUSHD"];
+        setOptions = [ "NO_AUTOPUSHD" ];
 
         oh-my-zsh = {
           enable = true;

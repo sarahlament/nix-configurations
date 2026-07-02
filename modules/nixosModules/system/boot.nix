@@ -1,32 +1,39 @@
-{inputs, ...}: {
-  flake.nixosModules.boot = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: let
-    inherit (lib) mkEnableOption mkDefault mkIf optionals;
-    cfg = config.modules.boot;
-  in {
-    options.modules.boot = {
-      desktop.enable = mkEnableOption "Enable extra module options for desktop";
-      efi.enable = mkEnableOption "Enable EFI";
-      zswap.enable = mkEnableOption "Enable zswap";
-      zram.enable = mkEnableOption "Enable zram";
-    };
+{ ... }: {
+  flake.nixosModules.boot =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    let
+      inherit (lib)
+        mkEnableOption
+        mkDefault
+        mkIf
+        optionals
+        ;
+      cfg = config.modules.boot;
+    in
+    {
+      options.modules.boot = {
+        desktop.enable = mkEnableOption "Enable extra module options for desktop";
+        efi.enable = mkEnableOption "Enable EFI";
+        zswap.enable = mkEnableOption "Enable zswap";
+        zram.enable = mkEnableOption "Enable zram";
+      };
 
-    config = {
-      boot = {
-        loader = mkIf cfg.efi.enable {
-          systemd-boot.enable = true;
-          efi.canTouchEfiVariables = true;
-          efi.efiSysMountPoint = "/efi";
-        };
+      config = {
+        boot = {
+          loader = mkIf cfg.efi.enable {
+            systemd-boot.enable = true;
+            efi.canTouchEfiVariables = true;
+            efi.efiSysMountPoint = "/efi";
+          };
 
-        initrd = {
-          systemd.enable = true;
-          availableKernelModules =
-            [
+          initrd = {
+            systemd.enable = true;
+            availableKernelModules = [
               "ahci"
               "sd_mod"
             ]
@@ -42,14 +49,13 @@
               "lz4"
               "lz4_compress"
             ];
-        };
-        blacklistedKernelModules = [
-          "pcspkr" # annoying TTY beeps
-        ];
+          };
+          blacklistedKernelModules = [
+            "pcspkr" # annoying TTY beeps
+          ];
 
-        kernelPackages = mkDefault pkgs.linuxPackages_zen;
-        kernelParams =
-          [
+          kernelPackages = mkDefault pkgs.linuxPackages_zen;
+          kernelParams = [
             "nowatchdog"
           ]
           ++ (optionals cfg.zswap.enable) [
@@ -63,20 +69,20 @@
             "splash"
           ];
 
-        plymouth.enable = cfg.desktop.enable;
+          plymouth.enable = cfg.desktop.enable;
+        };
+
+        zramSwap.enable = mkIf cfg.zram.enable true;
+
+        hardware.enableRedistributableFirmware = true;
+
+        environment.systemPackages = with pkgs; [
+          efibootmgr # Helper for EFI things
+          modprobed-db # Track kernel module usage for optimization
+          lshw # Comprehensive hardware info viewer
+          pciutils # Provides 'lspci'
+          usbutils # Provides 'lsusb'
+        ];
       };
-
-      zramSwap.enable = mkIf cfg.zram.enable true;
-
-      hardware.enableRedistributableFirmware = true;
-
-      environment.systemPackages = with pkgs; [
-        efibootmgr # Helper for EFI things
-        modprobed-db # Track kernel module usage for optimization
-        lshw # Comprehensive hardware info viewer
-        pciutils # Provides 'lspci'
-        usbutils # Provides 'lsusb'
-      ];
     };
-  };
 }

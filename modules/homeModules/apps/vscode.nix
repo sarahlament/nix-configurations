@@ -1,10 +1,5 @@
-{inputs, ...}: {
-  flake.homeModules.vscode = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
+{ ... }: {
+  flake.homeModules.vscode = { pkgs, ... }: {
     programs = {
       vscodium = {
         enable = true;
@@ -35,18 +30,27 @@
               "textDocument/formatting"
             ];
             "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
-            "nix.formatterPath" = "${pkgs.alejandra}/bin/alejandra";
+            "nix.formatterPath" = "${pkgs.nixfmt}/bin/nixfmt";
             "nix.serverSettings" = {
               "nixd" = {
                 "formatting" = {
-                  "command" = ["${pkgs.alejandra}/bin/alejandra"];
+                  "command" = [ "${pkgs.nixfmt}/bin/nixfmt" ];
+                };
+                "nixpkgs" = {
+                  "expr" = "(builtins.getFlake \"/home/lament/nix-configurations\").nixosConfigurations.ishtar.pkgs";
                 };
                 "options" = {
-                  "nixpkgs" = {
-                    "expr" = "(builtins.getFlake \"/home/lament/nix-configurations\").nixosConfigurations.ishtar.pkgs";
-                  };
                   "nixos" = {
-                    "expr" = "(builtins.getFlake \"/home/lament/nix-configurations\").nixosConfigurations.ishtar.options";
+                    "expr" =
+                      "(builtins.getFlake \"/home/lament/nix-configurations\").nixosConfigurations.ishtar.options";
+                  };
+                  "mailserver" = {
+                    "expr" =
+                      "{ mailserver = (builtins.getFlake \"/home/lament/nix-configurations\").nixosConfigurations.athena.options.mailserver; }";
+                  };
+                  "home-manager" = {
+                    "expr" =
+                      "(builtins.getFlake \"/home/lament/nix-configurations\").nixosConfigurations.ishtar.options.home-manager.users.type.getSubOptions []";
                   };
                 };
               };
@@ -75,7 +79,9 @@
             "editor.scrollbar.horizontal" = "hidden";
             "editor.unfoldOnClickAfterEndOfLine" = true;
             "editor.formatOnPaste" = true;
-            "editor.defaultFormatter" = "jnoortheen.nix-ide";
+            "[nix]" = {
+              "editor.defaultFormatter" = "jnoortheen.nix-ide";
+            };
 
             "diffEditor.codeLens" = true;
             "diffEditor.experimental.showMoves" = true;

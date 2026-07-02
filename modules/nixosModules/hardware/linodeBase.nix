@@ -1,50 +1,50 @@
-{inputs, ...}: {
-  flake.nixosModules.linodeBase = {
-    config,
-    lib,
-    modulesPath,
-    pkgs,
-    ...
-  }: {
-    imports = [
-      (modulesPath + "/profiles/qemu-guest.nix")
-    ];
-
-    boot = {
-      kernelPackages = pkgs.linuxPackages;
-      kernelModules = [
-        "virtio_net"
+{ ... }: {
+  flake.nixosModules.linodeBase =
+    {
+      modulesPath,
+      pkgs,
+      ...
+    }:
+    {
+      imports = [
+        (modulesPath + "/profiles/qemu-guest.nix")
       ];
 
-      kernelParams = ["console=ttyS0,19200n8"];
-      loader = {
-        timeout = 0;
-        grub = {
-          enable = true;
-          forceInstall = true;
-          device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi-disk-0";
+      boot = {
+        kernelPackages = pkgs.linuxPackages;
+        kernelModules = [
+          "virtio_net"
+        ];
 
-          extraConfig = ''
-            serial --speed 19200 --unit=0 --word=8 --parity=no --stop=1;
-            terminal_input serial;
-            terminal_output serial
-          '';
+        kernelParams = [ "console=ttyS0,19200n8" ];
+        loader = {
+          timeout = 0;
+          grub = {
+            enable = true;
+            forceInstall = true;
+            device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi-disk-0";
+
+            extraConfig = ''
+              serial --speed 19200 --unit=0 --word=8 --parity=no --stop=1;
+              terminal_input serial;
+              terminal_output serial
+            '';
+          };
         };
       };
-    };
 
-    networking = {
-      usePredictableInterfaceNames = false;
-      tempAddresses = "disabled";
-    };
+      networking = {
+        usePredictableInterfaceNames = false;
+        tempAddresses = "disabled";
+      };
 
-    environment.systemPackages = with pkgs; [
-      htop
-      kexec-tools
-      mtr
-      screen
-      sysstat
-      traceroute
-    ];
-  };
+      environment.systemPackages = with pkgs; [
+        htop
+        kexec-tools
+        mtr
+        screen
+        sysstat
+        traceroute
+      ];
+    };
 }

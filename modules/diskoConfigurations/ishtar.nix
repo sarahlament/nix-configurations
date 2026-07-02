@@ -1,4 +1,4 @@
-{inputs, ...}: {
+{ ... }: {
   flake.diskoConfigurations = {
     ishtar.disko.devices = {
       disk = {
@@ -15,7 +15,10 @@
                   type = "filesystem";
                   format = "vfat";
                   mountpoint = "/efi";
-                  mountOptions = ["dmask=0077" "fmask=0077"];
+                  mountOptions = [
+                    "dmask=0077"
+                    "fmask=0077"
+                  ];
                 };
               };
               NIXOS = {
@@ -47,19 +50,31 @@
                 subvolumes = {
                   "@" = {
                     mountpoint = "/";
-                    mountOptions = ["compress=zstd" "noatime"];
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
                   };
                   "@home" = {
                     mountpoint = "/home";
-                    mountOptions = ["compress=zstd" "noatime"];
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
                   };
                   "@nix" = {
                     mountpoint = "/nix";
-                    mountOptions = ["compress=zstd" "noatime"];
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
                   };
                   "@persist" = {
                     mountpoint = "/persist";
-                    mountOptions = ["compress=zstd" "noatime"];
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
                   };
                 };
               };

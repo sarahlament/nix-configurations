@@ -1,33 +1,26 @@
-{
-  inputs,
-  self,
-  ...
-}: {
-  flake.nixosModules.nixconf = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
+{ self, ... }: {
+  flake.nixosModules.nixconf = { pkgs, ... }: {
     nixpkgs.config = {
       allowUnfree = true;
     };
 
     # we create our own nixbld user for remote activation
-    users.groups.nixbldRemote = {};
+    users.groups.nixbldRemote = { };
     users.users.nixbldRemote = {
       isSystemUser = true;
       group = "nixbldRemote";
-      extraGroups = ["wheel"];
+      extraGroups = [ "wheel" ];
       home = "/var/lib/nixbldRemote/";
       createHome = true;
-      openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH8B07n/Z9HSnUkD5w5tm26eSwSiQnaxUVRexV9B/Wvm"];
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH8B07n/Z9HSnUkD5w5tm26eSwSiQnaxUVRexV9B/Wvm"
+      ];
       shell = pkgs.bash;
     };
 
     nix = {
       settings = {
-        trusted-users = ["@wheel"];
+        trusted-users = [ "@wheel" ];
         experimental-features = [
           "nix-command"
           "flakes"
@@ -46,12 +39,12 @@
       self.overlays.default
 
       # I'm tired of this always rebuilding, so we pin it here
-      (final: prev: {
+      (final: _prev: {
         numix-cursor-theme =
           (import (fetchTarball {
             url = "https://github.com/nixos/nixpkgs/archive/a799d3e3886da994fa307f817a6bc705ae538eeb.tar.gz";
             sha256 = "sha256:11mhk782xy1n58518f86k6fcvxjaaim3mk9nmhx68fg5i2jg9ayx";
-          }) {inherit (final) system;}).numix-cursor-theme;
+          }) { inherit (final) system; }).numix-cursor-theme;
       })
     ];
 

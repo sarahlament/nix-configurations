@@ -1,26 +1,27 @@
-{
-  inputs,
-  self,
-  ...
-}: let
+{ self, ... }:
+let
   inherit (self.myLib.helpers) mkSopsFile;
-in {
-  flake.nixosModules.buildMachines = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
-    sops.secrets.nixbldKey = {sopsFile = mkSopsFile "privkeys";};
-    nix.distributedBuilds = true;
-    nix.buildMachines = lib.mkIf (config.networking.hostName != "ishtar") [
-      {
-        hostName = "${self.myLib.directory.hosts.ishtar.ip.internal}";
-        systems = ["x86_64-linux"];
-        protocol = "ssh-ng";
-        sshUser = "nixbldRemote";
-        sshKey = config.sops.secrets.nixbldKey.path;
-      }
-    ];
-  };
+in
+{
+  flake.nixosModules.buildMachines =
+    {
+      config,
+      lib,
+      ...
+    }:
+    {
+      sops.secrets.nixbldKey = {
+        sopsFile = mkSopsFile "privkeys";
+      };
+      nix.distributedBuilds = true;
+      nix.buildMachines = lib.mkIf (config.networking.hostName != "ishtar") [
+        {
+          hostName = "${self.myLib.directory.hosts.ishtar.ip.internal}";
+          systems = [ "x86_64-linux" ];
+          protocol = "ssh-ng";
+          sshUser = "nixbldRemote";
+          sshKey = config.sops.secrets.nixbldKey.path;
+        }
+      ];
+    };
 }

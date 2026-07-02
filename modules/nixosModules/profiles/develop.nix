@@ -1,25 +1,16 @@
-{
-  inputs,
-  self,
-  ...
-}: {
-  flake.nixosModules.develop = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
+{ self, ... }: {
+  flake.nixosModules.develop = { pkgs, ... }: {
     config = {
       programs.virt-manager.enable = true;
       virtualisation = {
         docker.enable = true;
         libvirtd = {
           enable = true;
-          qemu.vhostUserPackages = with pkgs; [virtiofsd];
+          qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
         };
         spiceUSBRedirection.enable = true;
       };
-      home-manager.sharedModules = [self.homeModules.virt-manager];
+      home-manager.sharedModules = [ self.homeModules.virt-manager ];
 
       programs.direnv = {
         enable = true;
@@ -28,7 +19,7 @@
       };
 
       environment.systemPackages = with pkgs; [
-        alejandra # Nix formatter
+        nixfmt-tree # Nix formatter
         distrobox # seamlessly use other distros with docker
         jetbrains-toolbox # IDE manager
         nixd # Nix language server
@@ -42,16 +33,11 @@
   };
 
   # normally, this would live in modules/homeModules but with how little it is (and it's necessity for virt (a dev concern)) it stays here
-  flake.homeModules.virt-manager = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
+  flake.homeModules.virt-manager = { ... }: {
     dconf.settings = {
       "org/virt-manager/virt-manager/connections" = {
-        autoconnect = ["qemu:///system"];
-        uris = ["qemu:///system"];
+        autoconnect = [ "qemu:///system" ];
+        uris = [ "qemu:///system" ];
       };
     };
     home.sessionPath = [

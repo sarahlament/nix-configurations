@@ -1,10 +1,5 @@
-{inputs, ...}: {
-  flake.homeModules.git = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
+{ ... }: {
+  flake.homeModules.git = { ... }: {
     home.shellAliases = {
       g = "git";
       gs = "g stat";

@@ -1,4 +1,4 @@
-{inputs, ...}: {
+{ ... }: {
   flake.myLib.directory = {
     hosts = {
       athena = {
@@ -36,8 +36,12 @@
       };
     };
     services = {
-      public = ["git"];
-      private.athena = ["grafana" "notes" "vault"];
+      public = [ "git" ];
+      private.athena = [
+        "grafana"
+        "notes"
+        "vault"
+      ];
     };
   };
 }

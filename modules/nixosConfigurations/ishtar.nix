@@ -2,7 +2,8 @@
   inputs,
   self,
   ...
-}: let
+}:
+let
   activeModules = with self.nixosModules; [
     core
     disko
@@ -18,30 +19,29 @@
     kde
     workstation
   ];
-in {
+in
+{
   flake.nixosConfigurations.ishtar = inputs.nixpkgs.lib.nixosSystem {
-    specialArgs = {inherit inputs self;};
-    modules =
-      activeModules
-      ++ [
-        (inputs.import-tree (self + "/static/ishtar"))
+    specialArgs = { inherit inputs self; };
+    modules = activeModules ++ [
+      (inputs.import-tree (self + "/static/ishtar"))
 
-        {
-          networking.hostName = "ishtar";
-          system.stateVersion = "26.05";
-          nixpkgs.hostPlatform = "x86_64-linux";
+      {
+        networking.hostName = "ishtar";
+        system.stateVersion = "26.05";
+        nixpkgs.hostPlatform = "x86_64-linux";
 
-          modules.boot.desktop.enable = true;
-          modules.boot.zswap.enable = true;
-          modules.services.borg.subuser = "sub2";
-          modules.lament.desktop.enable = true;
-          modules.stylix.wallpaper = true;
+        modules.boot.desktop.enable = true;
+        modules.boot.zswap.enable = true;
+        modules.services.borg.subuser = "sub2";
+        modules.lament.desktop.enable = true;
+        modules.stylix.wallpaper = true;
 
-          fileSystems."/persist".neededForBoot = true;
+        fileSystems."/persist".neededForBoot = true;
 
-          # the CC plugin doesn't like me :L
-          programs.nix-ld.enable = true;
-        }
-      ];
+        # the CC plugin doesn't like me :L
+        programs.nix-ld.enable = true;
+      }
+    ];
   };
 }

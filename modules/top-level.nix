@@ -1,11 +1,12 @@
 {
   inputs,
   lib,
-  self,
   ...
-}: let
+}:
+let
   inherit (lib) mkOption types;
-in {
+in
+{
   imports = [
     inputs.git-hooks.flakeModule
     inputs.disko.flakeModules.disko
@@ -15,52 +16,45 @@ in {
 
   options.flake.myLib = mkOption {
     type = types.lazyAttrsOf types.raw;
-    default = {};
+    default = { };
   };
 
   config = {
-    systems = ["x86_64-linux"];
-    perSystem = {
-      config,
-      pkgs,
-      ...
-    }: {
-      formatter = pkgs.alejandra;
-      pre-commit = {
-        settings = {
-          package = pkgs.prek;
-          hooks = {
-            alejandra = {
-              enable = true;
-              package = pkgs.alejandra;
-            };
-            deadnix = {
-              enable = true;
-              package = pkgs.deadnix;
-              settings = {
-                noLambdaPatternNames = true;
-                noLambdaArg = true;
-              };
+    systems = [ "x86_64-linux" ];
+    perSystem =
+      {
+        config,
+        pkgs,
+        ...
+      }:
+      {
+        formatter = pkgs.nixfmt-tree;
+        pre-commit = {
+          settings = {
+            package = pkgs.prek;
+            hooks = {
+              nixfmt.enable = true;
+              nixfmt.package = pkgs.nixfmt;
+              deadnix.enable = true;
             };
           };
         };
+        devShells.default = pkgs.mkShell {
+          shellHook = ''
+            ${config.pre-commit.installationScript}
+            export FLAKE=$(pwd)
+            alias j='just'
+          '';
+          packages = with pkgs; [
+            age
+            dnsutils
+            delve
+            forgejo-cli
+            jq
+            just
+            sops
+          ];
+        };
       };
-      devShells.default = pkgs.mkShell {
-        shellHook = ''
-          ${config.pre-commit.installationScript}
-          export FLAKE=$(pwd)
-          alias j='just'
-        '';
-        packages = with pkgs; [
-          age
-          dig
-          delve
-          forgejo-cli
-          jq
-          just
-          sops
-        ];
-      };
-    };
   };
 }

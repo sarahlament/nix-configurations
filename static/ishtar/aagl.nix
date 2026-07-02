@@ -1,11 +1,5 @@
-{
-  config,
-  inputs,
-  lib,
-  pkgs,
-  ...
-}: {
-  imports = [inputs.aagl.nixosModules.default];
+{ inputs, ... }: {
+  imports = [ inputs.aagl.nixosModules.default ];
   nix.settings = {
     substituters = [
       "https://ezkea.cachix.org"

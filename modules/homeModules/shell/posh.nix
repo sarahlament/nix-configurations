@@ -1,14 +1,5 @@
-{
-  inputs,
-  self,
-  ...
-}: {
-  flake.homeModules.posh = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
+{ ... }: {
+  flake.homeModules.posh = { ... }: {
     programs.oh-my-posh = {
       enable = true;
       settings = {

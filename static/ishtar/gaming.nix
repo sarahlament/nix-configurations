@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
+{ pkgs, ... }: {
   programs.gamescope.args = [
     "--prefer-output DP-1"
     "-W2560 -H1440 -r165"

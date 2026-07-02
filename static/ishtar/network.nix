@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
+{ ... }: {
   networking.hosts = {
     "0.0.0.0" = [
       "data-p.gryphline.com"

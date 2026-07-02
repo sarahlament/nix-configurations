@@ -1,15 +1,5 @@
-{
-  inputs,
-  self,
-  ...
-}: {
-  flake.nixosModules.rootUser = {
-    config,
-    options,
-    lib,
-    pkgs,
-    ...
-  }: {
+{ ... }: {
+  flake.nixosModules.rootUser = { config, ... }: {
     home-manager.users.root = {
       home = {
         stateVersion = config.system.stateVersion;

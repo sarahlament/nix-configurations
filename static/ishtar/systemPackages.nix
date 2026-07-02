@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
+{ pkgs, ... }: {
   services.fwupd.enable = false;
   environment.systemPackages = with pkgs; [
     thunderbird # email client

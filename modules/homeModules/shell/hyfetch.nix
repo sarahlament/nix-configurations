@@ -1,10 +1,5 @@
-{inputs, ...}: {
-  flake.homeModules.hyfetch = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
+{ ... }: {
+  flake.homeModules.hyfetch = { ... }: {
     programs = {
       hyfetch = {
         enable = true;

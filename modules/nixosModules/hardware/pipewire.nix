@@ -1,10 +1,5 @@
-{inputs, ...}: {
-  flake.nixosModules.pipewire = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
+{ ... }: {
+  flake.nixosModules.pipewire = { pkgs, ... }: {
     security.rtkit.enable = true;
     services = {
       pipewire = {

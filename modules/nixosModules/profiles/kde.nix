@@ -1,21 +1,12 @@
-{
-  inputs,
-  self,
-  ...
-}: {
-  flake.nixosModules.kde = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
+{ ... }: {
+  flake.nixosModules.kde = { pkgs, ... }: {
     fonts = {
       enableDefaultPackages = true;
       enableGhostscriptFonts = true;
     };
     xdg.portal = {
       enable = true;
-      extraPortals = [pkgs.kdePackages.xdg-desktop-portal-kde];
+      extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
       xdgOpenUsePortal = true;
     };
 
