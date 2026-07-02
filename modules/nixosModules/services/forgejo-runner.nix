@@ -69,6 +69,8 @@
           };
         };
       systemd.services.gitea-runner-nixrun = {
+        # Deploys run under this runner; a switch that bounces it would kill the in-flight CI job
+        restartIfChanged = false;
         serviceConfig = {
           DynamicUser = mkForce false; # The nix store doesn't like ephemeral UIDs, so we disable the dynamic user
           User = mkForce "nixrun";
