@@ -34,6 +34,10 @@
         ip.internal = "fd67:d6a7:d6f3::100";
         keys.wgPub = "HqF57zMQiERxyZ4lG5A3uHJFddMr5kHabnP4cIlFXCI=";
       };
+      tablet = {
+        ip.internal = "fd67:d6a7:d6f3::150";
+        keys.wgPub = "pLS7wnnThXR1wy8tQKHIfPeCxiSkB9r3+ijVOWJ9hHo=";
+      };
     };
     services = {
       public = [ "git" ];
