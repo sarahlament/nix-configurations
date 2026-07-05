@@ -9,10 +9,9 @@
       zoneFile = self + "/static/${fqdn}/zone";
     in
     {
+      imports = [ self.nixosModules.tsig ];
+
       sops.secrets = {
-        tsigSecret = {
-          sopsFile = mkSopsFile "domain";
-        };
         axfrSecret = {
           sopsFile = mkSopsFile "domain";
         };
@@ -107,6 +106,14 @@
             ];
           };
         };
+      };
+
+      # KASP db (signing keys) lives here; losing it means a DS replacement at the registrar
+      services.borgbackup.jobs.${config.networking.hostName} = {
+        preHook = "knotc zone-dump";
+        paths = [
+          config.services.knot.settings.database.storage
+        ];
       };
 
       networking.firewall.extraInputRules = ''

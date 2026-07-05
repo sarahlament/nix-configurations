@@ -99,14 +99,14 @@
             enabled = true;
             filter = "postfix[mode=aggressive]";
             port = "smtp,submissions,submission";
-            action = action;
+            inherit action;
           };
           dovecot.settings = {
             enabled = true;
             filter = "dovecot[mode=aggressive]";
             port = "imap,imaps,submissions,submission";
-            action = action;
             journalmatch = "_SYSTEMD_UNIT=dovecot.service";
+            inherit action;
           };
         };
     };

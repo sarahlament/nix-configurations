@@ -6,7 +6,7 @@
       ...
     }:
     let
-      inherit (lib) mkEnableOption optionals;
+      inherit (lib) mkEnableOption optionals mkIf;
       inherit (self.myLib.helpers) mkSopsFile;
       cfg = config.modules.lament;
     in
@@ -44,7 +44,7 @@
             "gamemode"
           ];
         };
-        services.displayManager.autoLogin = {
+        services.displayManager.autoLogin = mkIf cfg.desktop.enable {
           enable = true;
           user = "lament";
         };
@@ -56,7 +56,7 @@
               git
               kitty
             ]
-            ++ optionals (cfg.desktop.enable) [
+            ++ optionals cfg.desktop.enable [
               vscode
               {
                 programs = {

@@ -44,7 +44,7 @@
           "${customDir}/public".d = { inherit (cfg) user group; };
         };
       services = {
-        caddy.virtualHosts."https://git.${fqdn}".extraConfig =
+        caddy.virtualHosts."git.${fqdn}".extraConfig =
           mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;
         borgbackup.jobs.${config.networking.hostName} = {
           preHook = "systemctl start forgejo-dump.service";

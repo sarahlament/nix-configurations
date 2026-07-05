@@ -1,0 +1,2 @@
+# W10: `{ ... }:` module signatures are intentional, don't nag to collapse them to `_`
+disabled = ["empty_pattern"]

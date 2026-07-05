@@ -8,11 +8,10 @@
     let
       inherit (lib) mkIf mkForce;
       inherit (self.myLib.directory) hosts peers;
-      inherit (self.myLib.constants) fqdn;
+      inherit (self.myLib.constants) fqdn wgPort;
       inherit (self.myLib.constants.addresses) internal;
       inherit (self.myLib.helpers) mkSopsFile;
       inherit (config.networking) hostName;
-      wgPort = 51820;
 
       host = self.myLib.directory.hosts.${hostName};
       isHub = host.roles.wgHub or false;

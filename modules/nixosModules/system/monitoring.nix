@@ -11,7 +11,7 @@
       inherit (self.myLib.directory.hosts.${hostName}.ip) internal;
       monitor = lib.findFirst (
         host: host.roles.monitor or false
-      ) (throw "network: no monitor defined in directory") (lib.attrValues hosts);
+      ) (throw "monitoring: no monitor defined in directory") (lib.attrValues hosts);
     in
     {
       environment.etc."alloy/config.alloy".text = ''
@@ -22,7 +22,6 @@
           labels        = {
             job  = "systemd-journal",
             host = "${hostName}",
-            instance = "${hostName}",
           }
         }
 

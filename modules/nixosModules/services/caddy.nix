@@ -9,6 +9,8 @@
       inherit (self.myLib.constants) fqdn;
     in
     {
+      imports = [ self.nixosModules.tsig ];
+
       networking.firewall.allowedTCPPorts = [
         80 # HTTP
         443 # HTTPS

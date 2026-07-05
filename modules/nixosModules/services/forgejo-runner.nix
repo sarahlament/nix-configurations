@@ -46,10 +46,10 @@
               server = {
                 connections = {
                   forgejo = {
-                    url = "https://git.lament.gay";
+                    url = "https://git.${fqdn}";
                     uuid = "91e77b7a-896a-4562-a9af-becb14b936b5";
                     token_url = "file://${cfg.tokenFile}";
-                    labels = cfg.labels;
+                    inherit (cfg) labels;
                   };
                 };
               };

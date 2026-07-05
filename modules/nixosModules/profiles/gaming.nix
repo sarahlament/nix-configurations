@@ -24,7 +24,7 @@
               "--rt"
               "--fullscreen"
             ]
-            ++ optionals (cfg.hdr.enable) [ "--hdr-enabled" ];
+            ++ optionals cfg.hdr.enable [ "--hdr-enabled" ];
             env = mkIf cfg.hdr.enable {
               "DXVK_HDR" = "1";
             };
@@ -54,7 +54,7 @@
             playerctl # Media player controller
             gamescope-wsi # WSI for gamescope. unsure why it's not included by default
           ]
-          ++ optionals (cfg.hdr.enable) [ vulkan-hdr-layer-kwin6 ];
+          ++ optionals cfg.hdr.enable [ vulkan-hdr-layer-kwin6 ];
       };
     };
 }

@@ -1,6 +1,7 @@
 { ... }: {
   flake.myLib.constants = {
     fqdn = "lament.gay";
+    wgPort = 51820;
     addresses = {
       internal = "fd67:d6a7:d6f3::/48";
       nameserver = {

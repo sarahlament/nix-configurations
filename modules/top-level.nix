@@ -33,9 +33,9 @@ in
           settings = {
             package = pkgs.prek;
             hooks = {
-              nixfmt.enable = true;
-              nixfmt.package = pkgs.nixfmt;
               deadnix.enable = true;
+              nixfmt.enable = true;
+              statix.enable = true;
             };
           };
         };
@@ -52,6 +52,7 @@ in
             forgejo-cli
             jq
             just
+            prek
             sops
           ];
         };

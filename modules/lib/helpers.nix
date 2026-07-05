@@ -1,5 +1,4 @@
 {
-  lib,
   self,
   ...
 }:
@@ -7,7 +6,6 @@
   flake.myLib.helpers =
     let
       inherit (self.myLib.constants.borg) user host;
-      inherit (lib) mkEnableOption;
     in
     {
       mkReverseProxy = port: ''
@@ -22,7 +20,6 @@
         }
       '';
       mkBorgRepo = subuser: "ssh://${user}-${subuser}@${user}.${host}/./backup";
-      mkDisableOption = desc: mkEnableOption desc // { default = true; };
       mkSopsFile = name: self + "/sops/${name}.yaml";
     };
 }

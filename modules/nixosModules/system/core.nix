@@ -33,7 +33,7 @@
       while the above is poor practice, I am confident for the following reasons:
       1: password *and* kbdinteractive auth methods are disabled, leaving only key auth
       2: sudo is restricted to @wheel, which, with nix, is fully defined by me
-      3: even if the key is leaked, public login gets restricted to specific allowed service users anyways, so you'd need to be within the tailnet to do anything to begin with
+      3: even if the key is leaked, public login gets restricted to specific allowed service users anyways, so you'd need to be within the WireGuard network to do anything to begin with
     */
 
     # home-manager is a system module, so we define base options here

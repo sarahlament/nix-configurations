@@ -59,17 +59,15 @@
             compactor = {
               working_directory = "/var/lib/loki/compactor";
               compaction_interval = "10m";
+              # without these the compactor only compacts; retention_period is just a query limit
+              retention_enabled = true;
+              delete_request_store = "filesystem";
             };
 
             limits_config = {
               retention_period = "744h"; # 31 days
               reject_old_samples = true;
               reject_old_samples_max_age = "168h";
-            };
-
-            table_manager = {
-              retention_deletes_enabled = true;
-              retention_period = "744h";
             };
           };
         };
@@ -130,7 +128,7 @@
         };
       };
 
-      services.caddy.virtualHosts."https://grafana.${fqdn}".extraConfig =
+      services.caddy.virtualHosts."grafana.${fqdn}".extraConfig =
         mkPrivateProxy ip.internal config.services.grafana.settings.server.http_port;
     };
 }
