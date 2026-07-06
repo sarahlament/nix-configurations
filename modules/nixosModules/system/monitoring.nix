@@ -2,16 +2,15 @@
   flake.nixosModules.monitoring =
     {
       config,
-      lib,
       ...
     }:
     let
       inherit (config.networking) hostName;
-      inherit (self.myLib.directory) hosts;
+      inherit (self.myLib.directory) hosts services;
       inherit (self.myLib.directory.hosts.${hostName}.ip) internal;
-      monitor = lib.findFirst (
-        host: host.roles.monitor or false
-      ) (throw "monitoring: no monitor defined in directory") (lib.attrValues hosts);
+      # loki lives inside the grafana module, so its host is wherever that service
+      # is placed - derive the log sink from the registry, no separate role to sync
+      monitor = hosts.${services.grafana.backend}.ip.internal;
     in
     {
       environment.etc."alloy/config.alloy".text = ''
@@ -50,7 +49,7 @@
 
         loki.write "local" {
           endpoint {
-            url = "http://[${monitor.ip.internal}]:3100/loki/api/v1/push"
+            url = "http://[${monitor}]:3100/loki/api/v1/push"
           }
         }
       '';

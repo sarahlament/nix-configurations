@@ -13,6 +13,27 @@
       inherit (hosts.${config.networking.hostName}.ip) internal;
     in
     {
+      # all three run as static users with state under /var/lib. the persist entry
+      # must carry the owning user/group - a plain string persists as root:root, and
+      # the bind mount then locks the service out of its own StateDirectory.
+      environment.persistence."/persist".directories = [
+        {
+          directory = "/var/lib/loki";
+          user = "loki";
+          group = "loki";
+        }
+        {
+          directory = "/var/lib/prometheus2";
+          user = "prometheus";
+          group = "prometheus";
+        }
+        {
+          directory = "/var/lib/grafana";
+          user = "grafana";
+          group = "grafana";
+        }
+      ];
+
       sops.secrets.grafanaSecretKey = {
         sopsFile = mkSopsFile "services";
         owner = "grafana";

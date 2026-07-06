@@ -11,7 +11,16 @@
         sopsFile = mkSopsFile "services";
       };
 
-      environment.persistence."/persist".directories = [ "/var/lib/vaultwarden" ];
+      # persist entry must own the dir; a plain string lands root:root and the bind
+      # mount locks vaultwarden out of its own state on a fresh boot
+      environment.persistence."/persist".directories = [
+        {
+          directory = "/var/lib/vaultwarden";
+          user = "vaultwarden";
+          group = "vaultwarden";
+          mode = "0700";
+        }
+      ];
 
       services = {
         borgbackup.jobs.${config.networking.hostName} = {

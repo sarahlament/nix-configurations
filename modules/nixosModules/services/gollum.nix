@@ -24,7 +24,15 @@
         ];
       };
 
-      # static user, so its stateDir isn't under /var/lib/private
-      environment.persistence."/persist".directories = [ config.services.gollum.stateDir ];
+      # static user, so its stateDir isn't under /var/lib/private. the persist entry
+      # must own the dir too - a plain string lands root:root and the bind mount locks
+      # gollum out of its own state on a fresh boot
+      environment.persistence."/persist".directories = [
+        {
+          directory = config.services.gollum.stateDir;
+          user = "gollum";
+          group = "gollum";
+        }
+      ];
     };
 }

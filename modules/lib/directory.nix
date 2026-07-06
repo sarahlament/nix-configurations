@@ -37,7 +37,6 @@
           wgPub = "7hPavXcPF2zfFbimfyjI40BBM7vmwGdl5kA9DN1Y+28=";
         };
         roles = {
-          monitor = true;
           impermanent = true;
         };
       };
@@ -60,7 +59,7 @@
         module = "forgejo";
       };
       grafana = {
-        backend = "athena";
+        backend = "minerva";
         port = 3000;
         module = "grafana";
       };
