@@ -2,16 +2,14 @@
   flake.nixosModules.gollum =
     { config, ... }:
     let
-      inherit (self.myLib.constants) fqdn;
-      inherit (self.myLib.helpers) mkPrivateProxy;
-      inherit (self.myLib.directory.hosts.${config.networking.hostName}) ip;
+      inherit (self.myLib.directory.hosts.${config.networking.hostName}.ip) internal;
     in
     {
       services = {
         gollum = {
           enable = true;
-          address = "localhost";
-          port = 4567;
+          address = internal;
+          inherit (self.myLib.directory.services.notes) port;
 
           extraConfig = ''
             wiki_options = {
@@ -21,12 +19,12 @@
             Precious::App.set(:wiki_options, wiki_options)
           '';
         };
-        caddy.virtualHosts."notes.${fqdn}".extraConfig =
-          mkPrivateProxy ip.internal config.services.gollum.port;
-
         borgbackup.jobs.${config.networking.hostName}.paths = [
           config.services.gollum.stateDir
         ];
       };
+
+      # static user, so its stateDir isn't under /var/lib/private
+      environment.persistence."/persist".directories = [ config.services.gollum.stateDir ];
     };
 }

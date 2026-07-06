@@ -2,11 +2,29 @@
   flake.nixosModules.caddy =
     {
       config,
+      lib,
       pkgs,
       ...
     }:
     let
       inherit (self.myLib.constants) fqdn;
+      inherit (self.myLib.directory) hosts services;
+      inherit (self.myLib.helpers) mkReverseProxy;
+      inherit (config.networking) hostName;
+      inherit (hosts.${hostName}) ip;
+
+      serviceVhosts = lib.mapAttrs' (
+        name: svc:
+        lib.nameValuePair "${name}.${fqdn}" {
+          extraConfig =
+            lib.optionalString (svc ? extraConfig) "${svc.extraConfig}\n"
+            + mkReverseProxy {
+              host = hosts.${svc.backend}.ip.internal;
+              inherit (svc) port;
+              bindTo = if (svc.public or false) then null else ip.internal;
+            };
+        }
+      ) services;
     in
     {
       imports = [ self.nixosModules.tsig ];
@@ -15,10 +33,6 @@
         80 # HTTP
         443 # HTTPS
       ];
-
-      # private vhosts bind to the WG internal address, which may not be up yet
-      # when caddy starts; let it bind regardless of interface state.
-      boot.kernel.sysctl."net.ipv6.ip_nonlocal_bind" = 1;
 
       systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.templates.acmeTsig.path;
       services.caddy = {
@@ -36,11 +50,13 @@
             server {env.RFC2136_NAMESERVER}
           }
         '';
-        virtualHosts.${fqdn} = {
-          extraConfig = ''
-            root * /var/www/${fqdn}
-            file_server
-          '';
+        virtualHosts = serviceVhosts // {
+          ${fqdn} = {
+            extraConfig = ''
+              root * /var/www/${fqdn}
+              file_server
+            '';
+          };
         };
       };
 

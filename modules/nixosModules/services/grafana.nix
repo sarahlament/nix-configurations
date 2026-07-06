@@ -8,9 +8,9 @@
     }:
     let
       inherit (self.myLib.constants) fqdn;
-      inherit (self.myLib.helpers) mkPrivateProxy mkSopsFile;
+      inherit (self.myLib.helpers) mkSopsFile;
       inherit (self.myLib.directory) hosts;
-      inherit (self.myLib.directory.hosts.${config.networking.hostName}) ip;
+      inherit (hosts.${config.networking.hostName}.ip) internal;
     in
     {
       sops.secrets.grafanaSecretKey = {
@@ -103,7 +103,8 @@
             server = {
               root_url = "https://grafana.${fqdn}";
               domain = "grafana.${fqdn}";
-              http_port = 3000;
+              http_addr = internal;
+              http_port = self.myLib.directory.services.grafana.port;
             };
           };
 
@@ -127,8 +128,5 @@
           };
         };
       };
-
-      services.caddy.virtualHosts."grafana.${fqdn}".extraConfig =
-        mkPrivateProxy ip.internal config.services.grafana.settings.server.http_port;
     };
 }

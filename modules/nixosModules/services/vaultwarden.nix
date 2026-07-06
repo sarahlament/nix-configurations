@@ -3,25 +3,20 @@
     { config, ... }:
     let
       inherit (self.myLib.constants) fqdn;
-      inherit (self.myLib.helpers) mkPrivateProxy mkSopsFile;
-      inherit (self.myLib.directory.hosts.${config.networking.hostName}) ip;
+      inherit (self.myLib.helpers) mkSopsFile;
+      inherit (self.myLib.directory.hosts.${config.networking.hostName}.ip) internal;
     in
     {
       sops.secrets.vaultwardenToken = {
         sopsFile = mkSopsFile "services";
       };
+
+      environment.persistence."/persist".directories = [ "/var/lib/vaultwarden" ];
+
       services = {
         borgbackup.jobs.${config.networking.hostName} = {
           preHook = "systemctl start backup-vaultwarden.service";
           paths = [ config.services.vaultwarden.backupDir ];
-        };
-        caddy = {
-          virtualHosts."vault.${fqdn}" = {
-            extraConfig = ''
-              encode zstd gzip
-              ${mkPrivateProxy ip.internal config.services.vaultwarden.config.ROCKET_PORT}
-            '';
-          };
         };
         vaultwarden = {
           enable = true;
@@ -32,8 +27,8 @@
             DOMAIN = "https://vault.${fqdn}";
             SIGNUPS_ALLOWED = false;
 
-            ROCKET_ADDRESS = "127.0.0.1";
-            ROCKET_PORT = 8222;
+            ROCKET_ADDRESS = internal;
+            ROCKET_PORT = self.myLib.directory.services.vault.port;
             ROCKET_LOG = "critical";
           };
         };

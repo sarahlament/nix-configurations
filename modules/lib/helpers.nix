@@ -1,4 +1,5 @@
 {
+  lib,
   self,
   ...
 }:
@@ -8,18 +9,28 @@
       inherit (self.myLib.constants.borg) user host;
     in
     {
-      mkReverseProxy = port: ''
-        reverse_proxy localhost:${toString port} {
-          header_up X-Real-IP {remote_host}
-        }
-      '';
-      mkPrivateProxy = ip: port: ''
-        bind ${ip}
-        reverse_proxy localhost:${toString port} {
-          header_up X-Real-IP {remote_host}
-        }
-      '';
+      mkReverseProxy =
+        {
+          host ? "localhost",
+          port,
+          bindTo ? null,
+        }:
+        let
+          # caddy needs bracket syntax for a literal IPv6 upstream
+          upstream = if lib.hasInfix ":" host then "[${host}]" else host;
+        in
+        lib.optionalString (bindTo != null) "bind ${bindTo}\n"
+        + ''
+          reverse_proxy ${upstream}:${toString port} {
+            header_up X-Real-IP {remote_host}
+          }
+        '';
       mkBorgRepo = subuser: "ssh://${user}-${subuser}@${user}.${host}/./backup";
       mkSopsFile = name: self + "/sops/${name}.yaml";
+      serviceModulesFor =
+        hostName:
+        map (svc: self.nixosModules.${svc.module}) (
+          lib.filter (svc: svc.backend == hostName) (lib.attrValues self.myLib.directory.services)
+        );
     };
 }

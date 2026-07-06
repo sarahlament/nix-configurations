@@ -11,6 +11,7 @@
       boot
       borgbackup
       buildMachines
+      impermanence
       monitoring
       networking
       nixconf

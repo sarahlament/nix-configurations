@@ -1,23 +1,25 @@
-{ inputs, ... }: {
+{ inputs, self, ... }: {
   flake.nixosModules.lanzaboote =
-    {
-      config,
-      lib,
-      ...
-    }:
+    { config, lib, ... }:
+    let
+      inherit (self.myLib.helpers) mkSopsFile;
+    in
     {
       imports = [ inputs.lanzaboote.nixosModules.lanzaboote ];
 
-      services.borgbackup.jobs.${config.networking.hostName}.paths = [ "/persist/pki" ];
+      # only the db pair signs boot files; PK/KEK/GUID stay encrypted in
+      # sops/pki.yaml, decrypted by hand for the one-time enrollment.
+      sops.secrets = {
+        dbKey.sopsFile = mkSopsFile "pki";
+        dbPem.sopsFile = mkSopsFile "pki";
+      };
+
       boot = {
-        loader = {
-          systemd-boot.enable = lib.mkForce false;
-          efi.canTouchEfiVariables = true;
-          efi.efiSysMountPoint = "/efi";
-        };
+        loader.systemd-boot.enable = lib.mkForce false;
         lanzaboote = {
           enable = true;
-          pkiBundle = "/persist/pki";
+          privateKeyFile = config.sops.secrets.dbKey.path;
+          publicKeyFile = config.sops.secrets.dbPem.path;
           configurationLimit = 3;
           settings = {
             console-mode = 0;

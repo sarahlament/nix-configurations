@@ -37,7 +37,7 @@
       # this is for the spokes, we trust the coordinator to verify the connection and route properly
       hubPeer = {
         publicKey = hub.keys.wgPub;
-        endpoint = "[${hub.ip.public.v6}]:${toString wgPort}";
+        endpoint = "${fqdn}:${toString wgPort}";
         allowedIPs = [ internal ];
         persistentKeepalive = 25;
       };
@@ -49,10 +49,16 @@
       };
       services.resolved.enable = mkForce false;
 
-      # phone -> ishtar (spoke<->spoke) routes through the hub, so the hub must forward.
-      # IPv6 gates its forwarding datapath on the GLOBAL knob; per-interface forwarding
-      # is only the NDP host/router role, so this has to be conf.all, not conf.internal.
-      boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = mkIf isHub 1;
+      boot.kernel.sysctl = {
+        # phone -> ishtar (spoke<->spoke) routes through the hub, so the hub must forward.
+        # IPv6 gates its forwarding datapath on the GLOBAL knob; per-interface forwarding
+        # is only the NDP host/router role, so this has to be conf.all, not conf.internal.
+        "net.ipv6.conf.all.forwarding" = mkIf isHub 1;
+
+        # services bind their WG internal address, which may not be up when they
+        # start; allow the bind regardless of interface state.
+        "net.ipv6.ip_nonlocal_bind" = 1;
+      };
 
       networking = {
         useDHCP = true;

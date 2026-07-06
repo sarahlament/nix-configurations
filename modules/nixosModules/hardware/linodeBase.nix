@@ -1,14 +1,11 @@
-{ ... }: {
+{ self, ... }: {
   flake.nixosModules.linodeBase =
     {
-      modulesPath,
       pkgs,
       ...
     }:
     {
-      imports = [
-        (modulesPath + "/profiles/qemu-guest.nix")
-      ];
+      imports = [ self.nixosModules.virtualGuest ];
 
       boot = {
         kernelPackages = pkgs.linuxPackages;

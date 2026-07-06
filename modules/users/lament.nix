@@ -67,7 +67,7 @@
             ]; # ++ optionals (cfg.server.enable)[]; if needed/wanted
 
           home = {
-            stateVersion = config.system.stateVersion;
+            inherit (config.system) stateVersion;
             username = "lament";
             homeDirectory = "/home/lament";
             shell.enableShellIntegration = true;

@@ -7,7 +7,8 @@
     }:
     let
       inherit (self.myLib.constants) fqdn;
-      inherit (self.myLib.helpers) mkReverseProxy mkSopsFile;
+      inherit (self.myLib.helpers) mkSopsFile;
+      inherit (self.myLib.directory.hosts.${config.networking.hostName}.ip) internal;
     in
     {
       sops.secrets.forgejoMailPass = {
@@ -44,8 +45,6 @@
           "${customDir}/public".d = { inherit (cfg) user group; };
         };
       services = {
-        caddy.virtualHosts."git.${fqdn}".extraConfig =
-          mkReverseProxy config.services.forgejo.settings.server.HTTP_PORT;
         borgbackup.jobs.${config.networking.hostName} = {
           preHook = "systemctl start forgejo-dump.service";
           paths = [ config.services.forgejo.dump.backupDir ];
@@ -89,8 +88,8 @@
               DOMAIN = "git.${fqdn}";
               ROOT_URL = "https://git.${fqdn}";
               LANDING_PAGE = "/sarahlament";
-              HTTP_PORT = 3030;
-              HTTP_ADDR = "localhost";
+              HTTP_PORT = self.myLib.directory.services.git.port;
+              HTTP_ADDR = internal;
 
               SSH_DOMAIN = "${config.networking.hostName}.${fqdn}";
               SSH_USER = "git";
