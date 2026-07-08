@@ -19,7 +19,8 @@
           grub = {
             enable = true;
             forceInstall = true;
-            device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi-disk-0";
+            # device comes from disko (the bios_grub partition sets grub.devices);
+            # setting it here too would duplicate the disk in mirroredBoots
 
             extraConfig = ''
               serial --speed 19200 --unit=0 --word=8 --parity=no --stop=1;

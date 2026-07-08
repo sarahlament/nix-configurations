@@ -110,11 +110,21 @@
 
       # KASP db (signing keys) lives here; losing it means a DS replacement at the registrar
       services.borgbackup.jobs.${config.networking.hostName} = {
-        preHook = "knotc zone-dump";
         paths = [
           config.services.knot.settings.database.storage
         ];
       };
+
+      # on a tmpfs-root host the same dir must be persisted, or the DNSSEC signing
+      # keys regenerate every boot -> DS mismatch at the registrar, zone goes bogus
+      environment.persistence."/persist".directories = [
+        {
+          directory = config.services.knot.settings.database.storage;
+          user = "knot";
+          group = "knot";
+          mode = "0750";
+        }
+      ];
 
       networking.firewall.extraInputRules = ''
         ip  saddr { ${nameserver.secondary.v4}, ${nameserver.notify.v4} } tcp dport 53 accept

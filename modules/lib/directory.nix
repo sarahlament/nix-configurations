@@ -19,6 +19,7 @@
           mailserver = true;
           knot = true;
           wgHub = true;
+          impermanent = true;
         };
       };
       ishtar = {

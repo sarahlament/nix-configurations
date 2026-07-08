@@ -26,7 +26,7 @@ _dmarc          IN TXT  "v=DMARC1; adkim=s; aspf=s; p=quarantine; rua=mailto:pos
 mail            IN A        104.200.16.195
                 IN AAAA     2600:3c00::2000:31ff:fe65:8d63
 mail._domainkey IN TXT  "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqF3q7GQYDC2itSGd9BlGAnnkxAwC93+LRxtWGBnGU9LPJVGIYZ1DlJTeSooeTJ2ERjBhqAZjdf+QAgGRmWLtpAD2aY2mOWJcyrKLYbECI5mbbkHPUqVl084sUnUkfLCfyMoxfAz5Cgm5V4+sVGBpv715QnGPGEpD3IsVU7Rky7kVYK1nF+JVzDiLVm0rIw+pO" "Zurawv/8RpMJ8CZ/8VU9ryMEdgSXlwFHq7K5XIQyeUk+qbJCm7+vzmfD9e0GF25QkURV2tKKiP8rpn5Iz52tlSuXT018TEz9MqvSWL0IUY2/P4V6AVDMV6iw/CgX4eUInLkudg+2wyYTIUgOXkNHwIDAQAB"
-_25._tcp.mail   IN TLSA     3 1 1 3f9adfcc4b9f16166888364e76d5bb56ff8fd587b9916d6e12fa7b1137d0e7d2
+_25._tcp.mail   IN TLSA     3 1 1 ebf368b0a55cebd96830f8132504da23909676633628ac2a537dbc323f527b17
 
 git             IN CNAME    lament.gay.
 www             IN CNAME    lament.gay.

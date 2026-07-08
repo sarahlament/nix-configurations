@@ -11,7 +11,6 @@ let
       disko
       linodeBase
 
-      acme
       caddy
       knot
       kresd

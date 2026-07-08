@@ -20,6 +20,8 @@
       imports = [
         # normally, I would avoid importing cross-module, however mailserver gets an exception: the jails *rely* on the f2b emailer script within the main module
         self.nixosModules.fail2ban
+        # likewise: the cert below consumes acme's rfc2136 DNS-01 defaults
+        self.nixosModules.acme
         inputs.nixos-mailserver.nixosModules.mailserver
       ];
       modules.services.f2b.recidiveJail = mkDefault true;
@@ -67,6 +69,25 @@
           memoryLimit = 500;
         };
       };
+
+      # tmpfs root wipes these on reboot - persist the mail store and DKIM keys.
+      # explicit ownership matters: a root-owned persist entry bind-mounts over
+      # the service's dir and locks it out. the acme cert re-issues via DNS-01 and
+      # rspamd bayes retrains, so neither is persisted here.
+      environment.persistence."/persist".directories = [
+        {
+          directory = config.mailserver.storage.path;
+          user = config.mailserver.storage.owner;
+          group = config.mailserver.storage.group;
+          mode = "0700";
+        }
+        {
+          directory = config.mailserver.dkim.keyDirectory;
+          user = "rspamd";
+          group = "rspamd";
+          mode = "0755";
+        }
+      ];
 
       # base admin account
       sops.secrets.adminMailPass = {

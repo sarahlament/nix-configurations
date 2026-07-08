@@ -26,10 +26,15 @@
     i18n.defaultLocale = "en_US.UTF-8";
     time.timeZone = "America/Chicago";
     programs.zsh.enable = true;
-    users.defaultUserShell = pkgs.zsh;
-    users.mutableUsers = false;
-    security.sudo-rs.enable = true;
-    security.sudo-rs.wheelNeedsPassword = false;
+    services.journald.extraConfig = "SystemMaxUse=500M";
+    users = {
+      defaultUserShell = pkgs.zsh;
+      mutableUsers = false;
+    };
+    security.sudo-rs = {
+      enable = true;
+      wheelNeedsPassword = false;
+    };
     /*
       while the above is poor practice, I am confident for the following reasons:
       1: password *and* kbdinteractive auth methods are disabled, leaving only key auth

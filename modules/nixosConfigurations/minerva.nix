@@ -27,9 +27,6 @@ in
           boot.efi.enable = true;
           services.borg.subuser = "sub3";
         };
-
-        # sops reads its key from /persist/key.age before secrets decrypt
-        fileSystems."/persist".neededForBoot = true;
       }
     ];
   };
