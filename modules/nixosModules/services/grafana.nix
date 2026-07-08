@@ -8,9 +8,10 @@
     }:
     let
       inherit (self.myLib.constants) fqdn;
-      inherit (self.myLib.helpers) mkSopsFile;
+      inherit (self.myLib.helpers) mkSopsFile roleHost;
       inherit (self.myLib.directory) hosts;
       inherit (hosts.${config.networking.hostName}.ip) internal;
+      mailRelay = (roleHost "mailserver").ip.internal;
     in
     {
       # all three run as static users with state under /var/lib. the persist entry
@@ -38,7 +39,6 @@
         sopsFile = mkSopsFile "services";
         owner = "grafana";
       };
-
       services = {
         loki = {
           enable = true;
@@ -120,6 +120,16 @@
             news.news_feed_enabled = false;
 
             security.secret_key = "$__file{${config.sops.secrets.grafanaSecretKey.path}}";
+
+            smtp = {
+              enabled = true;
+              # relay over WireGuard to the mailserver's internal address; no auth
+              # (trusted via mynetworks), NoStartTLS since the tunnel already encrypts
+              host = "[${mailRelay}]:25";
+              startTLS_policy = "NoStartTLS";
+              from_address = "grafana@${fqdn}";
+              from_name = "grafana";
+            };
 
             server = {
               root_url = "https://grafana.${fqdn}";

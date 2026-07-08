@@ -4,38 +4,37 @@
   ...
 }:
 let
-  activeModules = with self.nixosModules; [
-    core
-    disko
-    linodeBase
+  activeModules =
+    with self.nixosModules;
+    [
+      core
+      disko
+      linodeBase
 
-    acme
-    caddy
-    knot
-    kresd
-    mailserver
-  ];
-  serviceModules = self.myLib.helpers.serviceModulesFor "athena";
+      acme
+      caddy
+      knot
+      kresd
+      mailserver
+    ]
+    ++ self.myLib.helpers.serviceModulesFor "athena";
 in
 {
   flake.nixosConfigurations.athena = inputs.nixpkgs-small.lib.nixosSystem {
     specialArgs = { inherit inputs self; };
-    modules =
-      activeModules
-      ++ serviceModules
-      ++ [
-        (inputs.import-tree (self + "/static/athena"))
+    modules = activeModules ++ [
+      (inputs.import-tree (self + "/static/athena"))
 
-        {
-          networking.hostName = "athena";
-          system.stateVersion = "26.05";
-          nixpkgs.hostPlatform = "x86_64-linux";
+      {
+        networking.hostName = "athena";
+        system.stateVersion = "26.05";
+        nixpkgs.hostPlatform = "x86_64-linux";
 
-          modules = {
-            boot.zram.enable = true;
-            services.borg.subuser = "sub1";
-          };
-        }
-      ];
+        modules = {
+          boot.zram.enable = true;
+          services.borg.subuser = "sub1";
+        };
+      }
+    ];
   };
 }

@@ -3,8 +3,9 @@
     { config, ... }:
     let
       inherit (self.myLib.constants) fqdn;
-      inherit (self.myLib.helpers) mkSopsFile;
+      inherit (self.myLib.helpers) mkSopsFile roleHost;
       inherit (self.myLib.directory.hosts.${config.networking.hostName}.ip) internal;
+      mailRelay = (roleHost "mailserver").ip.internal;
     in
     {
       sops.secrets.vaultwardenToken = {
@@ -39,6 +40,14 @@
             ROCKET_ADDRESS = internal;
             ROCKET_PORT = self.myLib.directory.services.vault.port;
             ROCKET_LOG = "critical";
+
+            # relay unauthenticated over WireGuard to the mailserver's internal
+            # address (trusted via mynetworks); tunnel encrypts, so no SMTP TLS
+            SMTP_HOST = mailRelay;
+            SMTP_FROM = "vault@${fqdn}";
+            SMTP_FROM_NAME = "vault";
+            SMTP_PORT = 25;
+            SMTP_SECURITY = "off";
           };
         };
       };

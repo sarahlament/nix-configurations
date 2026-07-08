@@ -10,23 +10,16 @@
       inherit (self.myLib.directory) hosts peers;
       inherit (self.myLib.constants) fqdn wgPort;
       inherit (self.myLib.constants.addresses) internal;
-      inherit (self.myLib.helpers) mkSopsFile;
+      inherit (self.myLib.helpers) mkSopsFile roleHost;
       inherit (config.networking) hostName;
 
       host = self.myLib.directory.hosts.${hostName};
       isHub = host.roles.wgHub or false;
 
-      # look for the first host that defines they are a 'hub' in the directory
-      # fine for one coordinator, TODO recheck when adding a second
-      hub = lib.findFirst (
-        host: host.roles.wgHub or false
-      ) (throw "network: no wgHub defined in directory") (lib.attrValues hosts);
-
-      # similarly, look for the first resolver in the directory
-      # same as above, TODO recheck when adding a second
-      resolver = lib.findFirst (
-        host: host.roles.resolver or false
-      ) (throw "network: no resolver defined in directory") (lib.attrValues hosts);
+      # the coordinator and the recursive resolver; fine for one of each,
+      # TODO recheck when adding a second
+      hub = roleHost "wgHub";
+      resolver = roleHost "resolver";
 
       # this is for the hub, each peer restricted to its defined internal IP
       spokePeers = lib.mapAttrsToList (_: host: {

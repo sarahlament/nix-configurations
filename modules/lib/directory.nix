@@ -53,7 +53,7 @@
     };
     services = {
       git = {
-        backend = "athena";
+        backend = "minerva";
         port = 3030;
         public = true;
         module = "forgejo";

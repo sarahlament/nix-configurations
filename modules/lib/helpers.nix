@@ -27,6 +27,11 @@
         '';
       mkBorgRepo = subuser: "ssh://${user}-${subuser}@${user}.${host}/./backup";
       mkSopsFile = name: self + "/sops/${name}.yaml";
+      # the (single) host in the directory that declares a given role
+      roleHost =
+        role:
+        lib.findFirst (h: h.roles.${role} or false) (throw "directory: no host declares the '${role}' role")
+          (lib.attrValues self.myLib.directory.hosts);
       serviceModulesFor =
         hostName:
         map (svc: self.nixosModules.${svc.module}) (

@@ -13,6 +13,7 @@
     let
       inherit (self.myLib.constants) fqdn;
       inherit (self.myLib.helpers) mkSopsFile;
+      inherit (self.myLib.directory) hosts;
       inherit (lib) mkDefault;
     in
     {
@@ -69,7 +70,7 @@
 
       # base admin account
       sops.secrets.adminMailPass = {
-        sopsFile = mkSopsFile "pass";
+        sopsFile = mkSopsFile "mail";
       };
       mailserver.accounts."admin@${fqdn}" = {
         hashedPasswordFile = config.sops.secrets.adminMailPass.path;
@@ -81,33 +82,43 @@
         ];
       };
 
-      services.borgbackup.jobs.${config.networking.hostName}.paths = [
-        config.security.acme.certs."mail.${fqdn}".directory
-        config.mailserver.dkim.keyDirectory
-        config.mailserver.storage.path
-      ];
+      services = {
+        # fleet hosts relay outbound mail through here over WireGuard, so trust their
+        # internal addresses instead of requiring auth. peers (phone/tablet) are not
+        # included - only full hosts.
+        postfix.settings.main.mynetworks = [
+          "127.0.0.1/32"
+          "[::1]/128"
+        ]
+        ++ map (h: "[${h.ip.internal}]/128") (lib.attrValues hosts);
 
-      services.fail2ban.jails =
-        let
-          action = ''
-            nftables-allports
-              fail2ban-email
-          '';
-        in
-        {
-          postfix.settings = {
-            enabled = true;
-            filter = "postfix[mode=aggressive]";
-            port = "smtp,submissions,submission";
-            inherit action;
+        borgbackup.jobs.${config.networking.hostName}.paths = [
+          config.security.acme.certs."mail.${fqdn}".directory
+          config.mailserver.dkim.keyDirectory
+          config.mailserver.storage.path
+        ];
+        fail2ban.jails =
+          let
+            action = ''
+              nftables-allports
+                fail2ban-email
+            '';
+          in
+          {
+            postfix.settings = {
+              enabled = true;
+              filter = "postfix[mode=aggressive]";
+              port = "smtp,submissions,submission";
+              inherit action;
+            };
+            dovecot.settings = {
+              enabled = true;
+              filter = "dovecot[mode=aggressive]";
+              port = "imap,imaps,submissions,submission";
+              journalmatch = "_SYSTEMD_UNIT=dovecot.service";
+              inherit action;
+            };
           };
-          dovecot.settings = {
-            enabled = true;
-            filter = "dovecot[mode=aggressive]";
-            port = "imap,imaps,submissions,submission";
-            journalmatch = "_SYSTEMD_UNIT=dovecot.service";
-            inherit action;
-          };
-        };
+      };
     };
 }

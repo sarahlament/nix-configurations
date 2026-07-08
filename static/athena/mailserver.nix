@@ -10,7 +10,7 @@ in
 {
   # accounts are not module definitions
   sops.secrets.lamentMailPass = {
-    sopsFile = mkSopsFile "pass";
+    sopsFile = mkSopsFile "mail";
   };
   mailserver.accounts =
     let

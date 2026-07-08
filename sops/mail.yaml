@@ -1,0 +1,17 @@
+lamentMailPass: ENC[AES256_GCM,data:nWzGIrrtKyf33yGwvd3cWaiL/sYKqWgHaK5a7bx5v0VbVYfyutk94eRygIpM+4JwDHO/a1OBafkt75936fETH3or9Xs+87ShtdCLLYYo/6ec9dCror7bYNBhnTRYsd6LoE3JxR2mJkXMqA==,iv:TXtNOEOmioteM8mSuO1pBEk3r6PtZpT8c4QeaVGhY4s=,tag:mdpmk0X70xSivXnbuznBYA==,type:str]
+adminMailPass: ENC[AES256_GCM,data:cQM+cHNXkV4vFVnlyZTYxZ1Je2PKujuh/DkpXP2j6KJdFee1OUUeWJAGdQzKjXfgxLJHD4XP6dvYz7p4oKiIvPSstWdmdT2RjIe5uqZkYOe37lJA0Tyao/OvlBZqKx5VhU/TlpuaDFFExQ==,iv:gT0gKNMT+/YaiV/2ZICJbr1ixbuBNuGqvnB2IMzd+tk=,tag:E2P7awjvnZPKgmlYsc2U2Q==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBNNzdYTTlTQjJVMnFERHhF
+            ZFVaNFRNb0pBMGsyb25tY1ZTMk5VZnBydkdVCmNtME1MelNMcHZZZ05Qek00Nk1F
+            NXVDZklWNmIrY0ViNG5EMXNZaGR1aWcKLS0tIHM1aFhoK1g2R2FPYUY0MTJoZXNY
+            RWZjamRuLzJ3MFFhTXQwdGFJQVlUNVUKBpS0z/a12A41e9L6wb46nTxgubSPZYXT
+            H+9bgaN9AKsggOOPepeGVpt2PhN+vxpQEezJnsgB8W1euWw/OMm19Q==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age15k8clh8j26kxmnrfaa4a83s7mm7d5xl7vueh04kkrtpc2shhcuzqewurla
+    lastmodified: "2026-07-07T18:33:25Z"
+    mac: ENC[AES256_GCM,data:YHyOZbrRlTA0MOrWq6XDNgeSpJVDZL9xt9YKiRBAFG2ynF//QVgde6MRX3kNLgyJxgiOWOqNAwqKiWQDvra3LnsBhF2+nfZc1M0AYkp1WoXMWAtb/z/XFGvTNsyTDeZh7hjFJqqU9xZeyWFJinxdc39qZZGuvUeLugjHVAdAHyg=,iv:FcIXCX7SOvsmVjwZuActPs33Qevcew0FdrCCM5nZiLw=,tag:vfIIDQ25shWlj/7KYc+esg==,type:str]
+    unencrypted_suffix: _unencrypted
+    version: 3.13.1
