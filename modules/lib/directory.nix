@@ -75,6 +75,12 @@
         module = "vaultwarden";
         extraConfig = "encode zstd gzip";
       };
+      proxmox = {
+        backend = "minerva";
+        port = 8007; # minerva-side listener (8006 is proxmox itself)
+        module = "proxmox-proxy";
+        # no public = true -> edge caddy binds it to WG, VPN-only
+      };
     };
   };
 }
