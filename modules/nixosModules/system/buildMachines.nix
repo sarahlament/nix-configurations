@@ -1,6 +1,8 @@
 { self, ... }:
 let
-  inherit (self.myLib.helpers) mkSopsFile;
+  inherit (self.myLib.helpers) mkSopsFile roleHost;
+  # runner + remote builder live together on whichever host holds the builder role
+  builder = roleHost "builder";
 in
 {
   flake.nixosModules.buildMachines =
@@ -14,9 +16,10 @@ in
         sopsFile = mkSopsFile "privkeys";
       };
       nix.distributedBuilds = true;
-      nix.buildMachines = lib.mkIf (config.networking.hostName != "ishtar") [
+      # every host offloads to the builder except the builder itself (builds locally)
+      nix.buildMachines = lib.mkIf (config.networking.hostName != builder.hostname) [
         {
-          hostName = "${self.myLib.directory.hosts.ishtar.ip.internal}";
+          hostName = builder.ip.internal;
           systems = [ "x86_64-linux" ];
           protocol = "ssh-ng";
           sshUser = "nixbldRemote";

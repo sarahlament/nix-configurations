@@ -77,8 +77,8 @@
           Group = mkForce "nixrun";
           Restart = mkForce "always";
           RestartSec = mkForce "10s";
-          MemoryMax = mkForce "2G";
-          CPUQuota = mkForce "200%";
+          # no MemoryMax/CPUQuota: brigid is a dedicated headless builder, let it
+          # use the whole box (scale the VM if a build needs more)
 
           # We're using the new approach for declaring the .runner file, so we force the ExecStartPre to remove the register step
           ExecStartPre = mkForce [

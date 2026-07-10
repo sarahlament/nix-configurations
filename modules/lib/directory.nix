@@ -15,10 +15,15 @@
           wgPub = "3tPScod8UQO9f4KGXRGQDOSh30XEVeq/pOjkjBQ/LEM=";
         };
         roles = {
-          resolver = true;
-          mailserver = true;
-          knot = true;
-          wgHub = true;
+          edge = {
+            vpn = true;
+            web = true;
+            mail = true;
+          };
+          dns = {
+            authority = true;
+            resolver = true;
+          };
           impermanent = true;
         };
       };
@@ -29,6 +34,8 @@
           sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA8zVl6CUXd4tEb1zpdbV1SMB7taFSg+3Y3QJksY9+vU";
           wgPub = "2/eP72pROfrKRSrxPKeoroVtq9K+jvz1T4Gl4tPg03c=";
         };
+        roles = {
+        };
       };
       minerva = {
         hostname = "minerva";
@@ -38,6 +45,18 @@
           wgPub = "7hPavXcPF2zfFbimfyjI40BBM7vmwGdl5kA9DN1Y+28=";
         };
         roles = {
+          impermanent = true;
+        };
+      };
+      brigid = {
+        hostname = "brigid";
+        ip.internal = "fd67:d6a7:d6f3::51";
+        keys = {
+          sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPVE5J272luQVFpnDgPPpi/37NLz1KuHBHK7yOOC5Zd8";
+          wgPub = "TY8me/FEIRZBNctQ+l15cvxND/S4ALAz4OsaLshWvQ0=";
+        };
+        roles = {
+          builder = true;
           impermanent = true;
         };
       };

@@ -1,29 +1,25 @@
-{ ... }:
-{
+{ ... }: {
   flake.diskoConfigurations = {
-    # BIOS-only Linode (Direct Disk), so GPT with a 1M bios_grub (EF02) partition
-    # for GRUB's core.img - no UEFI/ESP. ext4 /boot keeps the bootloader off btrfs
-    # entirely (GRUB's btrfs support is finicky). Root is tmpfs; /nix + /persist +
-    # /var/log are btrfs subvols, mirroring minerva. GPT (not msdos) because disko
-    # deprecated the legacy table type.
-    athena.disko.devices = {
+    # shared by the Proxmox virtio VMs (minerva, brigid): UEFI, no swap, tmpfs root
+    uefi-plain.disko.devices = {
       disk = {
-        linode-root = {
-          device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi-disk-0";
+        system = {
+          device = "/dev/vda"; # Proxmox virtio disk - confirm on each VM
           type = "disk";
           content = {
             type = "gpt";
             partitions = {
-              bios = {
-                type = "EF02"; # BIOS boot partition - holds GRUB core.img on GPT
-                size = "1M";
-              };
-              boot = {
+              ESP = {
+                type = "EF00"; # EFI system partition for OVMF/systemd-boot
                 size = "1G";
                 content = {
                   type = "filesystem";
-                  format = "ext4";
-                  mountpoint = "/boot";
+                  format = "vfat";
+                  mountpoint = "/efi";
+                  mountOptions = [
+                    "dmask=0077"
+                    "fmask=0077"
+                  ];
                 };
               };
               root = {
@@ -58,19 +54,12 @@
             };
           };
         };
-        linode-swap = {
-          device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi-disk-1";
-          type = "disk";
-          content = {
-            type = "swap";
-          };
-        };
       };
       nodev = {
         "/" = {
           fsType = "tmpfs";
           mountOptions = [
-            "size=512M"
+            "size=2G"
             "mode=755"
           ];
         };

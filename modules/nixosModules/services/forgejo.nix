@@ -9,7 +9,11 @@
       inherit (self.myLib.constants) fqdn;
       inherit (self.myLib.helpers) roleHost;
       inherit (self.myLib.directory.hosts.${config.networking.hostName}.ip) internal;
-      mailRelay = (roleHost "mailserver").ip.internal;
+      mailRelay =
+        (roleHost [
+          "edge"
+          "mail"
+        ]).ip.internal;
     in
     {
       users.groups.git = { };

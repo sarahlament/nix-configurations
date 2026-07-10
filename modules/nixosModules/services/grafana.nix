@@ -11,7 +11,11 @@
       inherit (self.myLib.helpers) mkSopsFile roleHost;
       inherit (self.myLib.directory) hosts;
       inherit (hosts.${config.networking.hostName}.ip) internal;
-      mailRelay = (roleHost "mailserver").ip.internal;
+      mailRelay =
+        (roleHost [
+          "edge"
+          "mail"
+        ]).ip.internal;
     in
     {
       # all three run as static users with state under /var/lib. the persist entry

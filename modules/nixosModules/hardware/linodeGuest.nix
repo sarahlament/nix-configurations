@@ -1,5 +1,5 @@
 { self, ... }: {
-  flake.nixosModules.linodeBase =
+  flake.nixosModules.linodeGuest =
     {
       pkgs,
       ...
@@ -8,11 +8,6 @@
       imports = [ self.nixosModules.virtualGuest ];
 
       boot = {
-        kernelPackages = pkgs.linuxPackages;
-        kernelModules = [
-          "virtio_net"
-        ];
-
         kernelParams = [ "console=ttyS0,19200n8" ];
         loader = {
           timeout = 0;

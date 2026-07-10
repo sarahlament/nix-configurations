@@ -24,16 +24,17 @@
     {
       options.modules.services.borg = {
         subuser = mkOption {
-          description = "subuser for the borg box";
-          type = types.str;
+          description = "subuser for the borg box; null means this host has no state worth backing up (no job)";
+          type = types.nullOr types.str;
+          default = null;
         };
       };
-      config = {
-        sops.secrets."${cfg.subuser}Ssh" = {
-          sopsFile = mkSopsFile "borg";
-        };
-        sops.secrets."${cfg.subuser}Repo" = {
-          sopsFile = mkSopsFile "borg";
+      # a host backs up iff it's assigned a subuser; stateless hosts (e.g. the
+      # runner/builder) leave it unset and get no borg job at all
+      config = lib.mkIf (cfg.subuser != null) {
+        sops.secrets = {
+          "${cfg.subuser}Ssh".sopsFile = mkSopsFile "borg";
+          "${cfg.subuser}Repo".sopsFile = mkSopsFile "borg";
         };
 
         programs.ssh.knownHosts.hetzner-storagebox = {

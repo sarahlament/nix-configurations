@@ -14,12 +14,18 @@
       inherit (config.networking) hostName;
 
       host = self.myLib.directory.hosts.${hostName};
-      isHub = host.roles.wgHub or false;
+      isHub = host.roles.edge.vpn or false;
 
       # the coordinator and the recursive resolver; fine for one of each,
       # TODO recheck when adding a second
-      hub = roleHost "wgHub";
-      resolver = roleHost "resolver";
+      hub = roleHost [
+        "edge"
+        "vpn"
+      ];
+      resolver = roleHost [
+        "dns"
+        "resolver"
+      ];
 
       # this is for the hub, each peer restricted to its defined internal IP
       spokePeers = lib.mapAttrsToList (_: host: {

@@ -5,12 +5,20 @@
 }:
 {
   flake.nixosModules.disko =
-    { config, ... }:
+    { config, lib, ... }:
     let
-      diskoConfig = self.diskoConfigurations.${config.networking.hostName}.disko.devices;
+      cfg = config.modules.disko;
     in
     {
       imports = [ inputs.disko.nixosModules.disko ];
-      disko.devices = diskoConfig;
+      options.modules.disko.layout = lib.mkOption {
+        type = lib.types.enum [
+          "bios-linode"
+          "uefi-plain"
+          "uefi-lvm"
+        ];
+        description = "which disk layout template this host formats with";
+      };
+      config.disko.devices = self.diskoConfigurations.${cfg.layout}.disko.devices;
     };
 }

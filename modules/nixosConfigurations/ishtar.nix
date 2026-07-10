@@ -4,6 +4,8 @@
   ...
 }:
 let
+  inherit (self.myLib.helpers) serviceModulesFor roleModulesFor;
+  hostName = "ishtar";
   activeModules =
     with self.nixosModules;
     [
@@ -13,7 +15,6 @@ let
       nvidia
 
       pipewire
-      forgejo-runner
       stylix
 
       develop
@@ -21,7 +22,8 @@ let
       kde
       workstation
     ]
-    ++ self.myLib.helpers.serviceModulesFor "ishtar";
+    ++ serviceModulesFor hostName
+    ++ roleModulesFor hostName;
 in
 {
   flake.nixosConfigurations.ishtar = inputs.nixpkgs.lib.nixosSystem {
@@ -30,9 +32,9 @@ in
       (inputs.import-tree (self + "/static/ishtar"))
 
       {
-        networking.hostName = "ishtar";
-        system.stateVersion = "26.05";
+        networking = { inherit hostName; };
         nixpkgs.hostPlatform = "x86_64-linux";
+        system.stateVersion = "26.05";
 
         modules = {
           boot.desktop.enable = true;
@@ -40,6 +42,7 @@ in
           services.borg.subuser = "sub2";
           lament.desktop.enable = true;
           stylix.wallpaper = true;
+          disko.layout = "uefi-lvm";
         };
 
         fileSystems."/persist".neededForBoot = true;

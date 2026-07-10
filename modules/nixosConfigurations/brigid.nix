@@ -1,9 +1,7 @@
-{
-  inputs,
-  self,
-  ...
-}:
+{ inputs, self, ... }:
 let
+  inherit (self.myLib.helpers) serviceModulesFor roleModulesFor;
+  hostName = "brigid";
   activeModules =
     with self.nixosModules;
     [
@@ -12,20 +10,19 @@ let
       lanzaboote
       virtualGuest
     ]
-    ++ self.myLib.helpers.serviceModulesFor "minerva";
+    ++ serviceModulesFor hostName
+    ++ roleModulesFor hostName;
 in
 {
-  flake.nixosConfigurations.minerva = inputs.nixpkgs-small.lib.nixosSystem {
-    specialArgs = { inherit inputs self; };
+  flake.nixosConfigurations.brigid = inputs.nixpkgs.lib.nixosSystem {
     modules = activeModules ++ [
       {
-        networking.hostName = "minerva";
-        system.stateVersion = "26.11";
+        networking = { inherit hostName; };
         nixpkgs.hostPlatform = "x86_64-linux";
+        system.stateVersion = "26.11";
 
         modules = {
           boot.efi.enable = true;
-          services.borg.subuser = "sub3";
           disko.layout = "uefi-plain";
         };
       }

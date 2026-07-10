@@ -1,6 +1,8 @@
 { ... }: {
   flake.diskoConfigurations = {
-    ishtar.disko.devices = {
+    # desktop (ishtar): UEFI + LVM, persistent root. No LUKS yet - graduates to a
+    # uefi-luks layout when the impermanent+encryption rework lands.
+    uefi-lvm.disko.devices = {
       disk = {
         system = {
           device = "/dev/disk/by-id/nvme-WD_BLACK_SN770_1TB_23396D803695";
