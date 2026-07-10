@@ -52,6 +52,7 @@ in
             delve
             forgejo-cli
             jq
+            jujutsu
             just
             nixos-anywhere
             prek
