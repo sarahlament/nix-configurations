@@ -1,4 +1,4 @@
-{ self, ... }: {
+{ self, inputs, ... }: {
   flake.nixosModules.forgejo-runner =
     {
       config,
@@ -54,7 +54,10 @@
                 };
               };
             };
-            hostPackages = with pkgs; [
+            hostPackages = [
+              inputs.deploy-rs.packages.${pkgs.stdenv.hostPlatform.system}.default
+            ]
+            ++ (with pkgs; [
               sudo-rs
               openssh
               nix
@@ -65,7 +68,7 @@
               nixfmt-tree
               deadnix
               nodejs
-            ];
+            ]);
           };
         };
       systemd.services.gitea-runner-nixrun = {

@@ -4,6 +4,10 @@ on:
     branches: [main]
   pull_request:
 
+# the fleet is derived from directory.nix via the flake, so adding a host never
+# touches this file. act_runner can't build a strategy.matrix from a job output,
+# so each job loops over the flake-evaluated host list instead of a matrix.
+
 jobs:
   check:
     runs-on: native
@@ -18,34 +22,54 @@ jobs:
   build:
     runs-on: native
     needs: [check]
-    strategy:
-      matrix:
-        host: [ishtar, athena, minerva]
     steps:
       - uses: actions/checkout@v4
       - name: "build"
-        run: nixos-rebuild build --flake .#${{ matrix.host }} --no-link
+        # every nixosConfiguration, incl. the builder (brigid)
+        run: |
+          for host in $(nix eval --raw .#nixosConfigurations --apply 'cfgs: builtins.concatStringsSep " " (builtins.attrNames cfgs)'); do
+            echo "== build $host =="
+            nixos-rebuild build --flake .#"$host" --no-link
+          done
 
   dry-activate:
     runs-on: native
     needs: [build]
-    strategy:
-      matrix:
-        host: [ishtar, athena, minerva]
     steps:
       - uses: actions/checkout@v4
       - name: "dry-activate"
-        run: nixos-rebuild dry-activate --flake .#${{ matrix.host }} --target-host nixbldRemote@${{ matrix.host }}.lament.gay --sudo
+        # the deploy-rs node set (builder excluded - it's the runner)
+        run: |
+          for host in $(nix eval --raw .#deploy.nodes --apply 'ns: builtins.concatStringsSep " " (builtins.attrNames ns)'); do
+            echo "== dry-activate $host =="
+            nixos-rebuild dry-activate --flake .#"$host" --target-host nixbldRemote@"$host".lament.gay --sudo
+          done
 
   deploy:
     runs-on: native
-    strategy:
-      matrix:
-        host: [ishtar, athena, minerva]
     if: >-
       github.event_name == 'push'
       && !contains(github.event.head_commit.message || '', '[ci-skip]')
     steps:
       - uses: actions/checkout@v4
-      - name: "deploy"
-        run: nixos-rebuild switch --flake .#${{ matrix.host }} --target-host nixbldRemote@${{ matrix.host }}.lament.gay --sudo
+      - name: "deploy reachable hosts"
+        # deploy-rs takes the whole node set in one invocation. probe each first so
+        # an offline host (e.g. ishtar the desktop) is skipped, not failed; deploy
+        # the reachable ones together. --rollback-succeeded false keeps healthy
+        # hosts up if another fails (each still has its own magic rollback).
+        run: |
+          targets=()
+          for host in $(nix eval --raw .#deploy.nodes --apply 'ns: builtins.concatStringsSep " " (builtins.attrNames ns)'); do
+            if ssh -o BatchMode=yes -o ConnectTimeout=8 -o StrictHostKeyChecking=accept-new \
+                 nixbldRemote@"$host".lament.gay true 2>/dev/null; then
+              targets+=(".#$host")
+            else
+              echo "::warning::$host unreachable over WG - skipping deploy"
+            fi
+          done
+          if [ ${#targets[@]} -eq 0 ]; then
+            echo "no hosts reachable - nothing to deploy"
+            exit 0
+          fi
+          echo "deploying: ${targets[*]}"
+          deploy --skip-checks --rollback-succeeded false --targets "${targets[@]}"
