@@ -6,7 +6,9 @@ on:
 
 # the fleet is derived from directory.nix via the flake, so adding a host never
 # touches this file. act_runner can't build a strategy.matrix from a job output,
-# so each job loops over the flake-evaluated host list instead of a matrix.
+# so each job loops over the flake-evaluated host list instead of a matrix. each
+# host gets its own ::group:: in the log, and a failure is recorded (rc) but
+# doesn't abort the remaining hosts.
 
 jobs:
   check:
@@ -27,10 +29,13 @@ jobs:
       - name: "build"
         # every nixosConfiguration, incl. the builder (brigid)
         run: |
+          rc=0
           for host in $(nix eval --raw .#nixosConfigurations --apply 'cfgs: builtins.concatStringsSep " " (builtins.attrNames cfgs)'); do
-            echo "== build $host =="
-            nixos-rebuild build --flake .#"$host" --no-link
+            echo "::group::build $host"
+            nixos-rebuild build --flake .#"$host" --no-link || rc=1
+            echo "::endgroup::"
           done
+          exit $rc
 
   dry-activate:
     runs-on: native
@@ -38,12 +43,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: "dry-activate"
-        # the deploy-rs node set (builder excluded - it's the runner)
+        # the deploy-rs node set - the whole fleet (brigid loops back to itself)
         run: |
+          rc=0
           for host in $(nix eval --raw .#deploy.nodes --apply 'ns: builtins.concatStringsSep " " (builtins.attrNames ns)'); do
-            echo "== dry-activate $host =="
-            nixos-rebuild dry-activate --flake .#"$host" --target-host nixbldRemote@"$host".lament.gay --sudo
+            echo "::group::dry-activate $host"
+            nixos-rebuild dry-activate --flake .#"$host" --target-host nixbldRemote@"$host".lament.gay --sudo || rc=1
+            echo "::endgroup::"
           done
+          exit $rc
 
   deploy:
     runs-on: native
@@ -53,23 +61,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: "deploy reachable hosts"
-        # deploy-rs takes the whole node set in one invocation. probe each first so
-        # an offline host (e.g. ishtar the desktop) is skipped, not failed; deploy
-        # the reachable ones together. --rollback-succeeded false keeps healthy
-        # hosts up if another fails (each still has its own magic rollback).
+        # deploy each reachable host in its own invocation: a header per host, and
+        # one failure doesn't touch the others (each keeps its own magic rollback).
+        # offline hosts (e.g. ishtar the desktop) are skipped, not failed.
         run: |
-          targets=()
+          rc=0
           for host in $(nix eval --raw .#deploy.nodes --apply 'ns: builtins.concatStringsSep " " (builtins.attrNames ns)'); do
             if ssh -o BatchMode=yes -o ConnectTimeout=8 -o StrictHostKeyChecking=accept-new \
                  nixbldRemote@"$host".lament.gay true 2>/dev/null; then
-              targets+=(".#$host")
+              echo "::group::deploy $host"
+              deploy --skip-checks ".#$host" || rc=1
+              echo "::endgroup::"
             else
               echo "::warning::$host unreachable over WG - skipping deploy"
             fi
           done
-          if [ ${#targets[@]} -eq 0 ]; then
-            echo "no hosts reachable - nothing to deploy"
-            exit 0
-          fi
-          echo "deploying: ${targets[*]}"
-          deploy --skip-checks --rollback-succeeded false --targets "${targets[@]}"
+          exit $rc

@@ -47,11 +47,13 @@ in
           '';
           packages = with pkgs; [
             age
+            deploy-rs
             dnsutils
             delve
             forgejo-cli
             jq
             just
+            nixos-anywhere
             prek
             sops
           ];
