@@ -14,7 +14,7 @@
       # and re-expose plain http on the WG internal iface for athena's edge caddy.
       services.caddy = {
         enable = true;
-        virtualHosts."http://:${toString port}".extraConfig = ''
+        virtualHosts."https://:${toString port}".extraConfig = ''
           bind ${ip.internal}
           reverse_proxy https://192.168.4.236:8006 {
             transport http {
