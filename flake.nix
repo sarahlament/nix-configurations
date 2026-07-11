@@ -92,6 +92,14 @@
         rust-overlay.follows = "rust-overlay";
       };
     };
+    nix-minecraft = {
+      url = "github:Infinidoge/nix-minecraft";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-compat.follows = "flake-compat";
+        systems.follows = "systems";
+      };
+    };
 
     ###################
     ## DEDUPLICATION ##
