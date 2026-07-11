@@ -12,9 +12,16 @@
     }:
     let
       inherit (self.myLib.constants) fqdn;
+      inherit (self.myLib.constants.addresses) internal;
       inherit (self.myLib.helpers) mkSopsFile;
-      inherit (self.myLib.directory) hosts;
       inherit (lib) mkDefault;
+      # the constant carries the mask inside the address (addr/len); postfix wants it
+      # outside the brackets ([addr]/len), so reshape it for mynetworks.
+      internalPostfix =
+        let
+          parts = lib.splitString "/" internal;
+        in
+        "[${lib.head parts}]/${lib.last parts}";
     in
     {
       imports = [
@@ -104,14 +111,23 @@
       };
 
       services = {
-        # fleet hosts relay outbound mail through here over WireGuard, so trust their
-        # internal addresses instead of requiring auth. peers (phone/tablet) are not
-        # included - only full hosts.
+        # every device on the WireGuard net (fleet hosts + my phone/tablet) relays
+        # outbound mail through here without auth - the tunnel is the trust boundary,
+        # so trust the whole internal /48 rather than listing hosts.
         postfix.settings.main.mynetworks = [
           "127.0.0.1/32"
           "[::1]/128"
-        ]
-        ++ map (h: "[${h.ip.internal}]/128") (lib.attrValues hosts);
+          internalPostfix
+        ];
+
+        # rspamd keeps its OWN trusted-network list, separate from postfix mynetworks.
+        # nixos-mailserver hardcodes it to loopback, so mail relayed over WG (vaultwarden,
+        # grafana alerts) is greylisted + spam-scored as external and silently dropped by
+        # non-retrying senders. trust the WG net so rspamd treats internal mail as local
+        # (skips greylisting, drops the rDNS/SPF penalties, DKIM-signs it).
+        rspamd.overrides."options.inc".text = lib.mkForce ''
+          local_addrs = [::1/128, 127.0.0.0/8, ${internal}]
+        '';
 
         borgbackup.jobs.${config.networking.hostName}.paths = [
           config.security.acme.certs."mail.${fqdn}".directory
