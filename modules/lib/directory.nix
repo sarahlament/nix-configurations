@@ -46,6 +46,7 @@
         };
         roles = {
           impermanent = true;
+          postgres = true;
         };
       };
       brigid = {

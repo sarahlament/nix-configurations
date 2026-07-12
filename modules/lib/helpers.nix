@@ -52,6 +52,7 @@
             edge.web = [ caddy ];
             edge.mail = [ mailserver ];
             builder = [ forgejo-runner ];
+            postgres = [ postgres ];
             # edge.vpn is networking-only (the WG hub), no module to import
           };
           # walk the map: a list leaf is pulled in when the host declares the
