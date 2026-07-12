@@ -87,7 +87,7 @@
       notes = {
         backend = "minerva";
         port = 4567;
-        module = "gollum";
+        module = "wiki-js";
       };
       vault = {
         backend = "minerva";
