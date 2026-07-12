@@ -44,7 +44,8 @@ in
       };
 
       whitelist = {
-        # yourname = "your-mojang-uuid";
+        SarahLament = "3f99b647-2bda-4d35-a3fa-46d610032193";
+        CastaliaFae = "11a61f67-f51f-4dc6-802d-cbdb8b4ba00d";
       };
     };
   };
