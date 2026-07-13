@@ -36,7 +36,7 @@
       # this is for the spokes, we trust the coordinator to verify the connection and route properly
       hubPeer = {
         publicKey = hub.keys.wgPub;
-        endpoint = "${fqdn}:${toString wgPort}";
+        endpoint = "${hub.ip.public.v4}:${toString wgPort}";
         allowedIPs = [ internal ];
         persistentKeepalive = 25;
       };
