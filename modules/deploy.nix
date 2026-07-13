@@ -38,17 +38,11 @@ let
   };
 in
 {
+  # deploy-rs's `deployChecks` are deliberately NOT wired into `nix flake check`:
+  # both deploy-schema and deploy-activate embed the fleet's realised toplevels
+  # (the schema check bakes them into deploy.json via string-context), so either one
+  # turns `flake check` into a full fleet build. deploy-rs builds + activates on the
+  # real deploy (magic rollback covers it) and CI has its own build step, so flake
+  # check stays eval-only.
   flake.deploy.nodes = lib.mapAttrs mkNode self.myLib.directory.hosts;
-
-  # schema/activation validation folded into `nix flake check`.
-  perSystem =
-    { system, ... }:
-    {
-      # deploy-rs builds + activates on the real deploy (magic rollback covers it),
-      # and CI has its own build step, so keep only the cheap schema validation here -
-      # drop the fleet-wide toplevel build that `deploy-activate` drags in.
-      checks = lib.filterAttrs (n: _: n != "deploy-activate") (
-        inputs.deploy-rs.lib.${system}.deployChecks self.deploy
-      );
-    };
 }
