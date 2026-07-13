@@ -44,6 +44,11 @@ in
   perSystem =
     { system, ... }:
     {
-      checks = inputs.deploy-rs.lib.${system}.deployChecks self.deploy;
+      # deploy-rs builds + activates on the real deploy (magic rollback covers it),
+      # and CI has its own build step, so keep only the cheap schema validation here -
+      # drop the fleet-wide toplevel build that `deploy-activate` drags in.
+      checks = lib.filterAttrs (n: _: n != "deploy-activate") (
+        inputs.deploy-rs.lib.${system}.deployChecks self.deploy
+      );
     };
 }
