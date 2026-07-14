@@ -48,8 +48,9 @@
           modules.load('hints')
           hints.use_nodata(true)
 
-          -- ad/tracker blocklist; 'true' watches the file and hot-reloads on change
-          policy.add(policy.rpz(policy.DENY, '${blocklistPath}', true))
+          -- ad/tracker blocklist; watch=false because this build lacks lua-cqueues,
+          -- so the refresh timer restarts kresd to pick up a new list instead.
+          policy.add(policy.rpz(policy.DENY, '${blocklistPath}', false))
 
           ${hostHints}
           ${serviceHints}
@@ -63,8 +64,8 @@
           "C ${blocklistPath} 0644 knot-resolver knot-resolver - ${seedRpz}"
         ];
 
-        # refresh the blocklist daily; convert the hosts file to RPZ. kresd's
-        # watch flag reloads it, so no service restart is needed.
+        # refresh the blocklist daily; convert the hosts file to RPZ, then
+        # restart kresd to load it (cache is on-disk, so nothing is lost).
         services.dns-blocklist = {
           description = "Refresh kresd ad/tracker blocklist";
           after = [ "network-online.target" ];
@@ -73,6 +74,7 @@
             pkgs.curl
             pkgs.gawk
             pkgs.coreutils
+            pkgs.systemd
           ];
           serviceConfig.Type = "oneshot";
           script = ''
@@ -84,6 +86,7 @@
             } > "$tmp"
             install -m0644 -o knot-resolver -g knot-resolver "$tmp" '${blocklistPath}'
             rm -f "$tmp"
+            systemctl restart 'kresd@1.service'
           '';
         };
 
