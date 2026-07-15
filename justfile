@@ -18,16 +18,21 @@ push *args: check
     bookmark=$(jj log --no-graph --color never -r 'latest(bookmarks() & ::@)' -T 'bookmarks.map(|b| b.name()).join("\n")' | head -1)
     jj git push --bookmark "$bookmark" {{ args }}
 
-# fetch remote, then forget the current commit's (now-merged) bookmark
+# fetch remote, then forget any feature bookmarks now merged into main
 fetch *args:
     #!/usr/bin/env bash
     set -euo pipefail
     jj git fetch {{ args }}
-    bookmark=$(jj log --no-graph --color never -r 'latest((bookmarks() ~ main) & ::@)' -T 'bookmarks.map(|b| b.name()).join("\n")' | head -1)
-    if [ -z "$bookmark" ]; then
+    # every non-main bookmark that's an ancestor of main is merged; filter main
+    # out by NAME so a bookmark co-located with main (fast-forward) still counts
+    bookmarks=$(jj log --no-graph --color never -r 'bookmarks() & ::main' \
+        -T 'bookmarks.filter(|b| b.name() != "main").map(|b| b.name() ++ "\n").join("")')
+    if [ -z "$bookmarks" ]; then
         echo "no feature bookmark to forget"
     else
-        jj bookmark forget "$bookmark"
+        while IFS= read -r bookmark; do
+            [ -n "$bookmark" ] && jj bookmark forget --include-remotes "$bookmark"
+        done <<< "$bookmarks"
     fi
 
 # rebase N commits ("origin/main" default)

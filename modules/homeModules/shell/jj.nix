@@ -15,7 +15,10 @@
           # `jj fix` closes the formatting half: nixfmt reads stdin, writes stdout.
           # (deadnix + statix are gated on push instead - see `just push`.)
           fix.tools.nixfmt = {
-            command = [ (lib.getExe pkgs.nixfmt) ];
+            command = [
+              (lib.getExe pkgs.nixfmt)
+              "-"
+            ];
             patterns = [ "glob:'**/*.nix'" ];
           };
         };
