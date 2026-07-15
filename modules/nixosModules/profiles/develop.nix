@@ -10,6 +10,12 @@
         };
         spiceUSBRedirection.enable = true;
       };
+      # VM definitions/nvram/saved-state + docker images/volumes survive the
+      # tmpfs-root wipe. both are enabled right here, so they persist right here.
+      environment.persistence."/persist".directories = [
+        "/var/lib/libvirt"
+        "/var/lib/docker"
+      ];
       home-manager.sharedModules = [ self.homeModules.virt-manager ];
 
       programs.direnv = {

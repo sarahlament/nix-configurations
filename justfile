@@ -12,10 +12,9 @@ default:
     @just --list
 
 # lint-gated push of the bookmark on the current commit (jj skips git hooks, so gate on the full check)
-push *args:
+push *args: check
     #!/usr/bin/env bash
     set -euo pipefail
-    nix flake check
     bookmark=$(jj log --no-graph --color never -r 'latest(bookmarks() & ::@)' -T 'bookmarks.map(|b| b.name()).join("\n")' | head -1)
     jj git push --bookmark "$bookmark" {{ args }}
 
@@ -50,6 +49,7 @@ update:
 
 # eval check
 check:
+    jj st
     nix flake check
 
 # run the repl on the flake
