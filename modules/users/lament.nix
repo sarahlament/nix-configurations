@@ -53,6 +53,7 @@
             with self.homeModules;
             [
               git
+              jj
               kitty
             ]
             ++ optionals cfg.desktop.enable [

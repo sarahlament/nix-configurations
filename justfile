@@ -11,9 +11,25 @@ branch := `git branch --show-current`
 default:
     @just --list
 
-# --force-with-lease
-push:
-    git push --force-with-lease
+# lint-gated push of the bookmark on the current commit (jj skips git hooks, so gate on the full check)
+push *args:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    nix flake check
+    bookmark=$(jj log --no-graph --color never -r 'latest(bookmarks() & ::@)' -T 'bookmarks.map(|b| b.name()).join("\n")' | head -1)
+    jj git push --bookmark "$bookmark" {{ args }}
+
+# fetch remote, then forget the current commit's (now-merged) bookmark
+fetch *args:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    jj git fetch {{ args }}
+    bookmark=$(jj log --no-graph --color never -r 'latest((bookmarks() ~ main) & ::@)' -T 'bookmarks.map(|b| b.name()).join("\n")' | head -1)
+    if [ -z "$bookmark" ]; then
+        echo "no feature bookmark to forget"
+    else
+        jj bookmark forget "$bookmark"
+    fi
 
 # rebase N commits ("origin/main" default)
 rebase diff="":
