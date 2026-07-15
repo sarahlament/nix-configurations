@@ -1,7 +1,8 @@
 { ... }: {
   flake.diskoConfigurations = {
-    # desktop (ishtar): UEFI + LVM, persistent root. No LUKS yet - graduates to a
-    # uefi-luks layout when the impermanent+encryption rework lands.
+    # desktop (ishtar): UEFI + LVM, tmpfs root (impermanent). @home/@nix/@persist +
+    # @log survive; / is wiped every boot. No LUKS yet - graduates to a uefi-luks
+    # layout when the encryption rework lands.
     uefi-lvm.disko.devices = {
       disk = {
         system = {
@@ -50,13 +51,6 @@
               content = {
                 type = "btrfs";
                 subvolumes = {
-                  "@" = {
-                    mountpoint = "/";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                    ];
-                  };
                   "@home" = {
                     mountpoint = "/home";
                     mountOptions = [
@@ -78,10 +72,28 @@
                       "noatime"
                     ];
                   };
+                  # nodatacow to match the rest of the fleet's @log - append-heavy
+                  # journald churns CoW into fragmentation
+                  "@log" = {
+                    mountpoint = "/var/log";
+                    mountOptions = [
+                      "nodatacow"
+                      "noatime"
+                    ];
+                  };
                 };
               };
             };
           };
+        };
+      };
+      nodev = {
+        "/" = {
+          fsType = "tmpfs";
+          mountOptions = [
+            "size=4G"
+            "mode=755"
+          ];
         };
       };
     };

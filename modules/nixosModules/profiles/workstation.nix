@@ -13,6 +13,10 @@
       options.modules.workstation.bluetooth.enable = mkEnableOption "Enable bluetooth";
       config = {
         hardware.bluetooth.enable = mkIf cfg.bluetooth.enable true;
+        # pairings live in /var/lib/bluetooth - survive the tmpfs-root wipe
+        environment.persistence."/persist".directories = mkIf cfg.bluetooth.enable [
+          "/var/lib/bluetooth"
+        ];
         services = {
           flatpak.enable = true;
           tuned = {

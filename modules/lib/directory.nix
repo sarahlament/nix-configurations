@@ -24,7 +24,6 @@
             authority = true;
             resolver = true;
           };
-          impermanent = true;
         };
       };
       ishtar = {
@@ -45,7 +44,6 @@
           wgPub = "7hPavXcPF2zfFbimfyjI40BBM7vmwGdl5kA9DN1Y+28=";
         };
         roles = {
-          impermanent = true;
           postgres = true;
         };
       };
@@ -58,7 +56,6 @@
         };
         roles = {
           builder = true;
-          impermanent = true;
         };
       };
     };

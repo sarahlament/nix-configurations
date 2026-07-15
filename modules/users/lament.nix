@@ -36,7 +36,6 @@
           extraGroups = [
             "wheel"
             "systemd-journal"
-            "networkmanager"
             "plugdev"
             "video"
             "docker"
