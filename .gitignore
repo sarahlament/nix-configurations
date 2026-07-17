@@ -19,6 +19,9 @@ result-*
 .DS_Store
 Thumbs.db
 
+# Local notes/scratch (not tracked)
+docs/
+
 # Temporary files
 *.tmp
 *.bak

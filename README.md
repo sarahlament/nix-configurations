@@ -1,4 +1,4 @@
-# nix-configurations
+# pantheon
 
 My personal NixOS configurations, using the [Dendritic Pattern](https://github.com/mightyiam/dendritic).
 
@@ -65,6 +65,9 @@ That one file drives the boring stuff so I don't have to:
 - **kresd**, **wireguard**, and the **deploy** pipeline all read the same host/role data.
 
 So "where does X run?" is never spelunking through modules - it's one lookup in the directory. Move a role, move a service, add a host: edit the register, everything downstream follows.
+
+Is this overengineered? Yes. Yes it is.
+Is this necessary? *Yes. Yes it is.*
 
 ## Structure
 
