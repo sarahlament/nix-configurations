@@ -9,7 +9,7 @@
             name = "Sarah Lament";
             email = "sarah@lament.gay";
           };
-          ui.default-command = "log";
+          ui.default-command = "status";
 
           # jj runs no git hooks, so the prek gate never fires on a jj commit.
           # `jj fix` closes the formatting half: nixfmt reads stdin, writes stdout.
