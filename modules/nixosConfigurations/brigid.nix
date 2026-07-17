@@ -15,6 +15,7 @@ let
 in
 {
   flake.nixosConfigurations.brigid = inputs.nixpkgs.lib.nixosSystem {
+    specialArgs = { inherit inputs self; };
     modules = activeModules ++ [
       {
         networking = { inherit hostName; };

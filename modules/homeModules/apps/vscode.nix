@@ -37,20 +37,20 @@
                   "command" = [ "${pkgs.nixfmt}/bin/nixfmt" ];
                 };
                 "nixpkgs" = {
-                  "expr" = "(builtins.getFlake \"/home/lament/nix-configurations\").nixosConfigurations.ishtar.pkgs";
+                  "expr" = "(builtins.getFlake \"/home/lament/Projects/pantheon\").nixosConfigurations.ishtar.pkgs";
                 };
                 "options" = {
                   "nixos" = {
                     "expr" =
-                      "(builtins.getFlake \"/home/lament/nix-configurations\").nixosConfigurations.ishtar.options";
+                      "(builtins.getFlake \"/home/lament/Projects/pantheon\").nixosConfigurations.ishtar.options";
                   };
                   "mailserver" = {
                     "expr" =
-                      "{ mailserver = (builtins.getFlake \"/home/lament/nix-configurations\").nixosConfigurations.athena.options.mailserver; }";
+                      "{ mailserver = (builtins.getFlake \"/home/lament/Projects/pantheon\").nixosConfigurations.athena.options.mailserver; }";
                   };
                   "home-manager" = {
                     "expr" =
-                      "(builtins.getFlake \"/home/lament/nix-configurations\").nixosConfigurations.ishtar.options.home-manager.users.type.getSubOptions []";
+                      "(builtins.getFlake \"/home/lament/Projects/pantheon\").nixosConfigurations.ishtar.options.home-manager.users.type.getSubOptions []";
                   };
                 };
               };

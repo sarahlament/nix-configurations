@@ -52,7 +52,7 @@
 
     programs.nh = {
       enable = true;
-      flake = "/home/lament/nix-configurations";
+      flake = "/home/lament/Projects/pantheon";
       clean = {
         enable = true;
         extraArgs = "--keep 3 --optimise";

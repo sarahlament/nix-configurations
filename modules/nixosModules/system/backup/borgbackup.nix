@@ -3,6 +3,7 @@
     {
       config,
       lib,
+      pkgs,
       ...
     }:
     let
@@ -10,6 +11,7 @@
       inherit (self.myLib.helpers) mkBorgRepo mkSopsFile;
       inherit (self.myLib.constants) borg;
       inherit (config.networking) hostName;
+      athenaSmtp = "smtp://[${self.myLib.directory.hosts.athena.ip.internal}]:25";
       cfg = config.modules.services.borg;
       # the storage box's own ssh host key, so non-interactive borg-over-ssh trusts
       # it without a manual accept - critical on impermanent hosts whose
@@ -41,6 +43,31 @@
           hostNames = [ storageBox ];
           publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIICf9svRenC/PLKIL9nk6K/pxQgoiFC41wTNvoIncOxs";
         };
+
+        systemd.services.borg-alert = {
+          description = "Send email notification on borg backup failure";
+          serviceConfig = {
+            Type = "oneshot";
+            ExecStart = pkgs.writeShellScript "borg-alert" ''
+                            ${pkgs.curl}/bin/curl \
+                              --silent --show-error --connect-timeout 5 --max-time 30 \
+                              --url "${athenaSmtp}" \
+                              --mail-from "system@lament.gay" \
+                              --mail-rcpt "admin@lament.gay" \
+                              --upload-file - <<'MAIL'
+              From: Borg Backup <system@lament.gay>
+              To: admin@lament.gay
+              Subject: [borg] backup failed on ${hostName}
+              X-Notification-Source: borgbackup
+
+              The daily borg backup job on ${hostName} failed.
+              Check: journalctl -u borgbackup-job-${hostName} --since "24 hours ago"
+              MAIL
+            '';
+          };
+        };
+
+        systemd.services."borgbackup-job-${hostName}".onFailure = [ "borg-alert.service" ];
 
         services.borgbackup.jobs.${hostName} = {
           doInit = false;
