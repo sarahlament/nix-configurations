@@ -9,6 +9,7 @@ in
     {
       config,
       lib,
+      pkgs,
       ...
     }:
     let
@@ -16,19 +17,34 @@ in
       onBuilder = config.networking.hostName == builder.hostname;
     in
     {
-      sops.secrets.nixbldKey = {
+      # build user: SSH target on brigid for build offload - non-wheel, trusted by nix
+      users.groups.builder = mkIf onBuilder { };
+      users.users.builder = mkIf onBuilder {
+        isSystemUser = true;
+        group = "builder";
+        home = "/var/lib/builder/";
+        createHome = true;
+        openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBxBpDo3TnNztJUEp8mKh4FeZlnZcm76PTrkrQhNm+70 builder@pantheon"
+        ];
+        shell = pkgs.bash;
+      };
+
+      # build key: outbound SSH credential on non-builder hosts to reach brigid
+      sops.secrets.builderKey = mkIf (!onBuilder) {
         sopsFile = mkSopsFile "privkeys";
       };
+
       nix = {
         distributedBuilds = true;
         # every host offloads to the builder except the builder itself (builds locally)
-        buildMachines = mkIf (config.networking.hostName != builder.hostname) [
+        buildMachines = mkIf (!onBuilder) [
           {
             hostName = builder.ip.internal;
             systems = [ "x86_64-linux" ];
             protocol = "ssh-ng";
-            sshUser = "nixbldRemote";
-            sshKey = config.sops.secrets.nixbldKey.path;
+            sshUser = "builder";
+            sshKey = config.sops.secrets.builderKey.path;
           }
         ];
 
@@ -39,6 +55,7 @@ in
         settings = mkIf onBuilder {
           keep-outputs = true;
           keep-derivations = true;
+          trusted-users = [ "builder" ];
         };
       };
 

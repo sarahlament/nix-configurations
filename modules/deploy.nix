@@ -17,7 +17,7 @@ let
     # split-horizon DNS resolves <host>.lament.gay to the WG internal address
     # when queried from inside the fleet (i.e. from the builder/runner).
     hostname = "${host.hostname}.${fqdn}";
-    sshUser = "nixbldRemote";
+    sshUser = "deployer";
 
     # the builder deploys itself, so its closure is already local - copy it
     # directly instead of round-tripping through substituters.

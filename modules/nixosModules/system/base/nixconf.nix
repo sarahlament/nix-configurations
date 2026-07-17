@@ -5,15 +5,15 @@
     };
 
     # we create our own nixbld user for remote activation
-    users.groups.nixbldRemote = { };
-    users.users.nixbldRemote = {
+    users.groups.deployer = { };
+    users.users.deployer = {
       isSystemUser = true;
-      group = "nixbldRemote";
+      group = "deployer";
       extraGroups = [ "wheel" ];
-      home = "/var/lib/nixbldRemote/";
+      home = "/var/lib/deployer/";
       createHome = true;
       openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH8B07n/Z9HSnUkD5w5tm26eSwSiQnaxUVRexV9B/Wvm"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHo4ATn65VJkkEBvL/WQ6dnrT+v9F2effgIrQwcYCiR5 deployer@pantheon"
       ];
       shell = pkgs.bash;
     };

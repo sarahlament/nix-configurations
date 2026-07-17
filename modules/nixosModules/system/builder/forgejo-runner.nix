@@ -24,7 +24,7 @@
         owner = "nixrun";
         restartUnits = [ "gitea-runner-nixrun.service" ];
       };
-      sops.secrets.nixbldKey = {
+      sops.secrets.deployerKey = {
         sopsFile = mkSopsFile "privkeys";
         owner = "nixrun";
         path = "/var/lib/gitea-runner/nixrun/.ssh/id_ed25519";
