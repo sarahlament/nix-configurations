@@ -5,8 +5,15 @@ result-*
 # direnv
 .direnv/
 
-# Claude Code local settings
-**/.claude/
+# Claude Code local settings - ignore everything under .claude/ EXCEPT the
+# project instructions, which are real documentation and should be reviewable.
+# Must be `.claude/*` not `**/.claude/`: git cannot re-include a file whose
+# parent directory is itself excluded, so a negation under the old rule silently
+# did nothing.
+.claude/*
+!.claude/CLAUDE.md
+# nested .claude dirs (worktree checkouts, etc.) stay fully ignored
+**/*/.claude/
 
 # Editor/IDE
 .vscode/

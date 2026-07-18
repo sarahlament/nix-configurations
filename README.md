@@ -56,7 +56,7 @@ modules = activeModules ++ [
 
 ## Okay, but where does everything actually *go*?
 
-One file: `modules/lib/directory.nix`. It's the fleet register - every host, its keys, its WG address, and the `roles` it plays (`edge.{web,mail,vpn}`, `dns.{authority,resolver}`, `builder`, `impermanent`). It also carries a flat `services` registry: each proxied app keyed by its subdomain, declaring which host is its `backend`, what `port` it serves on, and whether it's `public`.
+One file: `modules/lib/directory.nix`. It's the fleet register - every host, its keys, its WG address, and the `roles` it plays (`edge.{web,mail,vpn}`, `dns.{authority,resolver}`, `builder`, `postgres`). It also carries a flat `services` registry: each proxied app keyed by its subdomain, declaring which host is its `backend`, what `port` it serves on, and whether it's `public`.
 
 That one file drives the boring stuff so I don't have to:
 
