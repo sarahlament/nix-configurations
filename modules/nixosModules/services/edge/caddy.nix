@@ -60,6 +60,17 @@
         };
       };
 
+      # caddy is a static user (not DynamicUser), so /var/lib/private doesn't cover it;
+      # without this, every reboot re-issues all certs and walks toward LE rate limits.
+      environment.persistence."/persist".directories = [
+        {
+          directory = "/var/lib/caddy";
+          user = "caddy";
+          group = "caddy";
+          mode = "0750";
+        }
+      ];
+
       services.borgbackup.jobs.${config.networking.hostName} = {
         paths = [ "/var/lib/caddy" ];
         exclude = [

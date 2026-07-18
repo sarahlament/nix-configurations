@@ -8,15 +8,44 @@ keys:
   - &brigid  age1qe5728xwrzt9dq4yxy0vhpe76as9m7jweda7m4979azau7zrzg4syc43p4
 
 creation_rules:
-  # all hosts: every host has SSH key, WG key, lamentKey, and either builderKey or deployerKey
-  - path_regex: ^sops/privkeys\.yaml$
+  # per-host privkeys: each host gets only its own SSH key, WG key, and the keys it needs
+  # athena: SSH + WG + builderKey (offloads builds to brigid)
+  - path_regex: ^sops/privkeys/athena\.yaml$
     key_groups:
-    - age: [*lament, *athena, *ishtar, *minerva, *brigid]
+    - age: [*lament, *athena]
 
-  # athena, ishtar, minerva: brigid has no borg subuser
-  - path_regex: ^sops/borg\.yaml$
+  # ishtar: SSH + WG + builderKey + lamentKey (desktop - personal SSH key lives here)
+  - path_regex: ^sops/privkeys/ishtar\.yaml$
     key_groups:
-    - age: [*lament, *athena, *ishtar, *minerva]
+    - age: [*lament, *ishtar]
+
+  # minerva: SSH + WG + builderKey
+  - path_regex: ^sops/privkeys/minerva\.yaml$
+    key_groups:
+    - age: [*lament, *minerva]
+
+  # brigid: SSH + WG + deployerKey (builder host; runs the CI that deploys the fleet)
+  - path_regex: ^sops/privkeys/brigid\.yaml$
+    key_groups:
+    - age: [*lament, *brigid]
+
+  # borg per-subuser: SSH key + repo passphrase + exported repo key (Enc, DR-only)
+  - path_regex: ^sops/borg/sub1\.yaml$
+    key_groups:
+    - age: [*lament, *athena]
+
+  - path_regex: ^sops/borg/sub2\.yaml$
+    key_groups:
+    - age: [*lament, *ishtar]
+
+  - path_regex: ^sops/borg/sub3\.yaml$
+    key_groups:
+    - age: [*lament, *minerva]
+
+  # sub4: provisioned and ready, not yet assigned to a host - lament-only until then
+  - path_regex: ^sops/borg/sub4\.yaml$
+    key_groups:
+    - age: [*lament]
 
   # athena only: knot (dns.authority) + tsig
   - path_regex: ^sops/domain\.yaml$

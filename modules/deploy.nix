@@ -23,7 +23,7 @@ let
     # directly instead of round-tripping through substituters.
     fastConnection = name == builder.hostname;
 
-    # activation runs as root via passwordless sudo (nixbldRemote is in wheel).
+    # activation runs as root via passwordless sudo (deployer is in wheel).
     profiles.system = {
       user = "root";
       path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.${name};

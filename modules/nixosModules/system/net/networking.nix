@@ -43,7 +43,7 @@
     in
     {
       sops.secrets."${hostName}WgKey" = {
-        sopsFile = mkSopsFile "privkeys";
+        sopsFile = mkSopsFile "privkeys/${hostName}";
         restartUnits = [ "wireguard-internal.service" ];
       };
       services.resolved.enable = mkForce false;

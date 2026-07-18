@@ -4,7 +4,7 @@
       allowUnfree = true;
     };
 
-    # we create our own nixbld user for remote activation
+    # deployer: fleet-wide SSH target for deploy-rs activation (wheel + passwordless sudo)
     users.groups.deployer = { };
     users.users.deployer = {
       isSystemUser = true;

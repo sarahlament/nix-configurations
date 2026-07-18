@@ -32,7 +32,7 @@ in
 
       # build key: outbound SSH credential on non-builder hosts to reach brigid
       sops.secrets.builderKey = mkIf (!onBuilder) {
-        sopsFile = mkSopsFile "privkeys";
+        sopsFile = mkSopsFile "privkeys/${config.networking.hostName}";
       };
 
       nix = {

@@ -4,8 +4,6 @@ alias help := default
 alias fr := flakerepl
 alias or := osrepl
 
-branch := `git branch --show-current`
-
 # base project recipes
 [private]
 default:
@@ -35,22 +33,13 @@ fetch *args:
         done <<< "$bookmarks"
     fi
 
-# rebase N commits ("origin/main" default)
-rebase diff="":
-    git rebase -i {{ if diff == "" { "origin/main" } else { "HEAD~" + diff } }}
-
 # format the flake
 fmt:
     nix fmt .
 
-# update the lockfile, then commit if changed
+# update the lockfile (commit with `jj describe` or `gcfl` after reviewing)
 update:
     nix flake update
-    if git diff --quiet $FLAKE/flake.lock; then \
-        echo "No updates found"; \
-    else \
-        git add $FLAKE/flake.lock && git commit -m "flake: updated"; \
-    fi
 
 # eval check
 check:
@@ -76,30 +65,6 @@ build host=`hostname -s` *args:
 # run the repl on a host
 osrepl host=`hostname -s`:
     nixos-rebuild repl --flake "$FLAKE/.#{{ host }}"
-
-# nvd diff since main
-nvd host=`hostname -s`:
-    if [ {{ branch }} = main ]; then \
-        echo "Cannot diff on main"; \
-    else \
-        nh os build --hostname={{ host }}; \
-        mv ./result ./result-new; \
-        git switch main; \
-        nh os build --hostname={{ host }}; \
-        git switch {{ branch }}; \
-        nvd diff ./result ./result-new; \
-        rm ./result ./result-new; \
-    fi
-
-# cleanup current branch after merge
-cleanup target=branch:
-    if [ {{ target }} == main ]; then \
-        echo "Refusing to cleanup main"; \
-    else \
-        git switch main; \
-        git pull; \
-        git branch -D {{ target }}; \
-    fi
 
 sops file="none":
     if [ {{ file }} == none ]; then \

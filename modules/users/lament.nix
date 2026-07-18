@@ -20,8 +20,8 @@
           sopsFile = mkSopsFile "pass";
           neededForUsers = true;
         };
-        sops.secrets.lamentKey = {
-          sopsFile = mkSopsFile "privkeys";
+        sops.secrets.lamentKey = mkIf cfg.desktop.enable {
+          sopsFile = mkSopsFile "privkeys/ishtar";
           owner = "lament";
           path = "/home/lament/.ssh/id_ed25519";
         };

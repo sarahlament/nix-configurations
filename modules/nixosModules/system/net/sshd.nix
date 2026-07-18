@@ -31,7 +31,7 @@
       };
       config = {
         sops.secrets."${config.networking.hostName}SshKey" = {
-          sopsFile = mkSopsFile "privkeys";
+          sopsFile = mkSopsFile "privkeys/${config.networking.hostName}";
           reloadUnits = [ "sshd.service" ];
         };
         services.openssh = {

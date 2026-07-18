@@ -35,8 +35,8 @@
       # runner/builder) leave it unset and get no borg job at all
       config = lib.mkIf (cfg.subuser != null) {
         sops.secrets = {
-          "${cfg.subuser}Ssh".sopsFile = mkSopsFile "borg";
-          "${cfg.subuser}Repo".sopsFile = mkSopsFile "borg";
+          "${cfg.subuser}Ssh".sopsFile = mkSopsFile "borg/${cfg.subuser}";
+          "${cfg.subuser}Repo".sopsFile = mkSopsFile "borg/${cfg.subuser}";
         };
 
         programs.ssh.knownHosts.hetzner-storagebox = {
