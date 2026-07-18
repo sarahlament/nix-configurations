@@ -62,8 +62,13 @@ creation_rules:
     key_groups:
     - age: [*lament, *athena, *ishtar, *minerva, *brigid]
 
-  # ishtar, minerva, brigid: lanzaboote; athena uses the Linode kernel, no SB
-  - path_regex: ^sops/pki\.yaml$
+  # PK/KEK/GUID: enrollment-only, no host needs these at runtime
+  - path_regex: ^sops/pki/lament\.yaml$
+    key_groups:
+    - age: [*lament]
+
+  # db key pair: shared across all lanzaboote hosts (ishtar/minerva/brigid)
+  - path_regex: ^sops/pki/db\.yaml$
     key_groups:
     - age: [*lament, *ishtar, *minerva, *brigid]
 

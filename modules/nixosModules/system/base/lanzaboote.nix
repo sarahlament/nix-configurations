@@ -8,11 +8,11 @@
     {
       imports = [ inputs.lanzaboote.nixosModules.lanzaboote ];
 
-      # only the db pair signs boot files; PK/KEK/GUID stay encrypted in
-      # sops/pki.yaml, decrypted by hand for the one-time enrollment.
+      # only the db pair signs boot files at activation; PK/KEK/GUID live in
+      # sops/pki/lament.yaml (lament-only) for the one-time enrollment ceremony.
       sops.secrets = {
-        dbKey.sopsFile = mkSopsFile "pki";
-        dbPem.sopsFile = mkSopsFile "pki";
+        dbKey.sopsFile = mkSopsFile "pki/db";
+        dbPem.sopsFile = mkSopsFile "pki/db";
       };
 
       boot = {
