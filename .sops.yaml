@@ -6,6 +6,7 @@ keys:
   - &ishtar  age18w5jg06hg3q0tj5za0cnhe3wm2m7a3ds6ne5gwt5p2ct9y90vdaq0wcyum
   - &minerva age15z2akyxwh32jmlg5myzghzu7lgvsnascqra8z9swdjps8yl0gq9shgp6r7
   - &brigid  age1qe5728xwrzt9dq4yxy0vhpe76as9m7jweda7m4979azau7zrzg4syc43p4
+  - &hestia  age1wjydzh3cgpma8gkmpzqvwdkya0c04nfn0lmg7vpawfaa9tplf3ss79cjew
 
 creation_rules:
   # per-host privkeys: each host gets only its own SSH key, WG key, and the keys it needs
@@ -29,6 +30,11 @@ creation_rules:
     key_groups:
     - age: [*lament, *brigid]
 
+  # hestia: SSH + WG (LAN DNS box, no fleet credentials)
+  - path_regex: ^sops/privkeys/hestia\.yaml$
+    key_groups:
+    - age: [*lament, *hestia]
+
   # borg per-subuser: SSH key + repo passphrase + exported repo key (Enc, DR-only)
   - path_regex: ^sops/borg/sub1\.yaml$
     key_groups:
@@ -42,10 +48,9 @@ creation_rules:
     key_groups:
     - age: [*lament, *minerva]
 
-  # sub4: provisioned and ready, not yet assigned to a host - lament-only until then
   - path_regex: ^sops/borg/sub4\.yaml$
     key_groups:
-    - age: [*lament]
+    - age: [*lament, *hestia]
 
   # athena only: knot (dns.authority) + tsig
   - path_regex: ^sops/domain\.yaml$
@@ -60,17 +65,17 @@ creation_rules:
   # all hosts: lamentUserPass is declared in users/lament.nix (fleet-wide)
   - path_regex: ^sops/pass\.yaml$
     key_groups:
-    - age: [*lament, *athena, *ishtar, *minerva, *brigid]
+    - age: [*lament, *athena, *ishtar, *minerva, *brigid, *hestia]
 
   # PK/KEK/GUID: enrollment-only, no host needs these at runtime
   - path_regex: ^sops/pki/lament\.yaml$
     key_groups:
     - age: [*lament]
 
-  # db key pair: shared across all lanzaboote hosts (ishtar/minerva/brigid)
+  # db key pair: shared across all lanzaboote hosts (ishtar/minerva/brigid/hestia)
   - path_regex: ^sops/pki/db\.yaml$
     key_groups:
-    - age: [*lament, *ishtar, *minerva, *brigid]
+    - age: [*lament, *ishtar, *minerva, *brigid, *hestia]
 
   # minerva: grafanaSecretKey, vaultwardenToken; brigid: forgejoRunnerToken
   - path_regex: ^sops/services\.yaml$

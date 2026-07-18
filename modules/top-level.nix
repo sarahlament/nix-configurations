@@ -57,6 +57,8 @@ in
             nixos-anywhere
             prek
             sops
+            ssh-to-age
+            wireguard-tools
           ];
         };
       };

@@ -58,6 +58,18 @@
           builder = true;
         };
       };
+      # home-LAN DNS appliance (laptop). fleet member, but serves nothing to the
+      # fleet - no directory.services entry, so no vhost on the edge.
+      hestia = {
+        hostname = "hestia";
+        ip.internal = "fd67:d6a7:d6f3::52";
+        keys = {
+          sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAeVAxli3fUW//TUkf0sBdERu1LpmuEqgH8L3gijdBYK";
+          wgPub = "6kbtEsCGQk9pfi5rJlND5EFPHxjA/vBxaDVFH/43j2s=";
+        };
+        roles = {
+        };
+      };
     };
     peers = {
       phone = {
@@ -91,6 +103,13 @@
         port = 8222;
         module = "vaultwarden";
         extraConfig = "encode zstd gzip";
+      };
+      pihole = {
+        backend = "hestia";
+        port = 8080;
+        module = "pihole";
+        # no public = true -> edge caddy binds it to WG, so the dashboard is
+        # reachable from the phone over the tunnel but never from the internet
       };
       proxmox = {
         backend = "minerva";

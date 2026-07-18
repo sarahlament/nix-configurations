@@ -16,6 +16,7 @@
           "bios-linode"
           "uefi-plain"
           "uefi-lvm"
+          "uefi-laptop"
         ];
         description = "which disk layout template this host formats with";
       };

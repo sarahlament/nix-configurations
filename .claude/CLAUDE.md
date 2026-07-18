@@ -8,6 +8,7 @@ Multi-host NixOS config built on **flake-parts** + **import-tree**.
 - **ishtar** - Desktop (Plasma 6, NVIDIA, lanzaboote secure boot, gaming). Declares no roles.
 - **minerva** - Friend-hosted spoke (residential NAT). Hosts the app services: Forgejo/git, Grafana + Loki, wiki-js, Vaultwarden, postgres (shared tenant DB). Carries the `postgres` role.
 - **brigid** - VM on a host Sarah controls, lanzaboote. Carries the `builder` role: Forgejo Actions runner + nix remote-builder.
+- **hestia** - Home-LAN laptop (lanzaboote). Pi-hole + unbound for the devices that aren't WG peers; recurses from the root rather than using athena's kresd. Declares no roles.
 
 Host roles, IPs, and keys are declared in `modules/lib/directory.nix`. Treat that as the source of truth, not this header.
 
@@ -144,7 +145,7 @@ Each entry follows **Is** / **Lives** / **Gotcha** (Gotcha optional). Copy the s
 - **NixOS module:** Create in `modules/nixosModules/{category}/`, define `flake.nixosModules.name`, add to host's `activeModules`
 - **Service:** Create the module in `services/` (no caddy config; read its own port from `directory.services.<name>.port`). Add the entry to `directory.services` (`backend`/`port`/`module`/`public?`/`extraConfig?`) - that places the module on its backend and generates its vhost on the edge
 - **Home-manager module:** Create in `modules/homeModules/{shell,apps}/`, define `flake.homeModules.name`, add to `sharedModules` in `core.nix` (shared) or `users/lament.nix` (user/desktop)
-- **Host:** Create nixosConfiguration in `modules/nixosConfigurations/` (deriving `serviceModules` via `serviceModulesFor "<host>"`), add disk layout in `diskoConfigurations/`, add an entry to `lib/directory.nix`, optionally add `static/{hostname}/`
+- **Host:** Run `just newhost <name>` first - it mints the ssh/wg keys into `sops/privkeys/<name>.yaml` and prints the pubkeys + `.sops.yaml` blocks to paste (keys are minted *locally*, never on the box: `sshd.nix` sets `generateHostKeys = false`). Then create the nixosConfiguration in `modules/nixosConfigurations/` (deriving `serviceModules` via `serviceModulesFor "<host>"`), add a disk layout in `diskoConfigurations/`, add the entry to `lib/directory.nix`, optionally add `static/{hostname}/`, and `sops updatekeys sops/pass.yaml` so the host can decrypt the fleet-wide secrets
 - **Host-specific tweak:** Drop a `.nix` file in `static/{hostname}/`. Auto-imported, no registration needed
 - **Custom package:** Source in `static/packages/`, wiring in `modules/packages.nix` with `perSystem` + `overlayAttrs`
 - **Secret:** Add to the right `sops/<category>.yaml`, reference via `mkSopsFile`
