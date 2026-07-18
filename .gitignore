@@ -19,8 +19,9 @@ result-*
 .DS_Store
 Thumbs.db
 
-# Local notes/scratch (not tracked)
+# Local notes/scratch and one-shot operational scripts (not tracked)
 docs/
+ceremony/
 
 # Temporary files
 *.tmp

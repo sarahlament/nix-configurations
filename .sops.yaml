@@ -1,7 +1,44 @@
 keys:
+  # personal admin key - stays for editing secrets locally
   - &lament age15k8clh8j26kxmnrfaa4a83s7mm7d5xl7vueh04kkrtpc2shhcuzqewurla
+  # per-host keys - each host decrypts only what it needs
+  - &athena  age1jhhre25nx0pq6j5gegsep0yyxua499y3az729p95rgq3qta0ppwqzlsqfp
+  - &ishtar  age18w5jg06hg3q0tj5za0cnhe3wm2m7a3ds6ne5gwt5p2ct9y90vdaq0wcyum
+  - &minerva age15z2akyxwh32jmlg5myzghzu7lgvsnascqra8z9swdjps8yl0gq9shgp6r7
+  - &brigid  age1qe5728xwrzt9dq4yxy0vhpe76as9m7jweda7m4979azau7zrzg4syc43p4
+
 creation_rules:
-  - path_regex: ^sops/.*\.yaml$
+  # all hosts: every host has SSH key, WG key, lamentKey, and either builderKey or deployerKey
+  - path_regex: ^sops/privkeys\.yaml$
     key_groups:
-    - age:
-      - *lament
+    - age: [*lament, *athena, *ishtar, *minerva, *brigid]
+
+  # athena, ishtar, minerva: brigid has no borg subuser
+  - path_regex: ^sops/borg\.yaml$
+    key_groups:
+    - age: [*lament, *athena, *ishtar, *minerva]
+
+  # athena only: knot (dns.authority) + tsig
+  - path_regex: ^sops/domain\.yaml$
+    key_groups:
+    - age: [*lament, *athena]
+
+  # athena only: mailserver (edge.mail)
+  - path_regex: ^sops/mail\.yaml$
+    key_groups:
+    - age: [*lament, *athena]
+
+  # all hosts: lamentUserPass is declared in users/lament.nix (fleet-wide)
+  - path_regex: ^sops/pass\.yaml$
+    key_groups:
+    - age: [*lament, *athena, *ishtar, *minerva, *brigid]
+
+  # ishtar, minerva, brigid: lanzaboote; athena uses the Linode kernel, no SB
+  - path_regex: ^sops/pki\.yaml$
+    key_groups:
+    - age: [*lament, *ishtar, *minerva, *brigid]
+
+  # minerva: grafanaSecretKey, vaultwardenToken; brigid: forgejoRunnerToken
+  - path_regex: ^sops/services\.yaml$
+    key_groups:
+    - age: [*lament, *minerva, *brigid]

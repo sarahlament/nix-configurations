@@ -48,7 +48,7 @@ jobs:
           rc=0
           for host in $(nix eval --raw .#deploy.nodes --apply 'ns: builtins.concatStringsSep " " (builtins.attrNames ns)'); do
             echo "::group::dry-activate $host"
-            nixos-rebuild dry-activate --flake .#"$host" --target-host nixbldRemote@"$host".lament.gay --sudo || rc=1
+            nixos-rebuild dry-activate --flake .#"$host" --target-host deployer@"$host".lament.gay --sudo || rc=1
             echo "::endgroup::"
           done
           exit $rc
@@ -68,7 +68,7 @@ jobs:
           rc=0
           for host in $(nix eval --raw .#deploy.nodes --apply 'ns: builtins.concatStringsSep " " (builtins.attrNames ns)'); do
             if ssh -o BatchMode=yes -o ConnectTimeout=8 -o StrictHostKeyChecking=accept-new \
-                 nixbldRemote@"$host".lament.gay true 2>/dev/null; then
+                 deployer@"$host".lament.gay true 2>/dev/null; then
               echo "::group::deploy $host"
               deploy --skip-checks ".#$host" || rc=1
               echo "::endgroup::"
