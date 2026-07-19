@@ -6,7 +6,7 @@ keys:
   - &ishtar  age18w5jg06hg3q0tj5za0cnhe3wm2m7a3ds6ne5gwt5p2ct9y90vdaq0wcyum
   - &minerva age15z2akyxwh32jmlg5myzghzu7lgvsnascqra8z9swdjps8yl0gq9shgp6r7
   - &brigid  age1qe5728xwrzt9dq4yxy0vhpe76as9m7jweda7m4979azau7zrzg4syc43p4
-  - &hestia  age1wjydzh3cgpma8gkmpzqvwdkya0c04nfn0lmg7vpawfaa9tplf3ss79cjew
+  - &hestia  age1gtd5wggsakhd8cx0qtqnfhuqyq0gaywygvz5za2wanu7w92h5ptsg792xw
 
 creation_rules:
   # per-host privkeys: each host gets only its own SSH key, WG key, and the keys it needs

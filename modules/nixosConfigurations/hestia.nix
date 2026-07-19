@@ -36,7 +36,7 @@ in
           # sub4 was already provisioned and unassigned. gravity.db is the only
           # state worth keeping here, but it's hand-curated, so it's worth it.
           services.borg.subuser = "sub4";
-          pihole.interface = "eth0";
+          pihole.interface = "wlan0";
         };
       }
     ];

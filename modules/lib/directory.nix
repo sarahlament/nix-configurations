@@ -64,8 +64,8 @@
         hostname = "hestia";
         ip.internal = "fd67:d6a7:d6f3::52";
         keys = {
-          sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAeVAxli3fUW//TUkf0sBdERu1LpmuEqgH8L3gijdBYK";
-          wgPub = "6kbtEsCGQk9pfi5rJlND5EFPHxjA/vBxaDVFH/43j2s=";
+          sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILlSAa6LSj0rGcwjTx1z05uC7yKnoM1v/CkcaBL0h6wb";
+          wgPub = "L3rihCr/61hoLxdRxXgThfvW2/SGXJUUjb5LhdY8KCA=";
         };
         roles = {
         };

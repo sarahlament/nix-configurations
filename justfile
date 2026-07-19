@@ -68,9 +68,13 @@ osrepl host=`hostname -s`:
 
 # keys are generated HERE, not on the target: sshd.nix sets generateHostKeys =
 # false, so a host receives its identity from sops on first boot rather than
-# making its own. that's also what breaks the chicken-and-egg - the host's age
-# recipient derives from the ssh key we just made, so nothing needs the box to
-# exist yet.
+# making its own. nothing needs the box to exist yet.
+#
+# the age identity is generated independently, NOT derived from the ssh host key
+# via ssh-to-age. that's deliberate: a leaked ssh host key must not also hand over
+# everything the host can decrypt. keeping them separate also means the sops
+# identity survives ssh host key rotation, and it's what the rest of the fleet
+# already does - `sops.age.keyFile = /persist/key.age`, placed at install.
 # mint a new host's private keys into sops, print the pubkeys to paste in
 newhost host donor="minerva":
     #!/usr/bin/env bash
@@ -90,10 +94,12 @@ newhost host donor="minerva":
     chmod 700 "$tmp"
     trap 'rm -rf "$tmp"' EXIT
 
-    # ssh host key first: the age recipient is derived from it
     ssh-keygen -t ed25519 -N "" -C "{{ host }}" -f "$tmp/ssh" >/dev/null
-    hostAge=$(ssh-to-age < "$tmp/ssh.pub")
     sshPub=$(cut -d' ' -f1,2 < "$tmp/ssh.pub")
+
+    # the host's sops identity - goes to /persist/key.age on the target
+    age-keygen -o "$tmp/age.key" 2>/dev/null
+    hostAge=$(age-keygen -y "$tmp/age.key")
 
     wg genkey > "$tmp/wg"
     wgPub=$(wg pubkey < "$tmp/wg")
@@ -122,8 +128,17 @@ newhost host donor="minerva":
 
     sops --config /dev/null set "$tmp/out.yaml" '["{{ host }}WgKey"]' "$(jq -Rs . < "$tmp/wg")"
     sops --config /dev/null set "$tmp/out.yaml" '["builderKey"]' "$(jq -Rs . < "$tmp/builder")"
+    # the host's own age key, kept here for disaster recovery: if /persist is lost
+    # the box can't decrypt anything, and this is the only copy that isn't on it.
+    # circular for the host, but lament can always read it.
+    sops --config /dev/null set "$tmp/out.yaml" '["{{ host }}AgeKey"]' "$(jq -Rs . < "$tmp/age.key")"
 
     mv "$tmp/out.yaml" "$file"
+    # the install needs the age key in the clear, to scp onto the installer.
+    # ceremony/ is gitignored - check that before ever moving this path, it is
+    # the only thing keeping a private key out of a commit.
+    mkdir -p ceremony
+    install -m600 "$tmp/age.key" "ceremony/{{ host }}-key.age"
 
     cat <<EOF
 
@@ -145,6 +160,16 @@ newhost host donor="minerva":
           wgPub = "${wgPub}";
 
     then: sops updatekeys ${file}
+
+    at install time, before first boot - without this the host decrypts nothing,
+    which on a headless box means no sshd host key and no way in:
+
+      scp ceremony/{{ host }}-key.age root@<installer>:/tmp/
+      install -m600 /tmp/{{ host }}-key.age /mnt/persist/key.age
+
+    ceremony/{{ host }}-key.age is 0600 and gitignored. it also lives in ${file}
+    as {{ host }}AgeKey for disaster recovery, so the ceremony copy is safe to
+    shred once the host is up.
     EOF
 
 sops file="none":
