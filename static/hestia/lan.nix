@@ -6,7 +6,10 @@
   ...
 }:
 let
-  inherit (config.modules.pihole) interface;
+  # the wireless interface this box's networking is keyed to. was borrowed from
+  # the pihole module while it lived here; it's a networking fact, not a pihole
+  # one, so it stays put now that the service is gone.
+  interface = "wlan0";
   inherit (self.myLib.helpers) mkSopsFile;
 in
 {

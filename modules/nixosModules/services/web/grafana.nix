@@ -9,13 +9,35 @@
     let
       inherit (self.myLib.constants) fqdn;
       inherit (self.myLib.helpers) mkSopsFile roleHost;
-      inherit (self.myLib.directory) hosts;
+      inherit (self.myLib.directory) hosts services;
       inherit (hosts.${config.networking.hostName}.ip) internal;
       mailRelay =
         (roleHost [
           "edge"
           "mail"
         ]).ip.internal;
+
+      # the blackbox exporter lives on hestia - the only always-on box inside the
+      # home LAN, so the only vantage that can probe the gateway/WAN from where it
+      # matters. prometheus reaches it over WG.
+      blackboxAddr = "[${hosts.hestia.ip.internal}]:9115";
+      # multi-target pattern: rewrite each listed target into a
+      # /probe?target=<t> call against hestia's blackbox, keeping the real
+      # target as the instance label.
+      blackboxRelabel = [
+        {
+          source_labels = [ "__address__" ];
+          target_label = "__param_target";
+        }
+        {
+          source_labels = [ "__param_target" ];
+          target_label = "instance";
+        }
+        {
+          target_label = "__address__";
+          replacement = blackboxAddr;
+        }
+      ];
     in
     {
       # all three run as static users with state under /var/lib. the persist entry
@@ -108,6 +130,36 @@
                 targets = [ "[${host.ip.internal}]:9100" ];
                 labels.host = name;
               }) hosts;
+            }
+            # is the home link up, from inside the house: gateway reachability +
+            # latency, and the WAN via public anchors.
+            {
+              job_name = "blackbox-icmp";
+              metrics_path = "/probe";
+              params.module = [ "icmp" ];
+              scrape_interval = "1m";
+              static_configs = [
+                {
+                  targets = [
+                    "192.168.1.1"
+                    "1.1.1.1"
+                    "8.8.8.8"
+                  ];
+                }
+              ];
+              relabel_configs = blackboxRelabel;
+            }
+            # is each app reachable as seen from home - hestia resolves these
+            # through athena's kresd, so this exercises the split-horizon path too.
+            {
+              job_name = "blackbox-http";
+              metrics_path = "/probe";
+              params.module = [ "http_2xx" ];
+              scrape_interval = "1m";
+              static_configs = [
+                { targets = map (name: "https://${name}.${fqdn}") (builtins.attrNames services); }
+              ];
+              relabel_configs = blackboxRelabel;
             }
           ];
         };

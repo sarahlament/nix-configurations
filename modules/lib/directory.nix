@@ -104,13 +104,6 @@
         module = "vaultwarden";
         extraConfig = "encode zstd gzip";
       };
-      pihole = {
-        backend = "hestia";
-        port = 8080;
-        module = "pihole";
-        # no public = true -> edge caddy binds it to WG, so the dashboard is
-        # reachable from the phone over the tunnel but never from the internet
-      };
       proxmox = {
         backend = "minerva";
         port = 8007; # minerva-side listener (8006 is proxmox itself)

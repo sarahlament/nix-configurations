@@ -33,10 +33,8 @@ in
         modules = {
           boot.efi.enable = true;
           disko.layout = "uefi-laptop";
-          # sub4 was already provisioned and unassigned. gravity.db is the only
-          # state worth keeping here, but it's hand-curated, so it's worth it.
-          services.borg.subuser = "sub4";
-          pihole.interface = "wlan0";
+          # no borg subuser: as a network probe this box holds no state worth
+          # backing up (metrics live in minerva's prometheus). sub4 stays free.
         };
       }
     ];
