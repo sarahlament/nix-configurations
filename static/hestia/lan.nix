@@ -14,8 +14,13 @@ in
   # the weak link in the design - every LAN client depends on this box for name
   # resolution, and that now rides a wireless association. wired when a port
   # frees up; nothing outside this file has to change when it does.
+  # wpa_supplicant's unit is hardened and runs as its own user, not root, so a
+  # default 0400 root-owned secret is unreadable to it - the association fails
+  # with "EXT PW FILE: Permission denied" and no PSK. nixpkgs already binds this
+  # path into the unit's sandbox; only the ownership needs to agree.
   sops.secrets.hestiaWifi = {
     sopsFile = mkSopsFile "privkeys/${config.networking.hostName}";
+    owner = config.systemd.services."wpa_supplicant-${interface}".serviceConfig.User;
     restartUnits = [ "wpa_supplicant-${interface}.service" ];
   };
 
@@ -37,13 +42,21 @@ in
     # every LAN client points at this box for DNS, so its address can't move.
     # a DHCP reservation on the router would work too - this way the box doesn't
     # depend on the router agreeing.
-    useDHCP = lib.mkForce false;
-    interfaces.${interface}.ipv4.addresses = [
-      {
-        address = "192.168.1.5";
-        prefixLength = 24;
-      }
-    ];
+    #
+    # scoped to the wireless interface rather than set host-wide: ethernet keeps
+    # its DHCP default, so plugging a cable in always yields a reachable box.
+    # that's the rescue path - wifi is the only link this host normally has, and
+    # without it a bad wireless state means a console session or a reinstall
+    # instead of an ssh session.
+    interfaces.${interface} = {
+      useDHCP = lib.mkForce false;
+      ipv4.addresses = [
+        {
+          address = "192.168.1.5";
+          prefixLength = 24;
+        }
+      ];
+    };
     defaultGateway = "192.168.1.1"; # TODO: confirm
 
     # SSH straight from the LAN instead of hairpinning through the hub in
