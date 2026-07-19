@@ -51,20 +51,22 @@ let
 
       # write + rename WITHIN textfileDir so the collector only ever sees a
       # complete file; the .XXXXXX temp name lacks the .prom suffix it scrapes.
+      # librespeed-cli --json emits an ARRAY (one entry per server tested), so
+      # bind the first result and read fields off it.
       tmp=$(mktemp -p "${textfileDir}" .librespeed.XXXXXX)
-      jq -r '
+      jq -r '.[0] as $r |
         "# HELP librespeed_download_mbps Download throughput (Mbit/s).",
         "# TYPE librespeed_download_mbps gauge",
-        "librespeed_download_mbps \(.download)",
+        "librespeed_download_mbps \($r.download)",
         "# HELP librespeed_upload_mbps Upload throughput (Mbit/s).",
         "# TYPE librespeed_upload_mbps gauge",
-        "librespeed_upload_mbps \(.upload)",
+        "librespeed_upload_mbps \($r.upload)",
         "# HELP librespeed_ping_ms Latency to the test server (ms).",
         "# TYPE librespeed_ping_ms gauge",
-        "librespeed_ping_ms \(.ping)",
+        "librespeed_ping_ms \($r.ping)",
         "# HELP librespeed_jitter_ms Jitter to the test server (ms).",
         "# TYPE librespeed_jitter_ms gauge",
-        "librespeed_jitter_ms \(.jitter)"
+        "librespeed_jitter_ms \($r.jitter)"
       ' <<<"$out" > "$tmp"
       mv -f "$tmp" "${textfileDir}/librespeed.prom"
     '';
