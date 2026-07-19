@@ -88,7 +88,17 @@
           # rather than in the FTL settings block.
           pihole-web = {
             enable = true;
-            ports = [ port ];
+            # both families, because the edge reaches this over WG and the
+            # internal network is v6-only - a bare port is civetweb for "IPv4
+            # only", which the edge sees as a refused connection and reports as
+            # a 502. the `o` suffix marks each bind optional: on Linux `[::]`
+            # also accepts v4, so the two can collide with EADDRINUSE depending
+            # on bindv6only, and upstream's own default carries `o` for exactly
+            # this reason.
+            ports = [
+              "${toString port}o"
+              "[::]:${toString port}o"
+            ];
           };
 
           # gravity.db is hand-curated through the UI, so it's the one thing here
