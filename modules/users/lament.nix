@@ -61,6 +61,10 @@
                   obsidian.enable = true;
                   firefox.enable = true;
                 };
+                # phase 0 keeps niri config RAW in ~/.config/niri; stylix's niri
+                # target would clobber it with a themed-but-bindless config.kdl.
+                # re-enable when we codify niri into HM (phase 1).
+                stylix.targets.niri.enable = false;
               }
             ]; # ++ optionals (cfg.server.enable)[]; if needed/wanted
 

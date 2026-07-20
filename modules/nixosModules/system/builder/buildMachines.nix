@@ -13,7 +13,7 @@ in
       ...
     }:
     let
-      inherit (lib) mkIf mkForce;
+      inherit (lib) mkIf mkForce mkMerge;
       onBuilder = config.networking.hostName == builder.hostname;
     in
     {
@@ -48,15 +48,22 @@ in
           }
         ];
 
-        # keep the build cache warm on the builder: retain the derivations and
-        # outputs of anything rooted so CI re-runs hit the store instead of
-        # rebuilding/refetching the world. --keep N only guards profile
-        # generations, so this is the piece that actually preserves cache.
-        settings = mkIf onBuilder {
-          keep-outputs = true;
-          keep-derivations = true;
-          trusted-users = [ "builder" ];
-        };
+        settings = mkMerge [
+          {
+            # let brigid substitute build inputs from its own caches instead of us
+            # shipping closures over the wire - brigid is the build path for everything.
+            builders-use-substitutes = true;
+          }
+          # keep the build cache warm on the builder: retain the derivations and
+          # outputs of anything rooted so CI re-runs hit the store instead of
+          # rebuilding/refetching the world. --keep N only guards profile
+          # generations, so this is the piece that actually preserves cache.
+          (mkIf onBuilder {
+            keep-outputs = true;
+            keep-derivations = true;
+            trusted-users = [ "builder" ];
+          })
+        ];
       };
 
       # and clean less eagerly than the fleet default (--keep 3, weekly)

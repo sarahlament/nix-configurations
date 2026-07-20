@@ -14,6 +14,10 @@
       # deliberately no programs.niri.settings / noctalia HM module here yet -
       # just the binaries + the session/greeter plumbing to boot into it.
       programs.niri.enable = true;
+      # niri-unstable (git main): noctalia v5 themes niri via `include` +
+      # `recent-windows` nodes that niri-stable 25.08 doesn't parse yet. cached in
+      # niri.cachix.org same as stable.
+      programs.niri.package = inputs.niri.packages.${pkgs.system}.niri-unstable;
 
       # greeter: greetd + tuigreet. lament autologins at boot (initial_session);
       # tuigreet is shown on logout / session switch. Drop initial_session to
