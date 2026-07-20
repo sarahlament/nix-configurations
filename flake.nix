@@ -64,6 +64,16 @@
     ###################
     ## ISHTAR INPUTS ##
     ###################
+    # niri: NOT following nixpkgs on purpose - that would invalidate
+    # niri.cachix.org (built against niri-flake's own pin) and force a
+    # from-source Rust + Mesa build.
+    niri.url = "github:sodiboo/niri-flake";
+    # noctalia: follows nixpkgs (its docs do); only heavy dep is quickshell,
+    # which comes from nixpkgs' cache regardless.
+    noctalia = {
+      url = "github:noctalia-dev/noctalia";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     stylix = {
       url = "github:nix-community/stylix/";
       #url = "github:nix-community/stylix/?ref=pull/892/head";

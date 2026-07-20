@@ -43,10 +43,8 @@
             "gamemode"
           ];
         };
-        services.displayManager.autoLogin = mkIf cfg.desktop.enable {
-          enable = true;
-          user = "lament";
-        };
+        # autologin is handled by greetd's initial_session in profiles/niri.nix
+        # now (greetd doesn't read services.displayManager.autoLogin).
 
         home-manager.users.lament = {
           imports =

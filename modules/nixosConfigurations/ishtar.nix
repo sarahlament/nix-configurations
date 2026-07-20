@@ -19,7 +19,7 @@ let
 
       develop
       gaming
-      kde
+      niri
       workstation
     ]
     ++ serviceModulesFor hostName
