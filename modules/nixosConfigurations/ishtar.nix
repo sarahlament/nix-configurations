@@ -15,7 +15,6 @@ let
       nvidia
 
       pipewire
-      stylix
 
       develop
       gaming
@@ -41,7 +40,6 @@ in
           boot.zswap.enable = true;
           services.borg.subuser = "sub2";
           lament.desktop.enable = true;
-          stylix.wallpaper = true;
           disko.layout = "uefi-lvm";
         };
 

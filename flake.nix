@@ -74,15 +74,6 @@
       url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    stylix = {
-      url = "github:nix-community/stylix/";
-      #url = "github:nix-community/stylix/?ref=pull/892/head";
-      inputs = {
-        flake-parts.follows = "flake-parts";
-        nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems";
-      };
-    };
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.1.0";
       inputs = {

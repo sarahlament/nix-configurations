@@ -56,22 +56,26 @@
             ]
             ++ optionals cfg.desktop.enable [
               vscode
-              {
-                programs = {
-                  obsidian.enable = true;
-                  firefox.enable = true;
-                  # kitty pulls noctalia's matugen palette (stylix target off below)
-                  kitty.extraConfig = "include /home/lament/.config/kitty/themes/noctalia.conf";
-                };
-                # noctalia (matugen) owns these now, not stylix. gated to the desktop
-                # host so stylix-less servers never see these options.
-                # (niri config is also kept RAW in ~/.config/niri; the stylix niri
-                # target would otherwise clobber it with a bindless config.kdl.)
-                stylix.targets = {
-                  niri.enable = false;
-                  kitty.enable = false;
-                };
-              }
+              (
+                { pkgs, ... }:
+                {
+                  programs = {
+                    obsidian.enable = true;
+                    firefox.enable = true;
+                    # kitty pulls noctalia's matugen palette
+                    kitty.extraConfig = "include /home/lament/.config/kitty/themes/noctalia.conf";
+                  };
+                  # cursor formerly owned by stylix (dropped with the NNN switch).
+                  # explicit enable also clears the pointerCursor deprecation warning.
+                  home.pointerCursor = {
+                    enable = true;
+                    package = pkgs.numix-cursor-theme;
+                    name = "Numix-Cursor-Light";
+                    size = 36;
+                    gtk.enable = true;
+                  };
+                }
+              )
             ]; # ++ optionals (cfg.server.enable)[]; if needed/wanted
 
           home = {
