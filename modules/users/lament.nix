@@ -57,13 +57,24 @@
             ++ optionals cfg.desktop.enable [
               vscode
               (
-                { pkgs, ... }:
+                { config, pkgs, ... }:
                 {
                   programs = {
                     obsidian.enable = true;
                     firefox.enable = true;
-                    # kitty pulls noctalia's matugen palette
-                    kitty.extraConfig = "include /home/lament/.config/kitty/themes/noctalia.conf";
+                    # the generated kitty.conf just pulls in the mutable rice file
+                    # (which itself includes noctalia's matugen palette).
+                    kitty.extraConfig = "include /home/lament/.config/kitty/rice.conf";
+                  };
+                  # niri + kitty visuals live in-repo but stay mutable: symlink
+                  # ~/.config straight at the work-tree so edits hot-reload with no
+                  # rebuild, while jj tracks them and borg backs them up. noctalia's
+                  # generated files (niri noctalia.kdl, kitty themes/) are left alone.
+                  xdg.configFile = {
+                    "niri/config.kdl".source =
+                      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/pantheon/dotfiles/niri/config.kdl";
+                    "kitty/rice.conf".source =
+                      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/pantheon/dotfiles/kitty/rice.conf";
                   };
                   # cursor formerly owned by stylix (dropped with the NNN switch).
                   # explicit enable also clears the pointerCursor deprecation warning.
