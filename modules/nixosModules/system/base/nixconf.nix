@@ -43,17 +43,7 @@
     };
     nixpkgs.overlays = [
       self.overlays.default
-
-      # I'm tired of this always rebuilding, so we pin it here
-      (final: _prev: {
-        inherit
-          (import (fetchTarball {
-            url = "https://github.com/nixos/nixpkgs/archive/a799d3e3886da994fa307f817a6bc705ae538eeb.tar.gz";
-            sha256 = "sha256:11mhk782xy1n58518f86k6fcvxjaaim3mk9nmhx68fg5i2jg9ayx";
-          }) { system = final.stdenv.hostPlatform.system; })
-          numix-cursor-theme
-          ;
-      })
+      self.overlays.pinned # numix-cursor-theme pin (shared with the standalone HM)
     ];
 
     programs.nh = {

@@ -1,11 +1,12 @@
-{ inputs, ... }: {
-  flake.nixosModules.nvf = { pkgs, ... }: {
-    imports = [ inputs.nvf.nixosModules.nvf ];
-    programs.nvf = {
-      enable = true;
-      defaultEditor = true;
-
-      settings.vim = {
+{ inputs, self, ... }: {
+  # the nvf config body, scope-agnostic: programs.nvf.settings is the same option
+  # in nvf's NixOS and HM modules, so this is imported by both the fleet-wide
+  # NixOS nvf (below, for servers) and ishtar's standalone HM
+  # (homeConfigurations/ishtar.nix). one source of truth for the nvim config.
+  flake.myLib.nvfModule =
+    { pkgs, ... }:
+    {
+      programs.nvf.settings.vim = {
         vimAlias = true;
 
         options = {
@@ -199,6 +200,19 @@
           setup = "require('dressing').setup {}";
         };
       };
+    };
+
+  # fleet-wide NixOS nvf: the SSH editor on every host. ishtar disables this
+  # (programs.nvf.enable = mkForce false) and runs nvf via standalone HM instead,
+  # so editor tweaks there are a `just home` away, not a system rebuild.
+  flake.nixosModules.nvf = {
+    imports = [
+      inputs.nvf.nixosModules.nvf
+      self.myLib.nvfModule
+    ];
+    programs.nvf = {
+      enable = true;
+      defaultEditor = true;
     };
   };
 }

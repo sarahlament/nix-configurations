@@ -62,6 +62,11 @@ switch *args:
 build host=`hostname -s` *args:
     nh os build --hostname={{ host }} {{ args }}
 
+# switch ishtar's standalone home-manager (user config, no system rebuild)
+# first run: `nix run home-manager -- switch --flake .#lament@ishtar -b hmb`
+home *args:
+    home-manager switch --flake ".#lament@ishtar" -b hmb {{ args }}
+
 # run the repl on a host
 osrepl host=`hostname -s`:
     nixos-rebuild repl --flake "$FLAKE/.#{{ host }}"
