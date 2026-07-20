@@ -60,11 +60,17 @@
                 programs = {
                   obsidian.enable = true;
                   firefox.enable = true;
+                  # kitty pulls noctalia's matugen palette (stylix target off below)
+                  kitty.extraConfig = "include /home/lament/.config/kitty/themes/noctalia.conf";
                 };
-                # phase 0 keeps niri config RAW in ~/.config/niri; stylix's niri
-                # target would clobber it with a themed-but-bindless config.kdl.
-                # re-enable when we codify niri into HM (phase 1).
-                stylix.targets.niri.enable = false;
+                # noctalia (matugen) owns these now, not stylix. gated to the desktop
+                # host so stylix-less servers never see these options.
+                # (niri config is also kept RAW in ~/.config/niri; the stylix niri
+                # target would otherwise clobber it with a bindless config.kdl.)
+                stylix.targets = {
+                  niri.enable = false;
+                  kitty.enable = false;
+                };
               }
             ]; # ++ optionals (cfg.server.enable)[]; if needed/wanted
 

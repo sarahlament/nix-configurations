@@ -6,6 +6,9 @@
 
         shellIntegration.enableZshIntegration = true;
         settings = {
+          font_family = "JetBrains Mono Nerd Font";
+          font_size = 13;
+          background_opacity = "0.85";
           initial_window_width = 1366;
           initial_window_height = 768;
           remember_window_size = "no";

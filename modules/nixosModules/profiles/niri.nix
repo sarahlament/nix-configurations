@@ -17,7 +17,7 @@
       # niri-unstable (git main): noctalia v5 themes niri via `include` +
       # `recent-windows` nodes that niri-stable 25.08 doesn't parse yet. cached in
       # niri.cachix.org same as stable.
-      programs.niri.package = inputs.niri.packages.${pkgs.system}.niri-unstable;
+      programs.niri.package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
 
       # greeter: greetd + tuigreet. lament autologins at boot (initial_session);
       # tuigreet is shown on logout / session switch. Drop initial_session to
@@ -43,7 +43,7 @@
       environment.systemPackages = [
         pkgs.xdg-utils
         pkgs.xwayland-satellite # rootless X for steam / X11 apps under niri
-        inputs.noctalia.packages.${pkgs.system}.default # noctalia-shell (raw-configured)
+        inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default # noctalia-shell (raw-configured)
       ];
     };
 }
