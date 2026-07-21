@@ -47,7 +47,12 @@
             r2modman # Mod manager for various games
             #ryubing-canary # Switch emulator
             prismlauncher # Minecraft profile manager
-            discord # Voice and text chat
+            # WebRTCPipeWireCapturer lets Go Live / screen-share use the Wayland
+            # screencast portal (it's native Wayland already via NIXOS_OZONE_WL).
+            # --no-sandbox disables the Electron/Chromium sandbox.
+            (discord.override {
+              commandLineArgs = "--enable-features=WebRTCPipeWireCapturer --no-sandbox";
+            })
             headsetcontrol # Headset control utility
             mangohud # Gaming performance overlay
             piper # Mouse configuration tool
