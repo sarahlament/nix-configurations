@@ -42,14 +42,20 @@
             config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/pantheon/dotfiles/kitty/rice.conf";
         };
 
-        # cursor formerly owned by stylix (dropped with the NNN switch).
-        # explicit enable also clears the pointerCursor deprecation warning.
-        home.pointerCursor = {
-          enable = true;
-          package = pkgs.numix-cursor-theme;
-          name = "Numix-Cursor-Light";
-          size = 36;
-          gtk.enable = true;
+        home = {
+          # swayidle drives the niri DPMS timer (spawned from config.kdl):
+          # monitors off after 5 min idle, back on with input.
+          packages = [ pkgs.swayidle ];
+
+          # cursor formerly owned by stylix (dropped with the NNN switch).
+          # explicit enable also clears the pointerCursor deprecation warning.
+          pointerCursor = {
+            enable = true;
+            package = pkgs.numix-cursor-theme;
+            name = "Numix-Cursor-Light";
+            size = 36;
+            gtk.enable = true;
+          };
         };
       };
   };

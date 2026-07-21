@@ -9,6 +9,8 @@ input {
         xkb {
             layout "us"
         }
+        // NumLock on at startup
+        numlock
     }
     // ishtar's a desktop, but these are harmless and ready if a laptop ever runs it
     touchpad {
@@ -35,6 +37,9 @@ output "DP-1" {
 
 // noctalia IS the shell: bar, launcher, control center, lock, notifications, OSDs.
 spawn-at-startup "noctalia"
+
+// DPMS idle timer: monitors off after 5 min (300s) idle, back on with input.
+spawn-at-startup "swayidle" "-w" "timeout" "300" "niri msg action power-off-monitors" "resume" "niri msg action power-on-monitors"
 
 // niri auto-manages xwayland-satellite when the binary is present (it is), so
 // steam / X11 apps get a rootless X server with no extra spawn needed here.
@@ -169,6 +174,13 @@ window-rule {
     open-floating true
 }
 
+// kitty is translucent (background_opacity in rice.conf). with prefer-no-csd,
+// niri paints a solid backdrop behind decoration-less windows, which shows
+// THROUGH the translucency as solid - turn it off so the wallpaper shows.
+window-rule {
+    match app-id="kitty"
+    draw-border-with-background false
+}
 // absolute path (not relative "noctalia.kdl"): this file is symlinked in from the
 // repo, and niri would resolve a relative include against the symlink target dir,
 // missing noctalia's generated palette. noctalia writes noctalia.kdl to this exact
