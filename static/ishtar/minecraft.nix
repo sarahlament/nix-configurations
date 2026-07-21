@@ -1,10 +1,10 @@
 { inputs, pkgs, ... }:
 let
   # ishtar's LAN address; the server binds here so it's reachable on the local
-  # net but NOT over the WireGuard `internal` iface (trusted fleet-wide, so a
-  # 0.0.0.0 bind would leak it to phone/tablet peers). pin this via a DHCP
-  # reservation so it doesn't wander.
-  lanAddr = "192.168.1.77";
+  # net (and via the router's :25565 port-forward) but NOT over the WireGuard
+  # `internal` iface (trusted fleet-wide, so a 0.0.0.0 bind would leak it to
+  # phone/tablet peers). now the host's static v4 (see network.nix).
+  lanAddr = "192.168.1.15";
   lanIface = "enp8s0";
 in
 {

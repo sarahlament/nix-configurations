@@ -28,7 +28,17 @@
       };
       ishtar = {
         hostname = "ishtar";
-        ip.internal = "fd67:d6a7:d6f3::2";
+        ip = {
+          internal = "fd67:d6a7:d6f3::2";
+          # WG entry point: the whole fleet dials ishtar directly (router forwards
+          # :51820 -> 192.168.1.15) instead of hairpinning via athena. hestia is
+          # behind this same router, so it reuses these public IPs on its own port.
+          public = {
+            v4 = "47.32.246.158";
+            v6 = "2600:6c56:7008:200:94a2:3f0d:ccbb:f89e";
+            port = 51820;
+          };
+        };
         keys = {
           sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA8zVl6CUXd4tEb1zpdbV1SMB7taFSg+3Y3QJksY9+vU";
           wgPub = "2/eP72pROfrKRSrxPKeoroVtq9K+jvz1T4Gl4tPg03c=";
@@ -62,7 +72,16 @@
       # fleet - no directory.services entry, so no vhost on the edge.
       hestia = {
         hostname = "hestia";
-        ip.internal = "fd67:d6a7:d6f3::52";
+        ip = {
+          internal = "fd67:d6a7:d6f3::52";
+          # same home router as ishtar: reuse ishtar's public IPs, distinct
+          # forwarded port (router forwards :51285 -> hestia's LAN reservation).
+          public = {
+            v4 = "47.32.246.158";
+            v6 = "2600:6c56:7008:200:94a2:3f0d:ccbb:f89e";
+            port = 51285;
+          };
+        };
         keys = {
           sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILlSAa6LSj0rGcwjTx1z05uC7yKnoM1v/CkcaBL0h6wb";
           wgPub = "L3rihCr/61hoLxdRxXgThfvW2/SGXJUUjb5LhdY8KCA=";

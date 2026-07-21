@@ -8,13 +8,24 @@
     let
       inherit (lib) mkIf mkForce;
       inherit (self.myLib.directory) hosts peers;
-      inherit (self.myLib.constants) fqdn wgPort;
+      inherit (self.myLib.constants) fqdn;
       inherit (self.myLib.constants.addresses) internal;
-      inherit (self.myLib.helpers) mkSopsFile roleHost;
+      inherit (self.myLib.helpers)
+        mkSopsFile
+        roleHost
+        mkPeer
+        portOf
+        ;
       inherit (config.networking) hostName;
 
       host = self.myLib.directory.hosts.${hostName};
       isHub = host.roles.edge.vpn or false;
+
+      # a host with a public endpoint listens for inbound WG and is directly
+      # dialable. the hub always is; ishtar is meshed in as a second entry point
+      # so the whole fleet hits it directly instead of hairpinning via the hub.
+      hasPublic = host.ip ? public;
+      isEntry = isHub || hasPublic;
 
       # the coordinator and the recursive resolver; fine for one of each,
       # TODO recheck when adding a second
@@ -27,19 +38,35 @@
         "resolver"
       ];
 
-      # this is for the hub, each peer restricted to its defined internal IP
-      spokePeers = lib.mapAttrsToList (_: host: {
-        publicKey = host.keys.wgPub;
-        allowedIPs = [ "${host.ip.internal}/128" ];
-      }) (lib.filterAttrs (n: _: n != hostName) hosts // peers);
+      # every host that publishes a public endpoint is directly dialable. mkPeer
+      # and portOf (which build/endpoint these) live in myLib.helpers.
+      entryHosts = lib.filterAttrs (_: h: h.ip ? public) hosts;
 
-      # this is for the spokes, we trust the coordinator to verify the connection and route properly
+      # the hub's default-route peer for a spoke: the whole mesh (/48) via the hub.
       hubPeer = {
         publicKey = hub.keys.wgPub;
-        endpoint = "${hub.ip.public.v4}:${toString wgPort}";
+        endpoint = "${hub.ip.public.v4}:${toString (portOf hub)}";
         allowedIPs = [ internal ];
         persistentKeepalive = 25;
       };
+
+      # the hub accepts every other node; entry points among them get dialed too.
+      spokePeers = lib.mapAttrsToList (_: mkPeer) (removeAttrs (hosts // peers) [ hostName ]);
+
+      # a non-hub entry point (ishtar) accepts everyone but itself and the hub
+      # (hubPeer is its /48 default route); entry points among them still dialed.
+      inboundPeers = lib.mapAttrsToList (_: mkPeer) (
+        removeAttrs (hosts // peers) [
+          hostName
+          hub.hostname
+        ]
+      );
+
+      # non-hub entry points a plain spoke dials directly, so the whole fleet
+      # reaches them without hairpinning through the hub (currently just ishtar).
+      directEntries = lib.mapAttrsToList (_: mkPeer) (
+        lib.filterAttrs (n: h: n != hostName && !(h.roles.edge.vpn or false)) entryHosts
+      );
     in
     {
       sops.secrets."${hostName}WgKey" = {
@@ -71,14 +98,20 @@
         ];
         firewall = {
           trustedInterfaces = [ "internal" ];
-          allowedUDPPorts = mkIf isHub [ wgPort ];
+          allowedUDPPorts = mkIf isEntry [ (portOf host) ];
         };
 
         wireguard.interfaces.internal = {
           ips = [ "${host.ip.internal}/48" ];
-          listenPort = mkIf isHub wgPort;
+          listenPort = mkIf isEntry (portOf host);
           privateKeyFile = config.sops.secrets."${hostName}WgKey".path;
-          peers = if isHub then spokePeers else [ hubPeer ];
+          peers =
+            if isHub then
+              spokePeers
+            else if hasPublic then
+              [ hubPeer ] ++ inboundPeers
+            else
+              [ hubPeer ] ++ directEntries;
         };
       };
     };

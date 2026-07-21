@@ -7,8 +7,25 @@
   flake.myLib.helpers =
     let
       inherit (self.myLib.constants.borg) user host;
+      # resolve a directory node's WG port: per-host override, else fleet default
+      portOf = node: node.ip.public.port or self.myLib.constants.wgPort;
     in
     {
+      inherit portOf;
+      # a WireGuard peer entry for a directory node: routing restricted to its own
+      # /128, plus its endpoint + a keepalive if it's an entry point (publicly
+      # dialable) - so the caller dials it directly rather than wait to be reached.
+      mkPeer =
+        node:
+        {
+          publicKey = node.keys.wgPub;
+          allowedIPs = [ "${node.ip.internal}/128" ];
+        }
+        // lib.optionalAttrs (node.ip ? public) {
+          endpoint = "${node.ip.public.v4}:${toString (portOf node)}";
+          persistentKeepalive = 25;
+        };
+
       mkReverseProxy =
         {
           host ? "localhost",
