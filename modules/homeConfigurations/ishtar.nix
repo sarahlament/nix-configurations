@@ -28,6 +28,7 @@
       ++ [
         inputs.nvf.homeManagerModules.default
         self.myLib.nvfModule
+        inputs.zen-browser.homeModules.beta
         {
           home = {
             stateVersion = "26.05";
@@ -101,6 +102,47 @@
           # bat needs nothing: its config isn't HM-owned, so noctalia's template
           # writes --theme=noctalia + builds the cache itself. ishtar-only.
           programs.btop.settings.color_theme = "noctalia";
+        }
+        {
+          # zen replaces brave (DNS-level adblock carries the network side now).
+          # nix owns the browser + force-installed extensions via policy; the
+          # profile is left UNMANAGED (no `profiles.*`) so noctalia's zen-browser
+          # community template owns the theme surface - its apply.sh injects
+          # userChrome/userContent css into the profile's chrome/ dir and flips
+          # the legacy-stylesheets pref in user.js, which a hm-managed profile
+          # would clobber as a read-only symlink. same "noctalia owns the mutable
+          # theme, nix owns the rest" split as bat/btop. ishtar-only.
+          #
+          # enable the "zen-browser" template in noctalia's control center. no
+          # live reload here (firefox-family, unlike kitty/btop) - restart zen to
+          # pick up a new palette.
+          programs.zen-browser = {
+            enable = true;
+            setAsDefaultBrowser = true;
+            policies = {
+              DontCheckDefaultBrowser = true;
+              DisableTelemetry = true;
+              DisableFirefoxStudies = true;
+              DisablePocket = true;
+              # force-install from AMO. keys are the extensions' webext ids;
+              # cosmetic filtering (uBO) still earns its keep past DNS blocking,
+              # bitwarden pairs with vaultwarden on minerva, stylus with matugen.
+              ExtensionSettings =
+                let
+                  fromAMO = builtins.mapAttrs (
+                    _: slug: {
+                      install_url = "https://addons.mozilla.org/firefox/downloads/latest/${slug}/latest.xpi";
+                      installation_mode = "force_installed";
+                    }
+                  );
+                in
+                fromAMO {
+                  "uBlock0@raymondhill.net" = "ublock-origin";
+                  "{446900e4-71c2-419f-a6a7-df9c091e268b}" = "bitwarden-password-manager";
+                  "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}" = "styl-us";
+                };
+            };
+          };
         }
       ];
   };

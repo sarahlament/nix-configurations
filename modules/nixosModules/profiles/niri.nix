@@ -14,6 +14,17 @@
       # deliberately no programs.niri.settings / noctalia HM module here yet -
       # just the binaries + the session/greeter plumbing to boot into it.
       programs.niri.enable = true;
+
+      # niri-flake ships xdg-desktop-portal-gnome (screencast/screenshot) and a
+      # portals.conf that names `gtk` as the FileChooser fallback - but never
+      # pulls the gtk backend in, and gnome's FileChooser doesn't render outside
+      # a gnome session. net result: file pickers (save/open/import) silently
+      # no-op in every app, flatpak and native alike. add the gtk backend and
+      # pin it as the FileChooser impl so dialogs actually show.
+      xdg.portal = {
+        extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+        config.niri."org.freedesktop.impl.portal.FileChooser" = "gtk";
+      };
       # niri-unstable (git main): noctalia v5 themes niri via `include` +
       # `recent-windows` nodes that niri-stable 25.08 doesn't parse yet. cached in
       # niri.cachix.org same as stable.

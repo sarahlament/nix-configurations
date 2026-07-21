@@ -76,7 +76,7 @@ binds {
     // --- launching ---
     Mod+Return hotkey-overlay-title="terminal" { spawn "kitty"; }
     Mod+T      hotkey-overlay-title="terminal" { spawn "kitty"; }
-    Mod+B      hotkey-overlay-title="browser"  { spawn "flatpak" "run" "com.brave.Browser"; }
+    Mod+B      hotkey-overlay-title="browser"  { spawn "zen-beta"; }
     Mod+Space  hotkey-overlay-title="launcher" { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
     Mod+D      hotkey-overlay-title="launcher" { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
     Mod+C      hotkey-overlay-title="control center" { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
@@ -160,9 +160,9 @@ binds {
     Mod+Shift+E     { quit; }
 }
 
-// brave picture-in-picture floats instead of tiling
+// zen picture-in-picture floats instead of tiling
 window-rule {
-    match app-id="com.brave.Browser" title="^Picture.in.Picture$"
+    match app-id="zen-beta" title="^Picture.in.Picture$"
     open-floating true
 }
 

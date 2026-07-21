@@ -74,6 +74,16 @@
       url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # zen: firefox-fork browser, replaces brave (DNS-level adblock carries the
+    # network side now). not in nixpkgs - community flake. noctalia's
+    # zen-browser template themes its chrome/content css off matugen.
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
+    };
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.1.0";
       inputs = {
