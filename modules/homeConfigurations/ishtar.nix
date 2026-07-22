@@ -21,6 +21,7 @@
         homeShell
         hyfetch
         posh
+        nushell # ishtar-only trial - see nushell.nix
         # lament's profile: base + desktop
         lamentHome
         lamentDesktop
@@ -102,6 +103,16 @@
           # bat needs nothing: its config isn't HM-owned, so noctalia's template
           # writes --theme=noctalia + builds the cache itself. ishtar-only.
           programs.btop.settings.color_theme = "noctalia";
+        }
+        {
+          # nvim yanks to the Wayland system clipboard. ishtar-only: the shared
+          # nvfModule stays headless-safe, since `unnamedplus` would route every
+          # yank through wl-copy, which errors on a server with no Wayland display.
+          programs.nvf.settings.vim.clipboard = {
+            enable = true;
+            registers = "unnamedplus";
+            providers.wl-copy.enable = true;
+          };
         }
         {
           # zen replaces brave (DNS-level adblock carries the network side now).

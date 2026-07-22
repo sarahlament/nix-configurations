@@ -102,6 +102,11 @@ binds {
     Mod+Shift+K     { move-window-up; }
     Mod+Shift+J     { move-window-down; }
 
+    // --- column stacking (shove focused window across the column boundary,
+    //     consuming into the neighbor or expelling out, whichever applies) ---
+    Mod+BracketLeft  { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+
     // --- monitors (dual-head: Ctrl focuses, Ctrl+Shift moves) - arrows + vim h/l ---
     Mod+Ctrl+Left        { focus-monitor-left; }
     Mod+Ctrl+Right       { focus-monitor-right; }
@@ -135,8 +140,11 @@ binds {
     Mod+R       { switch-preset-column-width; }
     Mod+F       { maximize-column; }
     Mod+Shift+F { fullscreen-window; }
-    Mod+Minus   { set-column-width "-10%"; }
-    Mod+Equal   { set-column-width "+10%"; }
+    // window-level (not column-) so it also resizes floating windows; height too
+    Mod+Minus         { set-window-width "-10%"; }
+    Mod+Equal         { set-window-width "+10%"; }
+    Mod+Shift+Minus   { set-window-height "-10%"; }
+    Mod+Shift+Equal   { set-window-height "+10%"; }
     Mod+Comma   { consume-window-into-column; }
     Mod+Period  { expel-window-from-column; }
 

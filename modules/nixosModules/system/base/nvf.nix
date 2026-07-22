@@ -11,7 +11,7 @@
 
         options = {
           tabstop = 2;
-          expandtab = false;
+          expandtab = true;
           shiftwidth = 2;
           number = true;
           relativenumber = true;
@@ -48,10 +48,10 @@
             desc = "Help Tags";
           }
 
-          # Conform: Format code
+          # LSP: Format the buffer (formatOnSave already runs this on write)
           {
             key = "<leader><Tab>";
-            action = "<cmd>ConformFormat<cr>";
+            action = "<cmd>lua vim.lsp.buf.format()<cr>";
             mode = [
               "n"
               "v"
@@ -105,7 +105,7 @@
                   formatting.command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
                   nix.flake = {
                     autoArchive = true;
-                    nixpkgsInputName = "nixos-unstable";
+                    nixpkgsInputName = "nixpkgs";
                   };
                 };
               };
@@ -124,29 +124,6 @@
         # Treesitter: Better syntax highlighting and code parsing
         treesitter.enable = true;
 
-        # Conform: A powerful and fast code formatter
-        formatter.conform-nvim = {
-          enable = false;
-          setupOpts = {
-            format_on_save = {
-              lsp_format = "fallback";
-              timeout_ms = 500;
-            };
-            formatters_by_ft = {
-              gitrebase = [ ];
-              gitignore = [ ];
-              gitcommit = [ ];
-              nix = [ "nixfmt" ];
-              toml = [ "taplo" ];
-              json = [ "prettier" ];
-              yaml = [ "prettier" ];
-              markdown = [ "prettier" ];
-              sh = [ "shfmt" ];
-              bash = [ "shfmt" ];
-            };
-          };
-        };
-
         # Completion engine (nvim-cmp)
         autocomplete.nvim-cmp = {
           enable = true;
@@ -161,8 +138,10 @@
         # Snippet engine (LuaSnip)
         snippets.luasnip.enable = true;
 
-        # Debug Adapter Protocol (DAP)
-        debugger.nvim-dap.enable = true;
+        # Debug Adapter Protocol (DAP): off until there's an actual debuggable
+        # target wired (python/rust/c/go/...). nix has no DAP adapter - it's not
+        # runtime-stepped; use `nix repl` / `nix eval --debugger` instead.
+        debugger.nvim-dap.enable = false;
 
         # Telescope: A highly-extensible fuzzy finder
         telescope.enable = true;

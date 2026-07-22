@@ -34,7 +34,14 @@
         history.append = true;
         syntaxHighlighting.enable = true;
 
-        setOptions = [ "NO_AUTOPUSHD" ];
+        setOptions = [
+          "NO_AUTOPUSHD"
+          # kitty's visual bell turns every zsh beep into a screen flash, so mute
+          # the interactive-error bells: ZLE errors (NO_BEEP) + ambiguous
+          # tab-completion (NO_LIST_BEEP). genuine app `\a` still flashes.
+          "NO_BEEP"
+          "NO_LIST_BEEP"
+        ];
 
         oh-my-zsh = {
           enable = true;
