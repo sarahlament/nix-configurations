@@ -39,7 +39,7 @@
         enable = true;
         package = pkgs.caddy.withPlugins {
           plugins = [ "github.com/caddy-dns/rfc2136@v1.0.0" ];
-          hash = "sha256-i6hgT3ufiVz13f2Ruox7EPLhIDXSomA3T/4IFmoHJUo=";
+          hash = "sha256-HohHrhdQb68UVl0oiT2b9+E/SNVMfGDHkZdJ2sY8Bu0=";
         };
 
         globalConfig = ''

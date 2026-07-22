@@ -62,6 +62,11 @@ in
             keep-outputs = true;
             keep-derivations = true;
             trusted-users = [ "builder" ];
+            # the warm cache above lets the store creep up between the monthly
+            # nh clean, so cap it: nix GCs dead paths mid-build once free space
+            # runs low, keeping a big CI closure from ENOSPC-ing the builder
+            min-free = 15 * 1024 * 1024 * 1024; # start GC under 15 GiB free
+            max-free = 30 * 1024 * 1024 * 1024; # ... free back up to 30 GiB
           })
         ];
       };
