@@ -8,11 +8,10 @@ palette = "noctalia"
 add_newline = true
 
 format = """
-$os$username$hostname$directory$git_branch$git_status
-$python$nodejs$docker_context$golang$rust$cmd_duration
+$os$username$hostname$directory$nix_shell$git_branch $git_status$fill$time
 $character"""
 
-right_format = "$memory_usage$time"
+right_format = "$cmd_duration$memory_usage"
 
 [character]
 success_symbol = "[❯](mauve)"
@@ -48,12 +47,14 @@ format = "[$path]($style) "
 [git_branch]
 symbol = " "
 style = "peach"
-format = "[$symbol$branch]($style) "
+format = "[$symbol$branch]($style)"
 
 [git_status]
 style = "peach"
-staged = "[ +$count](green)"
-modified = "[ !$count](yellow)"
+# jj auto-snapshots, so working changes aren't "dirty/unstaged" - they're
+# present. show them as +N (like staged), not !N.
+staged = "[+$count](green)"
+modified = "[+$count](green)"
 format = '([$all_status$ahead_behind]($style))'
 
 [cmd_duration]
@@ -74,27 +75,12 @@ time_format = "%H:%M"
 style = "teal"
 format = "[󰅐 $time]($style)"
 
-[python]
-symbol = " "
-style = "peach"
-format = '[$symbol$version]($style) '
+# devshell indicator: a snowflake when inside a `nix develop` / `nix-shell`.
+[nix_shell]
+symbol = "❄ "
+style = "sky"
+format = "[$symbol]($style)"
 
-[nodejs]
+# pushes $time to the right edge of the first line (spaces).
+[fill]
 symbol = " "
-style = "peach"
-format = '[$symbol$version]($style) '
-
-[docker_context]
-symbol = " "
-style = "peach"
-format = '[$symbol$context]($style) '
-
-[golang]
-symbol = " "
-style = "peach"
-format = '[$symbol$version]($style) '
-
-[rust]
-symbol = " "
-style = "peach"
-format = '[$symbol$version]($style) '

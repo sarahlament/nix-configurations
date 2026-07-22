@@ -115,20 +115,29 @@
           };
         }
         (
-          # ishtar's starship.toml is a WRITABLE seeded copy, not a repo symlink:
-          # noctalia's starship template sed-injects the matugen palette straight
-          # into the file (starship has no `include`), so a tracked mkOutOfStoreSymlink
-          # would churn the repo on every wallpaper change. seed the prompt body
-          # until noctalia has injected (its marker), then leave it alone so the
-          # live colors aren't clobbered on `just home`. enable the "starship"
-          # template in noctalia's control center.
+          # ishtar's starship.toml = our declarative BODY + noctalia's injected
+          # [palettes.noctalia] block, on one file (starship has no `include`). the
+          # body is ours to own, the palette block (between noctalia's markers) is
+          # noctalia's. rewrite the body from the repo every activation, preserving
+          # any palette block already injected - so `just home` never leaves a
+          # body-less file (starship would read that as default config -> blank
+          # prompt) and noctalia's live matugen palette survives. NOT a repo symlink:
+          # noctalia writing into a tracked file would churn the repo per wallpaper.
+          # enable the "starship" template in noctalia's control center.
           { pkgs, lib, ... }:
           {
             home.activation.seedStarship = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
               cfg="$HOME/.config/starship.toml"
-              if [ ! -e "$cfg" ] || ! ${pkgs.gnugrep}/bin/grep -q "NOCTALIA STARSHIP PALETTE" "$cfg"; then
-                $DRY_RUN_CMD ${pkgs.coreutils}/bin/install -Dm644 ${../../dotfiles/starship/starship.toml} "$cfg"
+              palette=""
+              if [ -e "$cfg" ]; then
+                palette=$(${pkgs.gnused}/bin/sed -n \
+                  '/NOCTALIA STARSHIP PALETTE >>>/,/NOCTALIA STARSHIP PALETTE <<</p' "$cfg")
               fi
+              tmp=$(${pkgs.coreutils}/bin/mktemp)
+              ${pkgs.coreutils}/bin/cat ${../../dotfiles/starship/starship.toml} > "$tmp"
+              [ -n "$palette" ] && printf '\n%s\n' "$palette" >> "$tmp"
+              $DRY_RUN_CMD ${pkgs.coreutils}/bin/install -Dm644 "$tmp" "$cfg"
+              ${pkgs.coreutils}/bin/rm -f "$tmp"
             '';
           }
         )
