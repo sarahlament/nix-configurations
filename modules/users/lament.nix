@@ -117,6 +117,13 @@
           ]
           ++ optionals cfg.desktop.enable [ self.homeModules.lamentDesktop ];
           home.stateVersion = config.system.stateVersion;
+
+          # servers have no matugen, so resolve `palette = "noctalia"` with a fixed
+          # Catppuccin block appended to the shared prompt body. ishtar instead
+          # seeds a writable copy noctalia injects (homeConfigurations/ishtar.nix).
+          xdg.configFile."starship.toml".text =
+            builtins.readFile ../../dotfiles/starship/starship.toml
+            + builtins.readFile ../../dotfiles/starship/palette-catppuccin.toml;
         };
       };
     };

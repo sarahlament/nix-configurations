@@ -2,7 +2,7 @@
   # nushell, ishtar-only trial (imported from homeConfigurations/ishtar.nix, NOT
   # sharedModules - servers stay pure zsh). lamentHome already sets
   # home.shell.enableShellIntegration, which cascades to enableNushellIntegration,
-  # so the existing oh-my-posh prompt + zoxide auto-wire in the moment nushell is
+  # so the existing starship prompt + zoxide auto-wire in the moment nushell is
   # enabled - no glue here. kitty is pointed at nu in lamentDesktop.
   flake.homeModules.nushell = { lib, ... }: {
     programs = {

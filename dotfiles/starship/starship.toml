@@ -1,0 +1,100 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# palette = "noctalia" is resolved from a [palettes.noctalia] block that is NOT
+# in this file: on ishtar noctalia's matugen template injects it (markers), on
+# servers nix appends the Catppuccin fallback (palette-catppuccin.toml). this
+# file is the shared prompt BODY - styles reference palette names, never hex.
+palette = "noctalia"
+add_newline = true
+
+format = """
+$os$username$hostname$directory$git_branch$git_status
+$python$nodejs$docker_context$golang$rust$cmd_duration
+$character"""
+
+right_format = "$memory_usage$time"
+
+[character]
+success_symbol = "[❯](mauve)"
+error_symbol = "[❯](red)"
+vimcmd_symbol = "[❮](mauve)"
+
+[os]
+disabled = false
+style = "mauve"
+
+[os.symbols]
+NixOS = " "
+Linux = " "
+
+[username]
+show_always = true
+style_user = "mauve"
+style_root = "red"
+format = "[$user]($style)"
+
+[hostname]
+ssh_only = false
+style = "mauve"
+format = "[@$hostname]($style) "
+
+[directory]
+truncation_length = 0
+truncate_to_repo = false
+home_symbol = "~"
+style = "mauve"
+format = "[$path]($style) "
+
+[git_branch]
+symbol = " "
+style = "peach"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "peach"
+staged = "[ +$count](green)"
+modified = "[ !$count](yellow)"
+format = '([$all_status$ahead_behind]($style))'
+
+[cmd_duration]
+min_time = 2000
+style = "teal"
+format = "[ $duration]($style)"
+
+[memory_usage]
+disabled = false
+threshold = 0
+symbol = "󰘚 "
+style = "mauve"
+format = "[$symbol$ram_pct]($style) "
+
+[time]
+disabled = false
+time_format = "%H:%M"
+style = "teal"
+format = "[󰅐 $time]($style)"
+
+[python]
+symbol = " "
+style = "peach"
+format = '[$symbol$version]($style) '
+
+[nodejs]
+symbol = " "
+style = "peach"
+format = '[$symbol$version]($style) '
+
+[docker_context]
+symbol = " "
+style = "peach"
+format = '[$symbol$context]($style) '
+
+[golang]
+symbol = " "
+style = "peach"
+format = '[$symbol$version]($style) '
+
+[rust]
+symbol = " "
+style = "peach"
+format = '[$symbol$version]($style) '

@@ -53,7 +53,7 @@
         fastfetch
         homeShell
         hyfetch
-        posh
+        starship
       ];
     };
 

@@ -20,7 +20,7 @@
         fastfetch
         homeShell
         hyfetch
-        posh
+        starship
         nushell # ishtar-only trial - see nushell.nix
         # lament's profile: base + desktop
         lamentHome
@@ -114,6 +114,24 @@
             providers.wl-copy.enable = true;
           };
         }
+        (
+          # ishtar's starship.toml is a WRITABLE seeded copy, not a repo symlink:
+          # noctalia's starship template sed-injects the matugen palette straight
+          # into the file (starship has no `include`), so a tracked mkOutOfStoreSymlink
+          # would churn the repo on every wallpaper change. seed the prompt body
+          # until noctalia has injected (its marker), then leave it alone so the
+          # live colors aren't clobbered on `just home`. enable the "starship"
+          # template in noctalia's control center.
+          { pkgs, lib, ... }:
+          {
+            home.activation.seedStarship = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+              cfg="$HOME/.config/starship.toml"
+              if [ ! -e "$cfg" ] || ! ${pkgs.gnugrep}/bin/grep -q "NOCTALIA STARSHIP PALETTE" "$cfg"; then
+                $DRY_RUN_CMD ${pkgs.coreutils}/bin/install -Dm644 ${../../dotfiles/starship/starship.toml} "$cfg"
+              fi
+            '';
+          }
+        )
         {
           # zen replaces brave (DNS-level adblock carries the network side now).
           # nix owns the browser + force-installed extensions via policy; the
