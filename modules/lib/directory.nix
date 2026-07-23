@@ -72,19 +72,23 @@
           builder = true;
         };
       };
-      # home-LAN DNS appliance (laptop). fleet member, but serves nothing to the
-      # fleet - no directory.services entry, so no vhost on the edge.
-      hestia = {
-        hostname = "hestia";
-        stateVersion = "26.11";
-        ip.internal = "fd67:d6a7:d6f3::52";
-        keys = {
-          sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILlSAa6LSj0rGcwjTx1z05uC7yKnoM1v/CkcaBL0h6wb";
-          wgPub = "L3rihCr/61hoLxdRxXgThfvW2/SGXJUUjb5LhdY8KCA=";
+      # home-LAN DNS appliance (laptop). PARKED 2026-07-23: powered off (slow
+      # WiFi), pulled from the fleet until it's back in actual use. grafana's
+      # blackbox probes rode this box, so they're commented out too - uncomment
+      # both to restore.
+      /*
+        hestia = {
+          hostname = "hestia";
+          stateVersion = "26.11";
+          ip.internal = "fd67:d6a7:d6f3::52";
+          keys = {
+            sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILlSAa6LSj0rGcwjTx1z05uC7yKnoM1v/CkcaBL0h6wb";
+            wgPub = "L3rihCr/61hoLxdRxXgThfvW2/SGXJUUjb5LhdY8KCA=";
+          };
+          roles = {
+          };
         };
-        roles = {
-        };
-      };
+      */
       # identity box (LUKS+TPM testbed for ishtar). role-less for now: the
       # kerberos/directory stack it will carry doesn't exist yet.
       verdandi = {
@@ -100,6 +104,7 @@
           wgPub = "NSYBMZZmakM3TTdFV/avnAyJowEUEgjOu/1lyyGyBDY=";
         };
         roles = {
+          identity = true;
         };
       };
     };
