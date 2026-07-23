@@ -42,7 +42,11 @@
       minerva = {
         hostname = "minerva";
         stateVersion = "26.11";
-        ip.internal = "fd67:d6a7:d6f3::50";
+        site = "fate";
+        ip = {
+          internal = "fd67:d6a7:d6f3::50";
+          site = "192.168.4.132";
+        };
         keys = {
           sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMJQhmbeDldaoqiRgYrYrtKY7l2eemsJyQBD9OT3UBM0";
           wgPub = "7hPavXcPF2zfFbimfyjI40BBM7vmwGdl5kA9DN1Y+28=";
@@ -55,7 +59,11 @@
         hostname = "brigid";
         stateVersion = "26.11";
         channel = "nixpkgs";
-        ip.internal = "fd67:d6a7:d6f3::51";
+        site = "fate";
+        ip = {
+          internal = "fd67:d6a7:d6f3::51";
+          site = "192.168.4.7";
+        };
         keys = {
           sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPVE5J272luQVFpnDgPPpi/37NLz1KuHBHK7yOOC5Zd8";
           wgPub = "TY8me/FEIRZBNctQ+l15cvxND/S4ALAz4OsaLshWvQ0=";
@@ -82,7 +90,11 @@
       verdandi = {
         hostname = "verdandi";
         stateVersion = "26.11";
-        ip.internal = "fd67:d6a7:d6f3::53";
+        site = "fate";
+        ip = {
+          internal = "fd67:d6a7:d6f3::53";
+          site = "192.168.4.73";
+        };
         keys = {
           sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKRTZ7gUJe57AjlNUjejA7ajfhng46wmC0rlki7LAE1N";
           wgPub = "NSYBMZZmakM3TTdFV/avnAyJowEUEgjOu/1lyyGyBDY=";

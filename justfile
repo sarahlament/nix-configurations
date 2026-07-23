@@ -52,11 +52,11 @@ flakerepl:
 
 # switch a *remote* machine
 deploy host=`hostname -s` *args:
-    nh os switch --hostname={{ host }} --target-host={{ host }} {{ args }}
+    nh os switch --hostname={{ host }} --target-host={{ host }} --elevation-strategy=passwordless {{ args }}
 
 # switch the *local* machine
 switch *args:
-    nh os switch {{ args }}
+    nh os switch --elevation-strategy=passwordless {{ args }}
 
 # build a host
 build host=`hostname -s` *args:

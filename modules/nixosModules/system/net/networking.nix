@@ -40,6 +40,22 @@
         allowedIPs = [ internal ];
         persistentKeepalive = 25;
       };
+
+      # site-local mesh: hosts sharing a `site` reach each other directly over the
+      # LAN instead of hairpinning through the hub. the /128 endpoint beats the
+      # hubPeer's /48, so same-site traffic routes direct; a stale LAN lease just
+      # falls back to the hub route (i.e. today's behavior).
+      mySite = host.site or null;
+      siteMates = lib.filterAttrs (
+        n: h: n != hostName && mySite != null && (h.site or null) == mySite
+      ) hosts;
+      hasSiteMates = siteMates != { };
+      sitePeers = lib.mapAttrsToList (_: h: {
+        publicKey = h.keys.wgPub;
+        allowedIPs = [ "${h.ip.internal}/128" ];
+        endpoint = "${h.ip.site}:${toString wgPort}";
+        persistentKeepalive = 25;
+      }) siteMates;
     in
     {
       sops.secrets."${hostName}WgKey" = {
@@ -71,14 +87,15 @@
         ];
         firewall = {
           trustedInterfaces = [ "internal" ];
-          allowedUDPPorts = mkIf isHub [ wgPort ];
+          # site members must accept inbound handshakes from their LAN neighbors
+          allowedUDPPorts = mkIf (isHub || hasSiteMates) [ wgPort ];
         };
 
         wireguard.interfaces.internal = {
           ips = [ "${host.ip.internal}/48" ];
-          listenPort = mkIf isHub wgPort;
+          listenPort = mkIf (isHub || hasSiteMates) wgPort;
           privateKeyFile = config.sops.secrets."${hostName}WgKey".path;
-          peers = if isHub then spokePeers else [ hubPeer ];
+          peers = if isHub then spokePeers else [ hubPeer ] ++ sitePeers;
         };
       };
     };
