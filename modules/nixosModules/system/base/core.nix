@@ -9,8 +9,8 @@
       inputs.home-manager.nixosModules.home-manager
 
       boot
-      borgbackup
       buildMachines
+      disko
       impermanence
       monitoring
       networking

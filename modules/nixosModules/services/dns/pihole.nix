@@ -101,11 +101,6 @@
             ];
           };
 
-          # gravity.db is hand-curated through the UI, so it's the one thing here
-          # that can't be rebuilt from the flake.
-          borgbackup.jobs.${config.networking.hostName}.paths = [
-            ftl.stateDirectory
-          ];
         };
 
         # this host resolves through its own stack, not the fleet resolver that

@@ -3,6 +3,7 @@
     hosts = {
       athena = {
         hostname = "athena";
+        stateVersion = "26.05";
         ip = {
           internal = "fd67:d6a7:d6f3::1";
           public = {
@@ -28,6 +29,8 @@
       };
       ishtar = {
         hostname = "ishtar";
+        stateVersion = "26.05";
+        channel = "nixpkgs";
         ip.internal = "fd67:d6a7:d6f3::2";
         keys = {
           sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA8zVl6CUXd4tEb1zpdbV1SMB7taFSg+3Y3QJksY9+vU";
@@ -38,6 +41,7 @@
       };
       minerva = {
         hostname = "minerva";
+        stateVersion = "26.11";
         ip.internal = "fd67:d6a7:d6f3::50";
         keys = {
           sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMJQhmbeDldaoqiRgYrYrtKY7l2eemsJyQBD9OT3UBM0";
@@ -49,6 +53,8 @@
       };
       brigid = {
         hostname = "brigid";
+        stateVersion = "26.11";
+        channel = "nixpkgs";
         ip.internal = "fd67:d6a7:d6f3::51";
         keys = {
           sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPVE5J272luQVFpnDgPPpi/37NLz1KuHBHK7yOOC5Zd8";
@@ -62,6 +68,7 @@
       # fleet - no directory.services entry, so no vhost on the edge.
       hestia = {
         hostname = "hestia";
+        stateVersion = "26.11";
         ip.internal = "fd67:d6a7:d6f3::52";
         keys = {
           sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILlSAa6LSj0rGcwjTx1z05uC7yKnoM1v/CkcaBL0h6wb";
