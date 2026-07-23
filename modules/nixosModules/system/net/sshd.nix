@@ -3,6 +3,7 @@
     {
       config,
       lib,
+      pkgs,
       ...
     }:
     let
@@ -42,6 +43,9 @@
             PasswordAuthentication = false;
             KbdInteractiveAuthentication = false;
             PermitRootLogin = "no";
+            # ticket-based login: a host with a host/<fqdn> keytab accepts a valid
+            # service ticket in lieu of a key. needs a keytab at /etc/krb5.keytab.
+            GSSAPIAuthentication = true;
           };
           hostKeys = [
             {
@@ -64,6 +68,20 @@
               lib.concatStringsSep "," ([ "*" ] ++ map (u: "!${u}") cfg.publicUsers)
             } Address *,!${internal}
               PubkeyAuthentication no
+          '';
+        };
+
+        # stock openssh lacks GSSAPI; this variant carries the krb5 patches so
+        # GSSAPIAuthentication is a valid option. programs.ssh.package sets the
+        # CLIENT (into corePackages); services.openssh.package defaults to it, so
+        # this single setting covers both the `ssh` client and sshd.
+        programs.ssh = {
+          package = pkgs.openssh_gssapi;
+          # offer GSSAPI only to fleet hosts (short name + fqdn), so we don't burn
+          # a Kerberos round-trip against github and friends.
+          extraConfig = ''
+            Host ${lib.concatStringsSep " " (lib.attrNames hosts)} *.${fqdn}
+              GSSAPIAuthentication yes
           '';
         };
 

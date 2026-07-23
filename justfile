@@ -62,6 +62,20 @@ switch *args:
 build host=`hostname -s` *args:
     nh os build --hostname={{ host }} {{ args }}
 
+# --- plain nixos-rebuild twins: no nh TUI/timer spam, clean output for logs + claude ---
+
+# build a host (no switch) - claude-safe, parseable output
+nbuild host=`hostname -s` *args:
+    nixos-rebuild build --flake ".#{{ host }}" {{ args }}
+
+# switch a *remote* host (passwordless via wheelNeedsPassword = false)
+ndeploy host=`hostname -s` *args:
+    nixos-rebuild switch --flake ".#{{ host }}" --target-host {{ host }} --sudo {{ args }}
+
+# switch the *local* machine
+nswitch host=`hostname -s` *args:
+    sudo nixos-rebuild switch --flake ".#{{ host }}" {{ args }}
+
 # switch ishtar's standalone home-manager (user config, no system rebuild)
 # first run: `nix run home-manager -- switch --flake .#lament@ishtar -b hmb`
 home *args:

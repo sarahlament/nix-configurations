@@ -12,6 +12,7 @@
       buildMachines
       disko
       impermanence
+      krb5-client
       monitoring
       networking
       nixconf
