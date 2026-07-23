@@ -23,7 +23,21 @@
       # pin it as the FileChooser impl so dialogs actually show.
       xdg.portal = {
         extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-        config.niri."org.freedesktop.impl.portal.FileChooser" = "gtk";
+        # xdg.portal.config REPLACES niri-flake's niri-portals.conf wholesale
+        # (authoritative per-desktop, /etc/xdg beats the package share dir), so we
+        # must restate its routing, not just append FileChooser. dropping
+        # `default = gnome` is what silently killed ScreenCast (discord screen
+        # picker): gnome is the backend that drives niri's mutter screencast API.
+        config.niri = {
+          default = [
+            "gnome"
+            "gtk"
+          ];
+          "org.freedesktop.impl.portal.FileChooser" = "gtk";
+          "org.freedesktop.impl.portal.Access" = "gtk";
+          "org.freedesktop.impl.portal.Notification" = "gtk";
+          "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
+        };
       };
       # niri-unstable (git main): noctalia v5 themes niri via `include` +
       # `recent-windows` nodes that niri-stable 25.08 doesn't parse yet. cached in
