@@ -12,43 +12,45 @@ The top-level `flake.nix` uses flake-part's helper function, then pass `import-t
 
 ## How are modules used?
 
-Each module is defined through `flake.{nixosModules,homeModules,etc}.moduleName`, which can then be referenced through `self.{nixosModules,homeModules,etc}.moduleName`. But a host's `activeModules` isn't one hand-written list - it's stitched together from three sources:
+Each module is defined through `flake.{nixosModules,homeModules,etc}.moduleName`, referenced through `self.{nixosModules,homeModules,etc}.moduleName`. But no host hand-lists its modules - `mkHost` (in `nixosConfigurations/hosts.nix`) assembles every host off its `directory.nix` entry:
 
 ```nix
-inherit (self.myLib.helpers) serviceModulesFor roleModulesFor;
+mkHost = name: entry:
+  inputs.${entry.channel or "nixpkgs-small"}.lib.nixosSystem {
+    specialArgs = { inherit inputs self; };
+    modules =
+      [ self.nixosModules.core ]                             # the universal base
+      ++ serviceModulesFor name                              # apps whose `backend` is this host
+      ++ roleModulesFor name                                 # modules its `roles` drag in
+      ++ [ (inputs.import-tree (self + "/static/${name}")) ] # host-local config
+      ++ [ { networking.hostName = name; system.stateVersion = entry.stateVersion; } ];
+  };
 
-activeModules =
-  with self.nixosModules;
-  [
-    core        # only the genuinely host-specific bits get hand-listed
-    disko
-    linodeGuest
-  ]
-  ++ serviceModulesFor hostName # apps whose `backend` is this host
-  ++ roleModulesFor hostName;   # modules pulled in by the host's `roles`
+# every host, generated straight from the directory - no per-host file
+flake.nixosConfigurations = builtins.mapAttrs mkHost self.myLib.directory.hosts;
 ```
 
-Everything else falls out of `directory.nix` (see below):
+Everything falls out of `directory.nix` (see below):
 
 - `serviceModulesFor "athena"` -> every service module the directory places on `athena`, via each service's `backend`.
 - `roleModulesFor "athena"` -> the modules a host's declared roles drag in (`edge.web -> caddy`, `dns.authority -> knot`, `builder -> forgejo-runner`, ...).
 
-So adding `caddy` to a host is never a manual `activeModules` edit - it's giving that host the `edge.web` role. Per-host fine-grained toggles ride in an inner `modules = { ... }` block (the options-based half of the config):
+So adding `caddy` to a host is never a manual edit - it's giving that host the `edge.web` role. Everything host-*local* - extra module imports (the guest/boot-trust class), per-host option toggles, the disk layout - lives in `static/<host>/host.nix`:
 
 ```nix
-modules = activeModules ++ [
-  {
-    networking.hostName = "athena";
-    system.stateVersion = "26.05";
-
-    modules = {                       # per-host option toggles
-      boot.zram.enable = true;
-      services.borg.subuser = "sub1";
-      disko.layout = "bios-linode";
-    };
-  }
-];
+# static/athena/host.nix
+{ self, ... }:
+{
+  imports = with self.nixosModules; [ linodeGuest borgbackup ];
+  modules = {                       # per-host option toggles
+    boot.zram.enable = true;
+    services.borg.subuser = "sub1";
+    disko.layout = "bios-linode";
+  };
+}
 ```
+
+So a host is just its `directory` entry (identity, ip, keys, `stateVersion`, roles) plus its `static/<host>/` dir - `mkHost` generates the rest.
 
 ## Custom lib? In flake-parts?
 
@@ -74,10 +76,7 @@ Is this necessary? *Yes. Yes it is.*
 ```
 modules/
   nixosConfigurations/
-    athena.nix   ## Linode VPS - edge/ingress, WG hub, DNS, mail. serves no apps
-    ishtar.nix   ## personal desktop - plasma, nvidia, gaming
-    minerva.nix  ## friend-hosted spoke - the app services live here
-    brigid.nix   ## VM - the `builder` (CI runner + remote builder)
+    hosts.nix    ## the mkHost generator - builds every host from directory + static/
   nixosModules/
     hardware/    ## what devices are bolted to this box (nvidia, pipewire)
     profiles/    ## what I want this machine to feel like
@@ -95,13 +94,13 @@ modules/
     apps/
     shell/
   diskoConfigurations/
-    ${hostName}.nix
+    <layout>.nix   ## a named disk layout (uefi-plain, uefi-luks, bios-linode, ...)
     module.nix   ## placement by colocation, diskoConfiguration handler
   lib/           ## the `myLib` layer + the directory - see above
   users/         ## see notes below
   packages.nix   ## single entrypoint for packages
-static/          ## host-specific, or not modularized yet
-  {hostname}/
+static/          ## per-host config + things not modularized yet
+  {hostname}/    ## host.nix (imports + toggles + disk layout) + any host-specific tweaks
   packages/      ## see note below
 sops/            ## encrypted secrets, one file per category
 ```
@@ -117,7 +116,7 @@ Modules are organized by output type then by semantic category.
 ## So... Why?
 
 Honestly? I liked the way the Dendritic Pattern looked on paper, and the idea of dropping a new module into the flake tree and importing it into my system instead of glue coding it (and args like `self`) in, just to forget where I put it, was enough.
-Need to change how ZSH works? `homeModules`. Caddy? `nixosModules`. New host? New file in `nixosConfigurations`. As long as I know *what* I want to change, *where* it is becomes obvious.
+Need to change how ZSH works? `homeModules`. Caddy? `nixosModules`. As long as I know *what* I want to change, *where* it is becomes obvious.
 
 
 ## License

@@ -9,18 +9,19 @@ let
     name: entry:
     inputs.${entry.channel or "nixpkgs-small"}.lib.nixosSystem {
       specialArgs = { inherit inputs self; };
-      modules =
-        [ self.nixosModules.core ]
-        ++ serviceModulesFor name
-        ++ roleModulesFor name
-        ++ [ (inputs.import-tree (self + "/static/${name}")) ]
-        ++ [
-          {
-            networking.hostName = name;
-            nixpkgs.hostPlatform = "x86_64-linux";
-            system.stateVersion = entry.stateVersion;
-          }
-        ];
+      modules = [
+        self.nixosModules.core
+      ]
+      ++ serviceModulesFor name
+      ++ roleModulesFor name
+      ++ [ (inputs.import-tree (self + "/static/${name}")) ]
+      ++ [
+        {
+          networking.hostName = name;
+          nixpkgs.hostPlatform = "x86_64-linux";
+          system.stateVersion = entry.stateVersion;
+        }
+      ];
     };
 in
 {

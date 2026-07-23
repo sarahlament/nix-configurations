@@ -49,7 +49,7 @@ Files under `static/` are plain NixOS modules (not flake-parts modules). They ge
 
 | Directory | Question it answers |
 |-----------|-------------------|
-| `modules/nixosConfigurations/` | Which hosts exist, and what does each assemble? |
+| `modules/nixosConfigurations/` | The `mkHost` generator - builds every host from its `directory` entry + `static/<host>/` |
 | `modules/nixosModules/system/` | What does every host need? Subgrouped: `base/` (boot, core, nix, secrets, guest bases), `net/` (wg, ssh, fail2ban), `builder/` (CI runner + remote-builder), `backup/` (borg) |
 | `modules/nixosModules/hardware/` | What is this machine? |
 | `modules/nixosModules/services/` | What does this machine serve? Subgrouped: `edge/` (ingress, TLS, mail), `web/` (the proxied `*.lament.gay` apps), `dns/` (authority + resolver), `data/` (backing stores) |
@@ -85,11 +85,11 @@ Top-level grouping is by **flake output type**, then by **semantic category**. E
 
 ### Standalone (import = enable)
 
-Most modules. A host opts in by listing it in its `activeModules`. No enable flag needed.
+Most modules. A host opts in by importing it - universal modules ride `core`, host-local ones go in `static/<host>/host.nix`. No enable flag needed.
 
 ### Directory-driven (services)
 
-Proxied web services aren't hand-listed. Each host's nixosConfiguration derives a `serviceModules` list (sibling to `activeModules`) via `serviceModulesFor "<host>"`: a service module is placed on whatever host its `directory.services` entry names as `backend`, and caddy generates its vhost on the edge. Moving a service between hosts is a one-line `backend` change.
+Proxied web services aren't hand-listed. `mkHost` gives every host a `serviceModulesFor "<host>"` list: a service module is placed on whatever host its `directory.services` entry names as `backend`, and caddy generates its vhost on the edge. Moving a service between hosts is a one-line `backend` change.
 
 ### Options-based (fine-grained control)
 
@@ -128,7 +128,7 @@ Each entry follows **Is** / **Lives** / **Gotcha** (Gotcha optional). Copy the s
 
 ### Disko auto-wiring
 **Is:** each host picks its disk layout by hostname automatically.
-**Lives:** `diskoConfigurations/module.nix`; hosts just include `disko` in `activeModules`.
+**Lives:** `diskoConfigurations/module.nix`; `disko` rides `core`, and each host names its layout via `modules.disko.layout` in `static/<host>/host.nix`.
 
 ### Home-Manager
 **Is:** integrated as a NixOS module (not standalone), so `useGlobalPkgs`/`useUserPackages` work.
@@ -142,10 +142,10 @@ Each entry follows **Is** / **Lives** / **Gotcha** (Gotcha optional). Copy the s
 
 ## Adding Things
 
-- **NixOS module:** Create in `modules/nixosModules/{category}/`, define `flake.nixosModules.name`, add to host's `activeModules`
+- **NixOS module:** Create in `modules/nixosModules/{category}/`, define `flake.nixosModules.name`, then import it where the host needs it - `core` (universal), the host's `static/<host>/host.nix` (host-local), or the role map in `helpers.nix` (role-driven)
 - **Service:** Create the module in `services/` (no caddy config; read its own port from `directory.services.<name>.port`). Add the entry to `directory.services` (`backend`/`port`/`module`/`public?`/`extraConfig?`) - that places the module on its backend and generates its vhost on the edge
 - **Home-manager module:** Create in `modules/homeModules/{shell,apps}/`, define `flake.homeModules.name`, add to `sharedModules` in `core.nix` (shared) or `users/lament.nix` (user/desktop)
-- **Host:** Run `just newhost <name>` first - it mints the ssh/wg keys into `sops/privkeys/<name>.yaml` and prints the pubkeys + `.sops.yaml` blocks to paste (keys are minted *locally*, never on the box: `sshd.nix` sets `generateHostKeys = false`). Then create the nixosConfiguration in `modules/nixosConfigurations/` (deriving `serviceModules` via `serviceModulesFor "<host>"`), add a disk layout in `diskoConfigurations/`, add the entry to `lib/directory.nix`, optionally add `static/{hostname}/`, and `sops updatekeys sops/pass.yaml` so the host can decrypt the fleet-wide secrets
+- **Host:** Run `just newhost <name>` first - it mints the ssh/wg/age keys into `sops/privkeys/<name>.yaml` and prints the pubkeys + `.sops.yaml` blocks to paste (keys are minted *locally*, never on the box: `sshd.nix` sets `generateHostKeys = false`). Then add the entry to `lib/directory.nix` (`ip`/`keys`/`stateVersion`/`channel?`/`roles`) and create `static/{hostname}/host.nix` (module imports + `modules.*` toggles + `disko.layout`) - `mkHost` generates the nixosConfiguration from those, there's no per-host file. Re-key the shared secrets the host was added to: `sops updatekeys sops/pass.yaml` (always) + `sops/pki/db.yaml` (if lanzaboote). Install with `just install <host> <ip>`. Full runbook lives in the wiki.
 - **Host-specific tweak:** Drop a `.nix` file in `static/{hostname}/`. Auto-imported, no registration needed
 - **Custom package:** Source in `static/packages/`, wiring in `modules/packages.nix` with `perSystem` + `overlayAttrs`
 - **Secret:** Add to the right `sops/<category>.yaml`, reference via `mkSopsFile`
@@ -166,4 +166,4 @@ Idioms to respect when editing (don't "clean these up"):
 - **import-tree only sees tracked files.** jj auto-snapshots on any command, so run a `jj st` (or any jj command) after writing a brand-new file to flush it into the tree before evaluating - never `git add` in this colocated repo, it desyncs git's index from jj's snapshot.
 - **`static/` files are NixOS modules, not flake-parts modules.** They get `inputs`/`self` from `specialArgs`, not outer function args.
 - **Guest modules override system defaults via priority.** `system/base/virtualGuest.nix` pins the stable kernel (`pkgs.linuxPackages`) without `mkDefault`, so it beats `boot.nix`'s `mkDefault pkgs.linuxPackages_zen`. This is intentional, and it applies to every virtual guest - `linodeGuest.nix` inherits it by importing `virtualGuest`, so athena and brigid both land on stable while ishtar keeps zen.
-- **Module names can differ from filenames.** `sshd.nix` defines `flake.nixosModules.ssh` (not `sshd`). Reference the module name in `activeModules`, not the file.
+- **Module names can differ from filenames.** `sshd.nix` defines `flake.nixosModules.ssh` (not `sshd`). Reference the module name (in `core`, a host's `static/`, or the role map), not the file.

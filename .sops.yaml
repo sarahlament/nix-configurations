@@ -7,6 +7,7 @@ keys:
   - &minerva age15z2akyxwh32jmlg5myzghzu7lgvsnascqra8z9swdjps8yl0gq9shgp6r7
   - &brigid  age1qe5728xwrzt9dq4yxy0vhpe76as9m7jweda7m4979azau7zrzg4syc43p4
   - &hestia  age1gtd5wggsakhd8cx0qtqnfhuqyq0gaywygvz5za2wanu7w92h5ptsg792xw
+  - &verdandi age1yxz4pcyly790n5tjcuh7xc6yvyv7hygxa7jht09rjs5hee5gpf0s368wmd
 
 creation_rules:
   # per-host privkeys: each host gets only its own SSH key, WG key, and the keys it needs
@@ -34,6 +35,11 @@ creation_rules:
   - path_regex: ^sops/privkeys/hestia\.yaml$
     key_groups:
     - age: [*lament, *hestia]
+
+  # verdandi: SSH + WG + builderKey (identity box, offloads builds to brigid)
+  - path_regex: ^sops/privkeys/verdandi\.yaml$
+    key_groups:
+    - age: [*lament, *verdandi]
 
   # borg per-subuser: SSH key + repo passphrase + exported repo key (Enc, DR-only)
   - path_regex: ^sops/borg/sub1\.yaml$
@@ -65,17 +71,17 @@ creation_rules:
   # all hosts: lamentUserPass is declared in users/lament.nix (fleet-wide)
   - path_regex: ^sops/pass\.yaml$
     key_groups:
-    - age: [*lament, *athena, *ishtar, *minerva, *brigid, *hestia]
+    - age: [*lament, *athena, *ishtar, *minerva, *brigid, *hestia, *verdandi]
 
   # PK/KEK/GUID: enrollment-only, no host needs these at runtime
   - path_regex: ^sops/pki/lament\.yaml$
     key_groups:
     - age: [*lament]
 
-  # db key pair: shared across all lanzaboote hosts (ishtar/minerva/brigid/hestia)
+  # db key pair: shared across all lanzaboote hosts (ishtar/minerva/brigid/hestia/verdandi)
   - path_regex: ^sops/pki/db\.yaml$
     key_groups:
-    - age: [*lament, *ishtar, *minerva, *brigid, *hestia]
+    - age: [*lament, *ishtar, *minerva, *brigid, *hestia, *verdandi]
 
   # minerva: grafanaSecretKey, vaultwardenToken; brigid: forgejoRunnerToken
   - path_regex: ^sops/services\.yaml$

@@ -77,6 +77,19 @@
         roles = {
         };
       };
+      # identity box (LUKS+TPM testbed for ishtar). role-less for now: the
+      # kerberos/directory stack it will carry doesn't exist yet.
+      verdandi = {
+        hostname = "verdandi";
+        stateVersion = "26.11";
+        ip.internal = "fd67:d6a7:d6f3::53";
+        keys = {
+          sshPub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKRTZ7gUJe57AjlNUjejA7ajfhng46wmC0rlki7LAE1N";
+          wgPub = "NSYBMZZmakM3TTdFV/avnAyJowEUEgjOu/1lyyGyBDY=";
+        };
+        roles = {
+        };
+      };
     };
     peers = {
       phone = {

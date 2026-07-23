@@ -15,6 +15,7 @@
         type = lib.types.enum [
           "bios-linode"
           "uefi-plain"
+          "uefi-luks"
           "uefi-lvm"
           "uefi-laptop"
         ];

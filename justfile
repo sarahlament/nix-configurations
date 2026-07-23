@@ -177,6 +177,61 @@ newhost host donor="minerva":
     shred once the host is up.
     EOF
 
+# disko and install are run as SEPARATE phases so the age key can be seeded
+# BETWEEN them: disko formats + mounts the subvols at /mnt, then we copy the key
+# onto the now-mounted /persist subvol, then install. a single-shot --extra-files
+# would write to the tmpfs root before the subvols mount, and @persist shadows it.
+# NOT kexec (boot the NixOS installer ISO first). reboots into the installed
+# system once done - the key is placed before install, so nothing waits on a
+# manual step. the key is the ONLY seed - sshd.nix makes no host key, sops does
+# the rest. (LUKS hosts halt at the passphrase prompt on first boot until the TPM
+# slot is enrolled - use the Proxmox console.)
+# partition + install a fresh host over nixos-anywhere (boot the installer ISO first)
+install host ip *args:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    umask 077
+
+    key="ceremony/{{ host }}-key.age"
+    if [ ! -e "$key" ]; then
+        echo "$key missing - run 'just newhost {{ host }}' first, or it was shredded" >&2
+        echo "(recover: sops decrypt --extract '[\"{{ host }}AgeKey\"]' sops/privkeys/{{ host }}.yaml)" >&2
+        exit 1
+    fi
+
+    # throwaway keypair for the installer session - not a personal key, discarded
+    # on exit. ignore host keys: a reinstall reuses the name/ip but the installer's
+    # host key is fresh each boot, so skip the stale known_hosts check and don't
+    # pollute it. (the *installed* host key is deterministic from sops, so it's
+    # stable across reinstalls - only the ISO's ephemeral key is the problem.)
+    tmp=$(mktemp -d)
+    trap 'rm -rf "$tmp"' EXIT
+    ssh-keygen -q -t ed25519 -N "" -C "install-{{ host }}" -f "$tmp/id"
+    ignore="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+    sshopt="$ignore -i $tmp/id"
+
+    # authorize the throwaway key on the installer - enter the ISO root password
+    # ONCE here (set it with `passwd` on the ISO console first), then every step
+    # below is key-based and non-interactive.
+    ssh-copy-id -i "$tmp/id.pub" $ignore root@{{ ip }}
+
+    na="nix run github:nix-community/nixos-anywhere --"
+    # --build-on local: drive the build here so it offloads to brigid via
+    # nix.buildMachines, never on the fresh (weak) target. auto would fall back to
+    # a remote build ON the target. substituters copy to the target by default.
+    # feed nixos-anywhere the same throwaway key + host-key-ignore as the scp/ssh.
+    common="--build-on local -i $tmp/id --ssh-option StrictHostKeyChecking=no --ssh-option UserKnownHostsFile=/dev/null"
+
+    # 1. disko: format + mount the subvols at /mnt (left mounted for the copy)
+    $na --flake ".#{{ host }}" $common --phases disko root@{{ ip }} {{ args }}
+
+    # 2. drop the key onto the mounted /persist subvol, before install
+    scp $sshopt "$key" root@{{ ip }}:/mnt/persist/key.age
+    ssh $sshopt root@{{ ip }} chmod 600 /mnt/persist/key.age
+
+    # 3. install against the mounted target, then reboot into it
+    $na --flake ".#{{ host }}" $common --phases install,reboot root@{{ ip }} {{ args }}
+
 sops file="none":
     if [ {{ file }} == none ]; then \
         echo "No file specified"; \
